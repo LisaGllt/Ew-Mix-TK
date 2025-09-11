@@ -1,0 +1,1474 @@
+```{r, include=F}
+library(here)
+source(file = here::here("functions/fun.R"))
+f_load_libraries_colors()
+
+```
+
+# Toxicokinetics of Imidacloprid
+
+## Results of the experiment
+
+### Data importation
+
+Notations :
+
+-   `Date_start` : Start of the experiement (t0)
+-   `Molecule` : Substance to which the earthworm is exposed
+-   `Dose` : Exposure dose (mg/kg)
+-   `ID_recipient` : Recipient in which the soil was prepared
+-   `ID_camp` : ID of the earthworm campagne and generation (see XXX for more information)
+-   `ID` : ID of the earthworm
+-   `Nb_rep` : Identification number of the replicate
+-   `Time_point` : Time point to which the earthworm is dedicated
+-   `Phase` : Uptake or Elimination phase
+-   `Time_introduction_D0` : Time of the day when the earthworm was introduced into his contaminated cosm
+-   `w0` : Body weight at t0
+-   `w_Tp` : Body weight at the given time point
+-   `w_frozen` : Body weight before congelation
+-   `C_worm` : Measured concentration of the substance in the earthworm
+-   `C_soil` : Measured concentration of the substance in the soil at the given time point
+
+```{r data, warning=F, message=F}
+
+df_TK <- read_excel(here::here("data/Data_TK_long.xlsx")) |> 
+    mutate(
+      Time_point_f = as.factor(Time_point),
+      ID = as.factor(ID),
+      w = w/1000, # Conversion mg to g
+      Dose = Dose*1000 # mg/kg to ng/g (mg/kg = microg/g = 1000 ng/g)
+    ) |> 
+    filter(Keep == "Yes") |> 
+    group_by(ID) |> 
+    mutate(t = as.numeric(difftime(Date, first(Date), units = "days"))) |> 
+    ungroup()
+  
+  Dose_EPX <- subset(df_TK, Molecule=="EPX")$Dose[1]
+  Dose_IMD <- subset(df_TK, Molecule=="IMD")$Dose[1]
+
+C_clx_IMD <- 16/1000 # ng/g
+C_clx_EPX <- 90/1000 # ng/g
+
+C_worm_t0_IMD <- mean(subset(df_TK,Molecule =="EPX")$C_worm_IMD, na.rm = T)
+C_worm_t0_EPX <- mean(subset(df_TK,Molecule =="IMD")$C_worm_EPX, na.rm = T)
+
+# IMD
+
+df_TK_IMD <- df_TK |> 
+  dplyr::select(Molecule, Dose, ID, expo, Phase, w, C_worm_EPX, C_worm_IMD, t, Time_point, ID_recipient, Nb_rep)|> 
+      filter(Molecule == "IMD") |> 
+      mutate(
+        C_soil_IMD = case_when(
+          t == 0 & ID_recipient == "1" ~ 0.089*1000, # ng/g
+          t == 0 & ID_recipient == "2" ~ 0.072*1000  # ng/g
+        ),
+        C_soil_EPX = case_when(
+          t == 0 & ID_recipient == "1" ~ 0.780*1000, # ng/g
+          t == 0 & ID_recipient == "2" ~ 1.070*1000  # ng/g
+        ),
+        Weight_wg = if_else(Phase == "Frozen", -1, w),
+        Weight_nog = if_else(!(Phase == "Frozen"), Weight_wg*0.851, w)
+      ) |> 
+      #mutate(across(where(is.numeric), ~ replace_na(.x, -1))) |> 
+      arrange(ID) |> 
+      mutate(
+        t = round(t,1),
+        Molecule = "IMD"
+        )
+
+df_TK_IMD[df_TK_IMD$t == 0,]$C_worm_IMD <- C_worm_t0_IMD
+df_TK_IMD[df_TK_IMD$t == 0,]$C_worm_EPX <- C_worm_t0_EPX
+
+df_TK_IMD <- df_TK_IMD |> 
+  mutate(
+    Time = t,
+    CiIMD = C_worm_IMD,
+    CiEPX = C_worm_EPX,
+    Weight = Weight_nog,
+    Time_point_f = as.factor(round(Time_point, 2))
+  ) |> 
+  dplyr::select(Time, CiEPX, CiIMD, Weight, Molecule, Nb_rep, ID, expo, Time_point_f) |> 
+  mutate(
+    CiEPX = na_if(CiEPX, -1),
+    CiIMD = na_if(CiIMD, -1)
+    )
+
+df_TK_IMD_mean <- df_TK_IMD |> 
+  dplyr::select(-ID) |> 
+  group_by(Time) |> 
+  summarise(
+    CiEPX = exp(mean(log(CiEPX[CiEPX > 0]), na.rm = TRUE)),
+    CiIMD = exp(mean(log(CiIMD[CiIMD > 0]), na.rm = TRUE)),
+    Weight = mean(Weight, na.rm = TRUE),
+    expo = mean(expo),
+    .groups = "drop"
+  ) |> 
+  mutate(Molecule = "IMD")
+```
+
+### Initial state
+
+```{r, warning=F, message=F}
+#| fig-cap: Initial weights of earthworms. 
+#| label: fig-init
+#| fig-width: 6
+#| fig-height: 4
+
+# Weights at t=0
+plot_D0 <- ggplot(
+  data=subset(df_TK_IMD, Time==0), 
+  aes(
+    x=Time_point_f, 
+    y=Weight, 
+    color=Molecule, 
+    fill=Molecule
+    )
+  )+
+
+  geom_boxplot(alpha=0.2)+
+  geom_dotplot(
+    binaxis='y', 
+    stackdir='center', 
+    dotsize=0.7, 
+    alpha=0.7
+    )+
+  facet_wrap(~Molecule, ncol=1, scales="free")+
+  
+  scale_color_manual(values=col_Molecule)+
+  scale_fill_manual(values=col_Molecule)+
+
+  labs(x="Time point (d)", y="Weight (mg)")+
+  
+
+  theme_classic(14)+
+  theme(
+    legend.position = "none", 
+    legend.title=element_text(size=sizetitle-2,face="bold"),
+    legend.text = element_text(size=sizetitle-2,face="plain"),
+    
+    strip.background = element_rect(
+      color="black", 
+      fill=Nord_snow[3], 
+      size=0, 
+      linetype="solid"
+      ),
+    strip.text = element_text(face = "bold")
+    )
+plot_D0
+```
+
+```{r, include=F}
+ggsave(
+  filename="TK_IMD_initial_weights.png", 
+  plot=plot_D0, 
+  width=6, 
+  height = 4, 
+  path=here::here("fig/TK")
+  )
+```
+
+!!! Growth rates !!!!
+
+### Measured internal concentrations
+
+```{r, message=F, warning=F}
+#| fig-cap: Measurements of IMD concentration in earthworms exposed to 0.1 mg/kg of IMD and related weight measurement of earthworms. Points represent the experimental data, the blue curve and the transparent blue band are produced with geom_smooth. 
+#| fig-label: fig-curvesmooth
+#| fig-width: 8
+#| fig-height: 4
+
+p <- ggplot(
+  data = df_TK_IMD,
+  aes(
+    x = Time
+  )
+  )+
+  geom_point(
+    mapping = aes(
+      y = CiEPX
+    ),
+    color = col_EPX,
+    fill = col_EPX
+  )+
+  geom_point(
+    mapping = aes(
+      y = CiIMD
+    ),
+    color = col_IMD,
+    fill = col_IMD
+  )+
+
+  facet_wrap(~Molecule, ncol = 2, scales = "free")+
+  labs(
+    x = "Time (days)",
+    y = "Concentration in earthworm (ng/g)"
+  )+
+  theme_minimal()
+p
+```
+
+Outl## Modeling of the toxicokinetics
+
+Overall steps in the terminal : Run the command `./mcsim.m_TK_IMD TK_IMD_Setpoint.in` in the terminal while being in the folder `mod/TK_IMD` to create the `Setpoints.out` now. Do the same with `./mcsim.m_TK_IMD TK_IMD_Setpoint_ind.in` to create the `Setpoints_ind.out` and with `./mcsim.m_TK_IMD TK_IMD_Setpoint_ind_full.in` to create the `Setpoints_ind_full.out`. These steps are presented through this page.
+
+Run the MCMC chains for the model :
+
+```{bash, results=F, eval=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_IMD
+pwd
+
+makemcsim m_TK_IMD.model &
+wait
+./mcsim.m_TK_IMD TK_IMD_C1.in &
+./mcsim.m_TK_IMD TK_IMD_C2.in &
+./mcsim.m_TK_IMD TK_IMD_C3.in &
+wait
+```
+
+```{r, message=F, warning=F}
+source(file = here::here("functions/fun.R"))
+path_mod_IMD <- here::here("mod/TK_IMD")
+path_mod <- path_mod_IMD
+```
+
+The first step is to retrieve the information of the MCMC simulation experiments.
+
+The inputs :
+
+-   Input files must a name like "xxxxx.1.in"
+-   Output files must a name like "xxxxx.1.out"
+
+```{r IMDreadMCMC, message=F, warning=F, results='hidden'}
+MCMC_out_IMD <- f_MCSim_ind(path_mod_IMD)
+
+NC <- MCMC_out_IMD$NC
+Nb_param <- MCMC_out_IMD$Nb_param
+Nb_experiement <- MCMC_out_IMD$Nb_experiement
+Nb_iter_kept <- MCMC_out_IMD$Nb_iter_kept
+N_iter_setpoint <- MCMC_out_IMD$N_iter_setpoint
+
+L_parameters <- unique(MCMC_out_IMD$Priors$Nom)
+
+```
+
+We can retrieve different information from the model :
+
+-   The number of chains used : `r NC`
+-   The number of parameters : `r Nb_param`
+-   The number of experiments : `r Nb_experiement`
+-   The number of last iterations used to describe the posterior distribution : `r Nb_iter_kept`
+-   The number of last iterations used to create the `tab_setpoint.out` file : `r N_iter_setpoint`
+
+### Priors used for the model
+
+```{r IMDreadpriors, message = F, warning = F}
+#| tbl-cap: Priors used for the model
+#| tbl-label: tbl-IMDPriors
+
+colnames(MCMC_out_IMD$Priors) <- c("Nom", "Distribution", "Mean", "Sd", "Min", "Max")
+
+MCMC_out_IMD$Priors |> datatable(
+  options = list(
+    dom = 't',
+    autoWidth = TRUE,
+    columnDefs = list(
+      list(className = 'dt-left', targets = "_all")
+      )
+    ), 
+  class="hover"
+  ) 
+```
+
+```{r IMDpriors, message=F, warning=F}
+#| fig-cap: Distributions of the priors.
+#| label: fig-IMDprior
+#| fig-height: 6
+#| fig-width: 8
+
+n_samples <- 1e6 # Simulation of the distribution
+
+df_priors_dist <- MCMC_out_IMD$Priors |> 
+  dplyr::select(Nom, Distribution, Mean, Sd) |> 
+  rowwise() |> 
+  mutate(samples = case_when(
+    !(Distribution == "Uniform") ~ list(rnorm(n_samples, mean = Mean, sd = Sd)),
+    Distribution == "Uniform" ~ list(runif(n_samples, min=Mean, max = Sd))
+    )
+    ) |> 
+  unnest(samples)
+
+col_prior <- Nord_polar[4]
+alpha_prior <- 0.5
+
+p <- ggplot() +
+  facet_wrap(~Nom, scales = "free")+
+  
+  stat_halfeye(
+    data = df_priors_dist, 
+    aes(
+       x = samples
+       ),
+    alpha = alpha_prior,
+    fill = col_prior,
+    color = col_prior,
+    normalize = "xy" 
+    ) +
+  
+  labs(
+    title = "Priors distributions", 
+    x = "Parameter value", 
+    y = "Density"
+    ) +
+  theme_minimal()
+
+p 
+
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_priors.png", 
+  plot=p, 
+  width=8, height = 6, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_priors.svg", 
+  plot=p, 
+  width=8, height = 6, 
+  path=here::here("fig/TK/")
+  )
+```
+
+### Chains
+
+```{r IMDChains, message=F, warning=F}
+#| fig-cap: Parameters chains. Only the first iteration and the last `r Nb_iter_kept` are represented.
+#| label: fig-IMDchains
+#| fig-height: 5
+#| fig-width: 8
+
+plot <-  
+  ggplot(
+    data = MCMC_out_IMD$Chains, 
+    aes(
+      x = Iteration, 
+      y = value, 
+      color = as.factor(Chain), 
+      group = as.factor(Chain)
+      )
+  )+
+  geom_line(alpha=0.7)+
+  facet_wrap(~Parameter, scales = "free", ncol = 2)+
+  
+  scale_color_manual(name = "Chains", values = nord(palette = "frost"))+
+  
+  theme_bw()+
+  theme(
+    legend.position = "right", 
+    title=element_text(size=12, face="plain"), 
+    axis.title.x = element_text(face="plain"),
+    strip.background = element_rect(fill="white")
+    )
+
+plot
+  
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_chains.png", 
+  plot=plot, 
+  width=8, height = 5, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_chains.svg", 
+  plot=plot, 
+  width=8, height = 5, 
+  path=here::here("fig/TK/")
+  )
+```
+
+We can also take a look at the likelihood and the deviance ratio.
+
+```{r IMDlike, message=F, warning=F}
+#| fig-cap: Evolution of likelihood and deviance ratio through the iterations.
+#| label: fig-IMDlike
+#| fig-height: 5
+#| fig-width: 8
+
+p1 <- ggplot(
+  MCMC_out_IMD$df_LnPost_start, 
+  aes(
+    x = iteration, 
+    y = LnPosterior, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = "First half iterations", 
+    y = "LnPosterior"
+    ) +
+  theme_minimal()
+
+p2 <- ggplot(
+  MCMC_out_IMD$df_LnPost, 
+  aes(
+    x = iteration, 
+    y = LnPosterior, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = paste(MCMC_out_IMD$Nb_iter_kept, "last iterations"), 
+    y = "LnPosterior"
+    ) +
+  theme_minimal()
+
+p3 <- ggplot(
+  MCMC_out_IMD$df_Devc, 
+  aes(
+    x = iteration, 
+    y = RatioDeviance, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = paste(MCMC_out_IMD$Nb_iter_kept, "last iterations"), 
+    y = "Ratio Deviance"
+    ) +
+  theme_minimal()
+
+p <- p1 + p2 + p3 +
+  plot_layout(ncol=3, guides = "collect")
+p
+
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_likedevratio.png", 
+  plot=p, 
+  width=8, height = 5, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_likedevratio.svg", 
+  plot=p, 
+  width=8, height = 5, 
+  path=here::here("fig/TK/")
+  )
+```
+
+### Parameter estimation results
+
+```{r IMDpost, message=F, warning=F}
+#| fig-cap: Distributions of the priors and the posteriors.
+#| label: fig-IMDpost
+#| fig-height: 6
+#| fig-width: 8
+
+alpha_prior <- 0.5
+alpha_post <- 0.5
+col_prior <- Nord_snow[1]
+col_post <- col_IMD
+
+
+MCMC_out_IMD$Chains <- MCMC_out_IMD$Chains |> 
+  mutate(Nom = str_remove(Parameter, "\\.\\d+\\.$"))
+
+p <- ggplot() +
+  
+  # Priors
+  stat_halfeye(
+    data = df_priors_dist, 
+    aes(
+       x = samples,
+       #y = ..scaled..
+       ),
+    alpha = alpha_prior,
+    fill = col_prior,
+    color = col_prior,
+    normalize = "xy" 
+    ) +
+  
+  # Posterior
+  stat_halfeye(
+    data = subset(MCMC_out_IMD$Chains, Nom %in% L_parameters),
+    mapping = aes(
+      x=value
+    ),
+    fill = col_post,
+    color = col_post,
+    alpha = alpha_post,
+    normalize = "xy"
+  ) +
+  
+  facet_wrap(~Nom, scales = "free")+
+  labs(
+    title = "<span style = 'color:#5E81AC;'>Posterior</span>
+       and <span style = 'color:#D8DEE9;'>prior</span> distributions", 
+    x = "Parameter value", 
+    y = "Density"
+    ) +
+  theme_minimal()+
+  theme(
+    title=element_markdown(face="bold")
+  )
+
+p
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_post.png", 
+  plot=p, 
+  width=8, height = 6, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_post.svg", 
+  plot=p, 
+  width=8, height = 6, 
+  path=here::here("fig/TK/")
+  )
+```
+
+```{r calcBCF, message=F, warning=F}
+
+f_get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+ku_samples <- MCMC_out_IMD$Chains |> filter(Nom == "kuIMD")
+ke_samples <- MCMC_out_IMD$Chains |> filter(Nom == "keIMD")
+
+BAF_samples <- ku_samples$value / ke_samples$value
+
+BAF_mode <- f_get_mode(BCF_samples)
+BAF_CI <- quantile(BAF_samples, probs = c(0.025, 0.975))
+BAF_CI_low <- as.numeric(BAF_CI[1])
+BAF_CI_up <- as.numeric(BAF_CI[2])
+BAF_min <- min(BAF_samples)
+BAF_max <- max(BAF_samples)
+BAF_mean <- mean(BAF_samples)
+BAF_sd <- sd(BAF_samples)
+
+BAF <- c(
+  BAF_mode, 
+  BAF_CI_low, BAF_CI_up, 
+  BAF_min, BAF_max, 
+  BAF_mean, BAF_sd
+  )
+
+```
+
+```{r IMDSummaryRes, message=F, warning=F}
+#| tbl-cap: Results summary
+#| tbl-label: tbl-IMDressum
+
+Summary_res_IMD_tmp <- cbind(as.data.frame(MCMC_out_IMD$Summary_res)[1:length(L_parameters)], BAF)
+
+Summary_res_IMD_f <- Summary_res_IMD_tmp |> 
+  mutate(across(where(is.numeric), signif, 2))
+
+Summary_res_IMD_f |> datatable(
+  options = list(
+    dom = 't',
+    autoWidth = TRUE,
+    columnDefs = list(
+      list(className = 'dt-left', targets = "_all")
+      )
+    ), 
+  class="hover"
+  ) 
+
+```
+
+### Comparison of observed vs. predicted data
+
+```{bash, results=F, eval=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_IMD
+pwd
+./mcsim.m_TK_IMD TK_IMD_Setpoint_ind.in
+wait
+```
+
+```{r IMDdataObs, message=F, warning=F}
+
+dObs_ind <- df_TK_IMD |> 
+  mutate(ID = as.numeric(ID))
+colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CiIMD"] <- "CiIMD_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
+
+```
+
+```{r IMDdatapred, message=F, warning=F}
+nb_rows_ind <- NC*N_iter_setpoint+1
+
+Sim.Res.ind <- read.delim(here::here(paste(path_mod_IMD, "Setpoints_ind.out", sep="/")))
+
+df_mod_ind <- NULL
+
+for (i in 1:Nb_experiement){
+  #print(i)
+  ID_i <- unique(dObs_ind$ID)[i]
+  
+  start = nb_rows_ind*(i-1)
+  end = nb_rows_ind*i
+
+  Sim.Res.ind_i  <- Sim.Res.ind[start:end,]
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Sim.Res.ind_i <- Sim.Res.ind_i|> 
+    dplyr::select(matches(paste0("_", i, "\\.[0-4]+$")))
+  
+  Time_pred = dObs_i$Time # !!!
+  
+  Nom_Endpoints = c("Weight", "CiIMD")
+  
+  Nsortie = 2
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind_i), fixed=FALSE)
+
+    
+    Data_sim = as.matrix( Sim.Res.ind_i[ , index] )
+    
+    MPV    = c(  MPV,  as.numeric( Data_sim[nrow(Data_sim), ] ) )
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+
+  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
+}
+
+df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
+df_mod_CiIMD_ind <- subset(df_mod_ind, Endpt == "CiIMD")
+
+```
+
+```{r IMDdatapredobs, message=F, warning=F}
+
+df_predobs_CiIMD_ind <- dObs_ind |> 
+  left_join(df_mod_CiIMD_ind, suffix = c("_obs", "_pred")) |> 
+  dplyr::select(-c(Weight_obs, CiEPX)) |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na()
+
+df_predobs_Weight_ind <- dObs_ind |> 
+  filter(!(expo==2)) |> 
+  left_join(df_mod_Weight_ind, suffix = c("_obs", "_pred"))|>
+  dplyr::select(-c(CiIMD_obs, CiEPX)) |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na()
+
+```
+
+```{r predobsIMD, message=F, warning=F}
+#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line. 
+#| label: fig-IMDpredobs
+#| fig-height: 4
+#| fig-width: 8
+
+fact_1 <- 2
+fact_2 <- 5
+
+col_line0 <- Nord_polar[1]
+col_line1 <- Nord_polar[4]
+col_line2 <- Nord_snow[1]
+
+seq_line <- seq(0.01, 3, 0.001)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line*fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line/fact_1,
+  x2  = seq_line,
+  y2  = seq_line*fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line/fact_2
+  )
+
+p_W <- ggplot(
+  data = df_predobs_Weight_ind,
+  mapping = aes(
+      x = Weight_obs,
+      y = predict.endpoint
+    )
+  )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x1, y=y1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_1, y=y_1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x2, y=y2),
+    color = col_line2
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_2, y=y_2),
+    color = col_line2
+    )+
+  
+  geom_abline(
+    slope=1, 
+    intercept = 0, 
+    color = col_line0,
+    linewidth = 1
+    )+
+  geom_pointrange(
+    mapping = aes(
+      ymin = low,
+      ymax = up
+    ),
+    alpha = 0.5,
+    color = col_IMD
+  )+
+  xlim(
+    xmin = 0.5,
+    xmax = max(df_predobs_Weight_ind$Weight_obs)
+  )+
+  ylim(
+    ymin = 0.5,
+    ymax = max(df_predobs_Weight_ind$predict.endpoint)
+  )+
+  scale_x_log10(
+    limits=c(0.3, 1.5)
+    )+
+  scale_y_log10(
+    limits=c(0.3, 1.5)
+    )+
+  labs(
+    x = "Observed weight of earthworms (g)",
+    y = "Predicted weight of earthworms (g)"
+  )+
+  theme_minimal()
+
+fact_1 <- 1.5
+fact_2 <- 2
+
+seq_line <- seq(0.5, 1500, 0.01)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line*fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line/fact_1,
+  x2  = seq_line,
+  y2  = seq_line*fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line/fact_2
+  )
+
+
+p_CiIMD_predobs <- ggplot(
+  data = df_predobs_CiIMD_ind,
+  mapping = aes(
+      x = CiIMD_obs,
+      y = predict.endpoint
+    )
+  )+
+  geom_path(
+    data=df_line,
+    mapping=aes(x=x1, y=y1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_1, y=y_1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x2, y=y2),
+    color = col_line2
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_2, y=y_2),
+    color = col_line2
+    )+
+  geom_abline(
+    slope=1, 
+    intercept = 0, 
+    color = col_line0,
+    linewidth = 1
+    )+
+  geom_pointrange(
+    mapping = aes(
+      ymin = low,
+      ymax = up
+    ),
+    alpha = 0.5,
+    color = col_IMD
+  )+
+  
+  xlim(
+    xmin = 0.5,
+    xmax = max(df_predobs_CiIMD_ind$CiIMD_obs)
+  )+
+  ylim(
+    ymin = 0.5,
+    ymax = max(df_predobs_CiIMD_ind$predict.endpoint)
+  )+
+  labs(
+    x = "Observed concentrations of IMD\nin earthworms (ng/g)",
+    y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
+  )+
+  scale_x_log10(limits=c(1, 1500))+
+  scale_y_log10(limits=c(1, 1500))+
+  theme_minimal()
+
+p_CiIMD_zoom_predobs <- ggplot(
+  data = df_predobs_CiIMD_ind,
+  mapping = aes(
+      x = CiIMD_obs,
+      y = predict.endpoint
+    )
+  )+
+  geom_path(
+    data=df_line,
+    mapping=aes(x=x1, y=y1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_1, y=y_1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x2, y=y2),
+    color = col_line2
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_2, y=y_2),
+    color = col_line2
+    )+
+  geom_abline(
+    slope=1, 
+    intercept = 0, 
+    color = col_line0,
+    linewidth = 1
+    )+
+  geom_pointrange(
+    mapping = aes(
+      ymin = low,
+      ymax = up
+    ),
+    alpha = 0.5,
+    color = col_IMD
+  )+
+  
+  xlim(
+    xmin = 0.5,
+    xmax = max(df_predobs_CiIMD_ind$CiIMD_obs)
+  )+
+  ylim(
+    ymin = 0.5,
+    ymax = max(df_predobs_CiIMD_ind$predict.endpoint)
+  )+
+  labs(
+    x = "Observed concentrations of IMD\nin earthworms (ng/g)",
+    y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
+  )+
+  scale_x_log10(limits=c(100, 2000))+
+  scale_y_log10(limits=c(100, 2000))+
+  theme_minimal()
+
+
+p1 <- p_W + p_CiIMD_predobs + p_CiIMD_zoom_predobs
+p1
+
+p2 <- p_W + p_CiIMD_zoom_predobs
+
+```
+
+```{r countfoldIMD, warning=F}
+
+df_predobs_Weight_ind <- df_predobs_Weight_ind |> 
+  mutate(
+    Ratio_predobs = predict.endpoint/Weight_obs,
+    Residuals = predict.endpoint-Weight_obs
+  )
+
+Weight_count_fold2 <- length(subset(df_predobs_Weight_ind, Ratio_predobs >= 0.5 & Ratio_predobs <= 2)$Weight_obs)/length(df_predobs_Weight_ind$Weight_obs)*100
+
+Weight_count_fold5 <- length(subset(df_predobs_Weight_ind, Ratio_predobs >= 0.2 & Ratio_predobs <= 5)$Weight_obs)/length(df_predobs_Weight_ind$Weight_obs)*100
+
+df_predobs_CiIMD_ind <- df_predobs_CiIMD_ind |> 
+  mutate(
+    Ratio_predobs = predict.endpoint/CiIMD_obs,
+    Residuals = predict.endpoint-CiIMD_obs
+  )
+
+CiIMD_count_fold2 <- length(subset(df_predobs_CiIMD_ind, Ratio_predobs >= 0.5 & Ratio_predobs <= 2)$CiIMD_obs)/length(df_predobs_CiIMD_ind$CiIMD_obs)*100
+
+CiIMD_count_fold5 <- length(subset(df_predobs_CiIMD_ind, Ratio_predobs >= 0.2 & Ratio_predobs <= 5)$CiIMD_obs)/length(df_predobs_CiIMD_ind$CiIMD_obs)*100
+
+
+
+cat("For weights : \n\n",
+  "Percentage of prediction in fold 2 = ", round(Weight_count_fold2, 1), "%\n",
+    "Percentage of prediction in fold 5 = ", round(Weight_count_fold5, 1), "%")
+cat("\n\nFor internal concentrations : \n\n",
+  "Percentage of prediction in fold 2 = ", round(CiIMD_count_fold2, 1), "%\n",
+    "Percentage of prediction in fold 5 = ", round(CiIMD_count_fold5, 1), "%")
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_predobs1.png", 
+  plot=p1, 
+  width=10, height = 6, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_predobs1.svg", 
+  plot=p1, 
+  width=10, height = 6, 
+  path=here::here("fig/TK/")
+  )
+
+ggsave(
+  filename="TK_IMD_predobs2.png", 
+  plot=p2, 
+  width=10, height = 4, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_predobs2.svg", 
+  plot=p2, 
+  width=10, height = 4, 
+  path=here::here("fig/TK/")
+  )
+```
+
+### Full individual trajectories
+
+```{bash, results=F, eval=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_IMD
+pwd
+./mcsim.m_TK_IMD TK_IMD_Setpoint_ind_full_1.in &
+./mcsim.m_TK_IMD TK_IMD_Setpoint_ind_full_2.in &
+./mcsim.m_TK_IMD TK_IMD_Setpoint_ind_full_3.in &
+./mcsim.m_TK_IMD TK_IMD_Setpoint_ind_full_4.in &
+wait
+```
+
+```{r IMDdatapredfull, message=F, warning=F}
+#| cache: false
+
+dObs_ind <- df_TK_IMD |> 
+  mutate(ID = as.numeric(ID))
+colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CiIMD"] <- "CiIMD_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
+
+nb_rows_ind <- NC*N_iter_setpoint+1
+
+Sim.Res.ind.full_1 <- as.data.frame(fread(here::here(path_mod_IMD, "Setpoints_ind_full_1.out"))) # Very heavy to import but it works !
+Sim.Res.ind.full_2 <- as.data.frame(fread(here::here(path_mod_IMD, "Setpoints_ind_full_2.out"))) # Very heavy to import but it works !
+Sim.Res.ind.full_3 <- as.data.frame(fread(here::here(path_mod_IMD, "Setpoints_ind_full_3.out"))) # Very heavy to import but it works !
+Sim.Res.ind.full_4 <- as.data.frame(fread(here::here(path_mod_IMD, "Setpoints_ind_full_4.out"))) # Very heavy to import but it works !
+
+l_Setpoint <- c(Sim.Res.ind.full_1, Sim.Res.ind.full_2, Sim.Res.ind.full_3, Sim.Res.ind.full_4)
+
+# Faut absolument les coller sinon ça décale tout
+
+df_mod_ind_1 <- NULL
+df_mod_ind_2 <- NULL
+df_mod_ind_3 <- NULL
+df_mod_ind_4 <- NULL
+
+for (i in 1:Nb_experiement){
+  
+  if(i <= 16){
+    Setpoint_part <- 1
+    Res <- Sim.Res.ind.full_1
+  }
+  if(16 < i & i <= 32){
+    Setpoint_part <- 2
+    Res <- Sim.Res.ind.full_2
+  }
+  if(32 < i & i <= 48){
+    Setpoint_part <- 3
+    Res <- Sim.Res.ind.full_3
+  }
+  if(48 < i){
+    Setpoint_part <- 4
+    Res <- Sim.Res.ind.full_4
+  }
+  
+  ID_i <- unique(dObs_ind$ID)[i]
+  
+  i_sim <- i-(Setpoint_part-1)*16 # No of simulation
+  
+  start = nb_rows_ind*(i_sim-1)
+  end = nb_rows_ind*(i_sim)
+
+  Sim.Res.ind.full_i  <- Res[start:end,]
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Sim.Res.ind.full_i <- Sim.Res.ind.full_i|> 
+    dplyr::select(matches(paste0("_", i_sim, "\\.[0-9]+$")))
+  
+  Time_pred = seq(0,44,0.25) # !!!
+  
+  Nom_Endpoints = c("Weight", "CiIMD")
+  
+  Nsortie = 2
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind.full_i), fixed=FALSE)
+    
+    Data_sim = as.matrix( Sim.Res.ind.full_i[ , index] )
+    
+    MPV    = c(  MPV,  as.numeric( Data_sim[nrow(Data_sim), ] ) )
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+  
+  if(i <= 16){
+    df_mod_ind_1 <- rbind(df_mod_ind_1, df_mod_ind_i)
+  }
+  if(16 < i & i <= 32){
+    df_mod_ind_2 <- rbind(df_mod_ind_2, df_mod_ind_i)
+  }
+  if(32 < i & i <= 48){
+    df_mod_ind_3 <- rbind(df_mod_ind_3, df_mod_ind_i)
+  }
+  if(48 < i){
+    df_mod_ind_4 <- rbind(df_mod_ind_4, df_mod_ind_i)
+  }
+}
+
+rm(
+  Sim.Res.ind.full_1, 
+  Sim.Res.ind.full_2, 
+  Sim.Res.ind.full_3, 
+  Sim.Res.ind.full_4
+  )
+
+df_mod_ind <- rbind(
+  df_mod_ind_1,
+  df_mod_ind_2,
+  df_mod_ind_3,
+  df_mod_ind_4
+)
+
+rm(
+  df_mod_ind_1,
+  df_mod_ind_2,
+  df_mod_ind_3,
+  df_mod_ind_4
+)
+
+df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
+df_mod_CiIMD_ind <- subset(df_mod_ind, Endpt == "CiIMD")
+
+time_limits <- dObs_ind %>%
+  group_by(ID) %>%
+  summarise(time_cutoff = max(Time, na.rm = TRUE) + 2)
+
+df_mod_CiIMD_ind_t <- df_mod_CiIMD_ind %>%
+  left_join(time_limits, by = "ID") %>%
+  filter(Time <= time_cutoff) %>%
+  dplyr::select(-time_cutoff) 
+
+df_mod_Weight_ind_t <- df_mod_Weight_ind %>%
+  left_join(time_limits, by = "ID") %>%
+  filter(Time <= time_cutoff) %>%
+  dplyr::select(-time_cutoff) 
+
+```
+
+```{r IMDpredcurvesdata, message=F, warning=F}
+#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-label: fig-IMDdatapredfull
+#| fig-width: 10
+#| fig-height: 20
+
+dObs_ind_plot <- dObs_ind |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na()
+
+alpha_point <- 0.5
+
+p_CiIMD <- ggplot()+
+  geom_line(
+    data=df_mod_CiIMD_ind_t,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_IMD
+    )+
+  geom_line(
+    data=df_mod_CiIMD_ind_t,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_IMD
+    )+
+  geom_line(
+    data=df_mod_CiIMD_ind_t,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_IMD,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiIMD_ind_t, 
+    aes(
+      x=Time, 
+      ymax= up, 
+      ymin= low,
+      group = ID
+      ),
+    fill = col_IMD,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot,
+    aes(
+      x = Time,
+      y = CiIMD_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_wrap(
+    ~ID,
+    ncol = 4,
+    #scales = "free"
+    )+
+  lims(y=c(0, 2500))+
+  labs(
+    x = "Time (days)",
+    y = "CiIMD (ng/g)"
+  )+
+  theme_minimal()
+
+p_CiIMD 
+
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_comptrajpred.png", 
+  plot=p_CiIMD , 
+  width=10, height = 20, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_comptrajpred.svg", 
+  plot=p_CiIMD , 
+  width=10, height = 20, 
+  path=here::here("fig/TK/")
+  )
+```
+
+```{r IMDpredcurvesdataW, message=F, warning=F}
+#| fig-cap: Weight predictions
+#| fig-label: fig-IMDdatapredfullW
+#| fig-width: 10
+#| fig-height: 20
+
+alpha_point <- 0.5
+
+p_W <- ggplot()+
+  geom_line(
+    data=df_mod_Weight_ind_t,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_IMD
+    )+
+  geom_line(
+    data=df_mod_Weight_ind_t,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_IMD
+    )+
+  geom_line(
+    data=df_mod_Weight_ind_t,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_IMD,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_Weight_ind_t, 
+    aes(
+      x=Time, 
+      ymax= up, 
+      ymin= low,
+      group = ID
+      ),
+    fill = col_IMD,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot,
+    aes(
+      x = Time,
+      y = Weight_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_wrap(
+    ~ID,
+    ncol = 4,
+    #scales = "free"
+    )+
+  #lims(y=c(0, 1500))+
+  labs(
+    x = "Time (days)",
+    y = "Weight (g)"
+  )+
+  theme_minimal()
+
+p_W
+
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_comptrajpredW.png", 
+  plot=p_W , 
+  width=10, height = 20, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_comptrajpredW.svg", 
+  plot=p_W , 
+  width=10, height = 20, 
+  path=here::here("fig/TK/")
+  )
+```
+
+### Simulation of the toxicodynamic in earthworms throughout the exposition
+
+The goal here is to recreate the concentration dynamic in the average earthworm during our exposition scheme but without the fasting phase that was required for chemical analysis and during which elimination was happening.
+
+```{bash, eval=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_IMD
+pwd
+./mcsim.m_TK_IMD TK_IMD_Setpoint.in
+wait
+```
+
+```{r IMDreadSetpoint, message=F, warning=F}
+
+Sim.Res <- as.data.frame(fread(here::here(path_mod_IMD, "Setpoints.out"),sep="\t"))
+  Time_pred = seq( 0, 42, 0.01) # A changer !!!
+  
+  Nom_Endpoints =c("Weight_1", "CiIMD_1")
+  Nsortie = 2
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+
+  for (i in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste("^",Nom_Endpoints[i],"\\.", sep="") , colnames(Sim.Res), fixed=FALSE )
+    
+    Data_sim = as.matrix( Sim.Res[ , index] )
+    
+    MPV    = c(  MPV,  as.numeric( Data_sim[nrow(Data_sim), ] ) )
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[i], ncol(Data_sim)))
+
+    }
+
+  df_mod <- data.frame(predict.endpoint = MPV,
+                       Time    = c( rep(Time_pred, Nsortie))  ,
+                       low     = IC_min,
+                       up      = IC_max,
+                       Endpt   = Endpoint,
+                       Experiment = c(rep(rep("Experience 1", length(Time_pred)), Nsortie)))
+  
+df_mod_Weight <- subset(df_mod, Endpt == "Weight_1")
+df_mod_CiIMD <- subset(df_mod, Endpt == "CiIMD_1") 
+  
+  # length(MPV)
+  # length(df_Cin$Time)
+  # length(Endpoint)
+  # length(df_Cin$Experiment)
+   
+```
+
+```{r IMDpredcurves, message=F, warning=F}
+#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 0.1 mg/kg of IMD. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
+#| fig-label: fig-IMDcurvemod
+#| fig-width: 8
+#| fig-height: 4
+
+alpha_point <- 0.5
+
+p_CiIMD <- ggplot()+
+  geom_line(
+    data=df_mod_CiIMD,
+    aes(
+      x=Time,
+      y= low
+      ),
+    linetype="dotted",
+    color = col_IMD
+    )+
+  geom_line(
+    data=df_mod_CiIMD,
+    aes(
+      x=Time,
+      y= up
+      ),
+    linetype="dotted",
+    color = col_IMD
+    )+
+  geom_line(
+    data=df_mod_CiIMD,
+    aes(
+      x=Time,
+      y= predict.endpoint
+      ),
+    color = col_IMD,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiIMD, 
+    aes(
+      x=Time, 
+      ymax= up, 
+      ymin= low
+      ),
+    fill = col_IMD,
+    alpha=0.1
+    )+
+  labs(
+    x = "Time (days)",
+    y = "Internal IMD concentration (ng/g)"
+  )+
+  theme_minimal()
+
+p <- p_CiIMD 
+p
+
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_IMD_predcurves.png", 
+  plot=p, 
+  width=6, height = 4, 
+  path=here::here("fig/TK/")
+  )
+ggsave(
+  filename="TK_IMD_predcurves.svg", 
+  plot=p, 
+  width=6, height = 4, 
+  path=here::here("fig/TK/")
+  )
+```
+
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+
+<b> Session Information </b>
+
+</button>
+
+:::: {#collapseOne .accordion-collapse .collapse}
+<div>
+
+```{r}
+sessionInfo()
+```
+
+</div>
+::::

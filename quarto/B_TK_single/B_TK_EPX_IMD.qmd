@@ -1,0 +1,279 @@
+```{r, include=F}
+library(here)
+source(file = here::here("functions/fun.R"))
+f_load_libraries_colors()
+col_Molecule <- rev(col_Molecule)
+```
+
+# Toxicokinetics of Imidacloprid and Epoxiconazole
+
+**Research question:** What is the kinetic of uptake and depuration of EPX and IMD in earthworms ?
+
+## Experiment
+
+### Exposition of earthworms
+
+We aimed to perform toxicokinetic experiements based on OECD TG 317 to be able to estimate the uptake and the depuration rate of each molecule.
+
+```{r, warning=F, message=F}
+#| fig-cap: Desing of the toxicokinetic experiements.
+#| label: fig-TKdesign
+#| fig-width: 6
+#| fig-height: 3
+
+t_elim <- 21
+t <- seq(0,t_elim*2,0.01)
+C0 <- 0
+C_soil <- 10
+C_soil <- 1000
+ks <- 0.1
+ke <- 1
+
+fdata <- function(t, state, parameters) {
+    with(as.list(c(state, parameters)), {
+      if(t<21){dl <- ks*C_soil-ke*state[1]}else{dl <- -ke*state[1]}
+      list(c(dl))
+    })  }
+
+# Initial condition
+init_var <- c(C0)
+
+# Parameters and time
+params <- c(
+  ks=ks, 
+  ke=ke, 
+  C_soil=C_soil
+  )
+
+# Resolution
+sol_fdata <- ode(
+  y=init_var, 
+  times=t, 
+  func=fdata, 
+  parms=params
+  )
+  
+sim_data_ex <- data.frame(
+  t= sol_fdata[,1], 
+  Cworm = sol_fdata[,2]
+  )
+sim_data_ex_up <- sim_data_ex[sim_data_ex$t<=t_elim,]
+sim_data_ex_elim <- sim_data_ex[sim_data_ex$t>=t_elim,]
+
+times_uptake <- c(1, 2, 3, 7, 10, 14, 17, 21)
+times_elim <- c(22, 23, 24, 28, 31, 35, 38, 42)
+times_points <- c(times_uptake, times_elim)
+
+sim_data_points <- sim_data_ex[sim_data_ex$t %in% times_points,]
+
+
+p <- ggplot()+
+  geom_line(
+    aes(
+      x=sim_data_ex_up$t, 
+      y=sim_data_ex_up$Cworm
+      ), 
+    color=col_uptake, 
+    linewidth=2
+    )+
+  geom_line(
+    aes(
+      x=sim_data_ex_elim$t, 
+      y=sim_data_ex_elim$Cworm
+      ), 
+    color=col_elim, 
+    linewidth=2
+    )+
+  geom_point(
+    aes(
+      x=sim_data_points$t, 
+      y=sim_data_points$Cworm
+      ), 
+    cex=3
+    )+
+  geom_label_repel(
+    aes(x=sim_data_points$t, 
+        y=sim_data_points$Cworm, 
+        label = sim_data_points$t
+        ),
+    box.padding   = 0.35, 
+    point.padding = 0.5,
+    segment.color = Nord_polar[1]
+    )+
+  annotate(
+    "text", 
+    x=t_elim/2, 
+    y=min(sim_data_ex$Cworm), 
+    colour=col_uptake, 
+    label="Uptake", 
+    fontface="bold"
+    )+
+  annotate(
+    "text", 
+    x=t_elim*1.5, 
+    y=max(sim_data_ex$Cworm), 
+    colour=col_elim, 
+    label="Elimination", 
+    fontface="bold"
+    )+
+  
+  labs(x="Time (d)", y=expression(paste("Concentration in earthworm")))+
+  
+  theme_bw()+
+  theme(
+    legend.position = "right", 
+    legend.title=element_text(size=sizetitle-2,face="bold"), 
+    title=element_text(size=sizetitle, face="bold"), 
+    axis.title.x = element_text(size=sizetitle,face="plain"), 
+    axis.title.y = element_text(size=sizetitle,face="plain")
+    )
+
+p
+```
+
+```{r, include=F}
+ggsave(
+  filename="TK_design.png", 
+  plot=p, 
+  width=8, 
+  height = 4, 
+  path=here::here("fig/TK")
+  )
+```
+
+The @fig-TKdesign gives a general idea of the chosen experimental design with a first phase of uptake when earthworms are exposed to a given dose of a given substance and a second phase of elimination when earthworms are not exposed anymore. Timepoints are defined when the substance concentration in earthworms is measured to be able to describe the uptake and elimination curves (8 timepoints each, in 4 replicates).
+
+One replicate consists of 1 individual exposed to the given concentration during the given time point if the time point is in the uptake phase or during 21 days with an elimination period (non exposed period) until the given time point. Individuals are kept individually in a medium cosm containing 200 g of soil (dry weight) at a WHC of 70% and fed with 3 g/ind/14 d (dry weight) of horse dung (WHC 70%). Cosms are kept in a thermoregulated enclosure at 18°C.
+
+AJOUTER PHOTO COSME AVEC UN VER
+
+The chosen tested concentration is1 mg/kg for EPX for which no lethal effect is expected.
+
+### Chemical analysis of soils and earthworms (HPLC-HRMS)
+
+AJOUTER PROTOCOLES
+
+### Toxicokinetics modeling
+
+The dynamic of the internal concentration is modeled with a one compartment model taking dilution with growth into account.
+
+$$
+\begin{aligned}
+\frac{\mathrm{d}C_i}{\mathrm{d}t}&= \frac1L(k_u\times C_e-k_e\times C_i)-C_i\times \frac1V \frac{\mathrm{d}V}{\mathrm{d}t}\\
+&=\frac1L\left(k_u\times C_e-k_e\times C_i-\frac{3a}{L} \ C_i \times \frac{\mathrm{d}L}{\mathrm{d}t} \right)
+\end{aligned}
+$$
+
+-   $C_e$ : Soil concentration (ng/g)
+-   $C_i$ : Internal concentration in earthworms (ng/g)
+-   $L$ : Structural volumetric length (cm)
+-   $V$ : Structural volume (cm$^3$) $= L^3$
+-   $k_u$ : Uptake rate (cm.g(soil).day$^{-1}$.g(worm)$^{-1}$)
+-   $k_e$ : Elimination rate (cm.day$^{-1}$)
+
+!!!!! CHOICE OF PRIORS !!!!!
+
+## Relationship between fresh weight and fresh weight without gut content
+
+!!!!!!! Expliquer pourquoi on en a besoin !!!!
+
+```{r}
+df_TK_full <- read_excel(here::here("data/Data_TK_long.xlsx")) |> 
+  mutate(
+    Time_point_f = as.factor(Time_point),
+    ID = as.factor(ID),
+    w = w/1000, # Conversion mg to g
+    Dose = Dose*1000, # mg/kg to ng/g (mg/kg = microg/g = 1000 ng/g),
+    CiIMD = C_worm_IMD,
+    CiEPX = C_worm_EPX
+  ) |> 
+  mutate(
+    C_soil_IMD = case_when(
+      t == 0 & ID_recipient == "1" ~ 0.089, # ng/g
+      t == 0 & ID_recipient == "2" ~ 0.072  # ng/g
+    ),
+    C_soil_EPX = case_when(
+      t == 0 & ID_recipient == "1" ~ 0.780, # ng/g
+      t == 0 & ID_recipient == "2" ~ 1.070  # ng/g
+    )
+  ) |> 
+  mutate(expo = case_when(
+    Phase == "Uptake" ~ 1,
+    Phase == "Elimination" ~ 0,
+    Phase == "Frozen" ~ 2
+    )
+  ) |> 
+  filter(Keep == "Yes") |> 
+  group_by(ID) |> 
+  mutate(t = as.numeric(difftime(Date, first(Date), units = "days"))) |> 
+  dplyr::ungroup()
+```
+
+```{r, warning=F, message=F}
+
+# t1 = dernière masse avant expo == 2
+t1_df <- df_TK_full %>%
+  filter(Phase != "Frozen") %>%
+  group_by(ID) %>%
+  filter(t == max(t)) %>%
+  dplyr::select(ID, w_popo = w, Molecule)
+
+# t2 = première masse pendant expo == 2
+t2_df <- df_TK_full %>%
+  filter(Phase == "Frozen") %>%
+  group_by(ID) %>%
+  dplyr::select(ID, w_nopopo = w, Molecule)
+
+# Joindre les deux et calculer le pourcentage de perte
+df_TK_fasting <- t1_df %>%
+  inner_join(t2_df, by = c("ID", "Molecule")) %>%
+  mutate(
+    Per_loss = 100 * (w_popo - w_nopopo) / w_popo,
+    Loss = (w_popo - w_nopopo)
+    )
+```
+
+```{r}
+#| fig-cap: Relationship between fresh weight before and after fasting. 
+#| fig-label: fig-Wfasting
+#| fig-width: 5
+#| fig-height: 4
+#intercept <- 1.0
+#fit <- lm(I(x - intercept) ~ 0 + y, lin)> summary(fit)
+lm.fasting <- lm(w_nopopo ~ w_popo+0, data = df_TK_fasting)
+summary(lm.fasting)
+#plot(lm.fasting)
+
+ggplot(
+  data = df_TK_fasting
+)+
+  geom_point(
+    aes(
+      x=w_popo,
+      y=w_nopopo,
+      color = Molecule
+      ),
+    alpha = 0.3
+  )+
+  geom_abline(
+    intercept = 0,
+    slope = lm.fasting$coefficients[1],
+    color = col_red
+  )+
+  annotate(
+    geom="text", 
+    x = 0.6, y = 1.1, 
+    label = paste0("Wnopopo = Wpopo x ", signif(lm.fasting$coefficients[1],4), "\n adj-R2 = ", signif(summary(lm.fasting)$adj.r.squared, 4)), 
+    color = col_red,
+    size = 3
+    )+
+  scale_color_manual(values = col_Molecule)+
+  lims(x=c(0.4, 1.2), y=c(0.4, 1.2))+
+  labs(
+    x="Weight with gut content (g)",
+    y="Weight without gut content (g)"
+  )+
+  theme_minimal()
+
+
+```

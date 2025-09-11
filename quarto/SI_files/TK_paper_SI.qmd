@@ -1,0 +1,70 @@
+---
+title: "Behind the toxic cocktail: Toxicokinetic mechanisms of pesticide mixture interactions in earthworms"
+subtitle: "Supplemntary information"
+author: 
+  - name: Lisa Gollot
+  - name: Ghislaine Delarue
+  - name: Sylvie Nélieu
+  - name: Juliette Faburé
+  - name: Rémy Beaudouin
+  - name: Raphaël Royauté
+lang: eng
+format:
+  pdf:
+    documentclass: scrreprt
+    toc: true
+    toc-depth: 3
+    lof: true
+    lot: true
+    tbl-colwidths: auto
+    df-print: tibble
+    number-sections: true
+    fontsize: large
+    linestretch: 1.2
+    layout: 
+      - header=1cm
+    geometry: 
+      - top=2cm
+      - bottom=2cm
+      - left=2cm
+      - right=2cm
+    include-in-header: 
+      text: 
+        \usepackage{pdfpages}
+editor: 
+    markdown:
+      canonical: true
+bibliography: references.bib
+csl: apa.csl
+---
+
+# Earthworm culture
+
+## Breeding and experiment soil
+
+| Characteristics                 | Value |
+|---------------------------------|-------|
+| Clay ( \< 2 µm, g/kg)           | 226.0 |
+| Fine silt (2-20 µm, g/kg)       | 174.1 |
+| Coarse silt (20-50 µm, g/kg)    | 298.9 |
+| Fine sand (50-200 µm, g/kg)     | 239.1 |
+| Coarse sand (200-2000 µm, g/kg) | 47.9  |
+| $CaCO_3$ total (g/kg)           | 23.3  |
+| Organic matter (g/kg)           | 32.6  |
+| $P_2O_5$ (g/kg)                 | 0.1   |
+| Organic carbon (g/kg)           | 18.9  |
+| Total nitrogen (N) (g/kg)       | 1.5   |
+| C/N                             | 12.5  |
+| pH                              | 7.5   |
+| Total $Cu$ (mg/kg)              | 25.2  |
+
+: Main characteristics of the breeding soil from Versailles. Table from @bart_2017a. {@tbl-Clx}
+
+## DNA barcoding
+
+![Results of the DNA barcoding of 10 individuals from the culture (highlighted in yellow)](../../photos/DNA_barcoding.png)
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

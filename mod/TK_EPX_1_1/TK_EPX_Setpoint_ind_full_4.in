@@ -1,0 +1,155 @@
+#### Toxicokinetics of Epoxiconazole in A. caliginosa
+#===============================================
+
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Setpoints_ind_full_4.out", "tab_setpoint_ind.out", 0, kuEPX, keEPX, a_growth);
+
+########## Individuals ################################################
+
+Simulation { # TK EPX - i =  91
+    Winit=0.5658;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,21.0118055555556,27.8034722222222,29.1263888888889);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  92
+    Winit=0.5961;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,21.0118055555556,27.8034722222222,29.1263888888889);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  97
+    Winit=0.5752;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,21,30.7916666666667,32.0416666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  98
+    Winit=0.6433;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,21,30.7916666666667,32.0416666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  99
+    Winit=0.5327;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,21,30.7916666666667,32.0416666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  100
+    Winit=0.6558;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,21,30.7916666666667,32.0416666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  107
+    Winit=0.592;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9958333333333,34.7875,36.0375);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  108
+    Winit=0.6405;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9958333333333,34.7875,36.0375);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  113
+    Winit=0.5502;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9951388888889,37.7868055555556,39.0368055555556);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  114
+    Winit=0.4093;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9951388888889,37.7868055555556,39.0368055555556);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  115
+    Winit=0.7593;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9951388888889,37.7868055555556,39.0368055555556);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  116
+    Winit=0.4522;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=780;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9951388888889,37.7868055555556,39.0368055555556);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  121
+    Winit=0.5129;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=1070;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9881944444444,41.7798611111111,43.0541666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  122
+    Winit=0.4306;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=1070;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9881944444444,41.7798611111111,43.0541666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  123
+    Winit=0.4556;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=1070;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9881944444444,41.7798611111111,43.0541666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+Simulation { # TK EPX - i =  124
+    Winit=0.4505;
+    Ci0EPX=0.768438499579877;
+    Ce0EPX=1070;
+    CclxEPX=0.09;
+    expo=NDoses(4,1,0,2,2,0,20.9881944444444,41.7798611111111,43.0541666666667);
+    PrintStep(Weight,0, 44, 0.25);
+    PrintStep(CiEPX,0, 44, 0.25);
+}
+End.

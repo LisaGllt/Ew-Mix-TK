@@ -1,0 +1,144 @@
+# Preliminary information about this study
+
+People that have contributed to this study :
+
+-   Valentine Lebars (M1 internship) : Toxicokinetics tests & EC50 tests & Earthworms breeding (May - July 2024)
+-   Maia Collombel (L3 internship) : Toxicokinetics tests & EC50 tests & Earthworms breeding (May - June 2024)
+-   Laura Frattaroli (research technician) : Earthworms breeding & Mixture tests (October 2024 - August 2025)
+-   Julien Rouyer (Gap year intership of engineering school) : Earthworms breeding & Mixture tests (October - December 2024)
+-   Cheikh Ahmed Tidane Sarr (M2 intership) : Mixture tests (March - August 2025)
+
+## Abstract
+
+## GANTT {#sec-GANTT}
+
+```{r,, include=F}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(forcats)
+library(nord)
+
+Nord_frost <- nord(palette = "frost")
+Nord_aurora <- nord(palette = "aurora")
+Nord_polar <- nord(palette = "polarnight")
+```
+
+```{r, echo=F, warning=F}
+#| fig-cap: GANTT
+#| label: fig-GANTT
+#| fig-width: 10
+#| fig-height: 4
+
+# Sample data
+data_gantt <- data.frame(
+  task = c(
+    "1. Preliminary tests",                      # 1
+    "2. Toxicokinetic tests",                    # 2
+    "3.1. EC50 tests for IMD",                   # 3
+    "3.2. EC50 tests for EPX",                   # 4
+    "4.1. Mixture tests - Autumn 2024",          # 5
+    "4.2. Mixture tests - Small test with IMD",  # 6
+    "4.3. Mixture tests - Spring 2025",          # 7
+    "4.3. Mixture tests - Hatchling monitoring"  # 8
+  ),
+  start_date = as.Date(
+    c(
+      "2024-03-05",                              # 1
+      "2024-05-27",                              # 2
+      "2024-04-01",                              # 3
+      "2024-05-03",                              # 4
+      "2024-10-14",                              # 5
+      "2025-01-07",                              # 6
+      "2025-03-25",                              # 7
+      "2025-04-30"                               # 8
+    )
+  ),
+  end_date = as.Date(
+    c
+    ("2024-04-19",                               # 1
+      "2024-07-04",                              # 2
+      "2024-07-08",                              # 3
+      "2024-07-08",                              # 4
+      "2024-12-18",                              # 5
+      "2025-02-05",                              # 6
+      "2025-04-30",                              # 7
+      "2025-07-31"                               # 8
+    )
+  ),
+  status = c(
+    "Completed",                                 # 1
+    "Completed",                                 # 2
+    "Completed",                                 # 3
+    "Completed",                                 # 4
+    "Completed",                                 # 5
+    "Completed",                                 # 6
+    "Completed",                                 # 7
+    "In Progress"                                # 8
+  )
+)
+
+# Custom color palette for the statuses
+
+status_colors <- c("In Progress" = Nord_frost[1], "Completed" = Nord_frost[4])
+
+# Creating the Gantt chart
+ggplot(
+  data_gantt, 
+  aes(
+    x = start_date, 
+    # y = reorder(task, -as.numeric(start_date))
+    y = fct_rev(task)
+  )
+) +  # Reorder tasks
+  
+  geom_segment(
+    aes(
+      xend = end_date, 
+      yend = task, 
+      color = status
+    ), 
+    size = 6, 
+    lineend = "round",
+    alpha = 0.7
+  ) +  # Rounded bars
+  
+  geom_text(
+    aes(
+      x = ymd(start_date) + (ymd(end_date)-ymd(start_date))/2, 
+      label = task,
+    ),
+    hjust = 0.5,
+    vjust = -1.2,
+    size = 4, 
+    color = "black",
+    fontface = "bold"
+  )+
+  
+  scale_color_manual(values = status_colors) +  # Apply custom colors
+  
+  labs(
+    title = "Project Timeline",
+    x = NULL,  # Remove axis title for x
+    y = NULL,  # Remove axis title for y
+    color = "Status"
+  ) +
+  
+  theme_minimal(base_family = "Arial") +                                          # Use a clean, sans-serif font
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),             # Title style
+    legend.position = "right",
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10),
+    # axis.text.y = element_text(size = 12, hjust = 0, face = "bold"),                                        # Make task labels bold
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(size = 10, color = "grey40"),                      # Date labels in grey
+    panel.grid.minor = element_blank(),                                           # Remove minor grid lines
+    panel.grid.major.y = element_blank(),                                         # Remove horizontal grid lines
+    panel.grid.major.x = element_line(color = "grey85", linetype = "dashed")      # Subtle dashed vertical grid
+  ) +
+  scale_x_date(date_labels = "%b %Y", date_breaks = "2 month", expand = c(0, 0))  # Custom date formatting
+
+
+```

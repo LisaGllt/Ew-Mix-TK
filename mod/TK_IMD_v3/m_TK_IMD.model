@@ -1,0 +1,56 @@
+# Kinetic model
+#----------------------------------------------------------------------
+Inputs = {expo, Winit}
+States = {L, CeIMD, CiIMD};
+Outputs = {Weight}; # Only Weights needs to be in Outputs
+
+# Parameters declarations
+# !!! Weight of earthworms are without their gut content !!!
+Winit;  # Initial weight (with gut content) (g)
+Ci0IMD;     # IMD Initial concentration in earthworms (ng/g)
+Ce0IMD;     # Initial IMD concentration in the contaminated soil (ng/g soil)
+CclxIMD;    # IMD concentration in the uncontaminated soil (ng/g soil)
+
+# Error parameters
+Sigma_W;  # Error on Weight measurements without gut content
+Sigma_CiIMD; # Error on CiIMD measurements
+
+# Kinetics in soil
+DT50IMD = 191;   # IMD Half-life in soil (days)
+
+# Growth parameters
+a_growth;   # Growth rate of earthworms in soil (g popo^(1/3)/d)
+Vr_a_growth;
+
+# Kinetics in Earthworms
+kuIMD;    # IMD Absorption rate
+keIMD;    # IMD Elimination rate
+
+# Exposition status
+expo; # 0 if in soil and not exposed ; 1 if in soil and exposed ; 2 if fasting
+
+# MODEL
+Initialize {
+    # Starting points
+    L = pow(Winit, 1.0/3.0);
+    CeIMD = Ce0IMD + CclxIMD;
+    CiIMD = Ci0IMD;
+}
+
+# Differentials
+Dynamics {
+    # Growth
+    dt(L) = (expo == 2 ? 0 : a_growth);
+    
+    # Concentration in soil 
+    dt(CeIMD) = -log(2)/DT50IMD * CeIMD;
+    
+    # Concentration in earthworms
+    dt(CiIMD) = 1/(L)*(kuIMD*(expo==1 ? CeIMD : (expo ==0 ? CclxIMD : 0)) - keIMD*CiIMD) - 3*(expo == 2 ? 0 : a_growth)/(L)*CiIMD;
+}
+
+CalcOutputs {
+    Weight = pow(L,3);
+}
+
+End.
