@@ -1,8 +1,8 @@
 # Kinetic model
 #----------------------------------------------------------------------
-Inputs = {expo, Winit}
-States = {L, CeIMD, CiIMD};
-Outputs = {Weight}; # Only Weights needs to be in Outputs
+Inputs = {expo, Winit, event_Ce}
+States = {L, CeIMD, Ci_IMD};
+Outputs = {Weight, CiIMD, C_exposure}; # Only Weights needs to be in Outputs
 
 # PARAMETERS -----------------------------------------------------
 
@@ -18,7 +18,8 @@ Sigma_W;  # Error on Weight measurements without gut content
 Sigma_CiIMD; # Error on CiIMD measurements
 
 # Kinetics in soil 
-DT50IMD = 191;   # IMD Half-life in soil (days)
+DT50IMD = 353.5;   # IMD Half-life in soil (days)
+DT50gut = 0.21; # In days ! (= 5 h)
 
 # Growth parameters 
 a_growth;   # Growth rate of earthworms in soil (g^(1/3)/d)
@@ -37,7 +38,7 @@ Initialize {
     # Starting points
     L = pow(Winit, 1.0/3.0);
     CeIMD = Ce0IMD + CclxIMD;
-    CiIMD = Ci0IMD;
+    Ci_IMD = Ci0IMD;
 }
 
 # Differentials
@@ -45,15 +46,19 @@ Dynamics {
     # Growth
     dt(L) = (expo == 2 ? 0 : a_growth);
     
-    # Concentration in soil 
-    dt(CeIMD) = -log(2)/DT50IMD * CeIMD;
+    # Concentration in soil
+    dt(CeIMD) = (expo == 2 ? -log(2)/DT50gut * CeIMD : -log(2)/DT50IMD * CeIMD);
     
     # Concentration in earthworms
-    dt(CiIMD) = 1/(L)*(kuIMD*(expo==1 ? CeIMD : (expo ==0 ? CclxIMD : 0)) - keIMD*CiIMD) - 3*(expo == 2 ? 0 : a_growth)/(L)*CiIMD;
+    a_real = (expo == 2 ? 0 : a_growth);
+    
+    dt(Ci_IMD) = 1/(L)*(kuIMD*CeIMD - keIMD*Ci_IMD) - 3*a_real/(L)*Ci_IMD;
 }
 
 CalcOutputs {
     Weight = pow(L,3);
+    CiIMD = (Ci_IMD > 1e-12 ? Ci_IMD : 1e-12);
+    C_exposure = CeIMD;
 }
 
 End.

@@ -17,22 +17,14 @@ book:
   chapters:
     - index.qmd
     - quarto/A_Earthworm_culture.qmd
-    - part: quarto/B_TK/B_TK_EPX_IMD.qmd
+    - part: quarto/B_TK_single/B_TK_EPX_IMD.qmd
       chapters:
-        - quarto/B_TK/BA_TK_IMD.qmd
-        - quarto/B_TK/BA_TK_EPX.qmd
-    - part: quarto/C_TD_Single/C_TD_EPX_IMD_single.qmd
-      chapters: 
-        - quarto/C_TD_Single/CA_Preliminary_tests.qmd
-        - quarto/C_TD_Single/CB_Effect_single.qmd
-    - part: quarto/D_TD_Mix/D_TD_EPX_IMD_mix.qmd
-      chapters:
-        - quarto/D_TD_Mix/DA_How_to_study_mixture.qmd
-        - quarto/D_TD_Mix/DB_Effect_cocoons_mix_design.qmd
-        - quarto/D_TD_Mix/DC_Effect_cocoons_mix_power.qmd
-        - quarto/D_TD_Mix/DD_Effect_cocoons_mix_analysis_Autumn2024.qmd
-        - quarto/D_TD_Mix/DE_Effect_cocoons_mix_analysis_Spring2025.qmd
-        - quarto/D_TD_Mix/DF_Effect_cocoons_mix_analysis_otherEndpoints.qmd
+        - quarto/B_TK_single/BA_TK_IMD.qmd
+        - quarto/B_TK_single/BA_TK_EPX.qmd
+    # - part: quarto/C_TK_mix/C_TD_EPX_IMD_mix.qmd
+    #   chapters: 
+    #     - quarto/C_TK_mix/CA_Preliminary_tests.qmd
+    #     - quarto/C_TK_mix/CB_Effect_single.qmd
     - quarto/references.qmd
   navbar:
     right:

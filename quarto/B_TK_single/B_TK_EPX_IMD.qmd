@@ -147,7 +147,9 @@ One replicate consists of 1 individual exposed to the given concentration during
 
 AJOUTER PHOTO COSME AVEC UN VER
 
-The chosen tested concentration is1 mg/kg for EPX for which no lethal effect is expected.
+The chosen tested concentration is 1 mg/kg for EPX for which no lethal effect is expected.
+
+At the end of their exposure scenario, earthworms are weighted and then put on wet filter paper in Petri dishes for about 24 hours so their can void their gut content. At the end of these 24 hours, they are massaged to removed what is left in the gut and then weighted and frozen at -80°C.
 
 ### Chemical analysis of soils and earthworms (HPLC-HRMS)
 
@@ -173,7 +175,7 @@ $$
 
 !!!!! CHOICE OF PRIORS !!!!!
 
-## Relationship between fresh weight and fresh weight without gut content
+## Relationship between fresh weight and fresh weight without gut content {#sec-gutcontent}
 
 !!!!!!! Expliquer pourquoi on en a besoin !!!!
 
@@ -276,4 +278,183 @@ ggplot(
   theme_minimal()
 
 
+```
+
+## Description of the gut depuration dynamic
+
+When on Petri dishes, we need to account for the slow voiding process of the gut content during the 24 hours there are fasting.
+
+A small experiment was done with 10 earthworms individually put in cosm with 200 g of Closeaux soil and 3 g of horse dung. After a week they were placed on filter paper in Petri dishes and weighted regularly. After 32 hours, earthworms were massaged to void the rest of their gut and weighted again.
+
+```{r data gut, message=F, warning=F}
+df_gut <- read_excel(here::here("data/Data_GUT.xlsx")) |> 
+  mutate(
+    ID = as.factor(ID)
+  ) |> 
+  group_by(ID) |> 
+  mutate(
+    Per_Weight = 100 * Weight / Weight[t == 0]
+    ) |> 
+  ungroup()
+```
+
+```{r, message=F, warning=F}
+#| fig-cap: Evolution of earthworm weight and the corresponding percentage of initial weight throughout time in Petri dishes. Weight after being massaged are described with squared points.
+#| label: fig-GUT
+#| fig-height: 4
+#| fig-width: 8
+
+p_mg <- ggplot(
+  data = df_gut, 
+  aes(
+    x = t,
+    y = Weight,
+    color = ID,
+    shape = Handling
+  )
+)+
+  geom_line(
+    linewidth = 0.8,
+    alpha = 0.8
+  )+
+  geom_point(
+    alpha = 0.5,
+    size = 2.5
+  )+
+  
+  labs(
+    x = "Time (hours)",
+    y = "Weight (mg)"
+  )+
+  scale_color_manual(values = c(Nord_aurora, Nord_frost, Nord_polar))+
+  scale_shape_manual(values = shape_Molecule)+
+  theme_minimal()
+
+p_per <- ggplot(
+  data = df_gut, 
+  aes(
+    x = t,
+    y = Per_Weight,
+    color = ID,
+    shape = Handling
+  )
+)+
+  geom_line(
+    linewidth = 0.8,
+    alpha = 0.8
+  )+
+  geom_point(
+    alpha = 0.5,
+    size = 2.5
+  )+
+  
+  labs(
+    x = "Time (hours)",
+    y = "Percentage of initial weight (%)"
+  )+
+  ylim(50, NA)+
+  scale_color_manual(values = c(Nord_aurora, Nord_frost, Nord_polar))+
+  scale_shape_manual(values = shape_Molecule)+
+  theme_minimal()
+
+p <- p_mg + p_per + plot_layout(ncol=2, guides="collect")
+p
+
+```
+
+We modele the dynamic with a first order decay :
+
+$$\frac{dP_{Weight}}{dt}=-\frac{\ln 2}{DT_{50,\text{gut}}}\ (P_{Weight}-P^{\infty}_{Weight})$$
+
+$$P_{Weight}=P^{\infty}_{Weight}+(100-P^{\infty}_{Weight})\ \exp\left(- \frac{\ln 2}{DT_{50,\text{gut}}}\times t\right)$$
+
+With :
+
+-   $t$ : Time (h)
+-   $P_{Weight}$ : Percentage of initial weight (%, 0-100)
+-   $P^{\infty}_{Weight}$ : Percentage of initial weight when gut is fully emptied (%)
+-   $DT_{50,\text{gut}}$ : Half-life of the gut content (h)
+
+For the model, we consider that weights measured after massage are weights measured after a significant amount of time has passed. Therefore, the corresponding percentages of initial weight inform $P^{\infty}_{Weight}$.
+
+```{r modgut, message=F, warning=F}
+
+df_gut_mod <- df_gut |> 
+  mutate(
+    t = case_when(
+      Handling == "None" ~ t,
+      Handling == "Massaged" ~ 1000
+    )
+  )
+
+mod.gut <- nlsLM(Per_Weight ~ Per_Weight_void + (100-Per_Weight_void)*exp(-lambda*t),
+               data = df_gut_mod,
+               start = list(
+                 Per_Weight_void = 15,
+                 lambda = 0.01
+                 ),
+               lower = c(0,0), 
+               upper = c(Inf,Inf)
+               )
+
+summary(mod.gut)
+cat("95% confidence intervals\n")
+confint2(mod.gut, level = 0.95)
+
+DT50_gut <- signif(as.numeric(log(2)/ coef(mod.gut)["lambda"]), 3)
+Per_Weight_void <- signif(as.numeric(coef(mod.gut)["Per_Weight_void"]), 3)
+
+df_gut_mod_plot <- df_gut_mod |> 
+  filter(Handling == "None")
+
+df_gut_mod_plot$Per_Weight_pred <- predict(mod.gut, newdata = df_gut_mod_plot)
+```
+
+The estimated value for $DT_{50,\text{gut}}$ and $P^{\infty}_{Weight}$ are `r DT50_gut` hours and `r Per_Weight_void`%, respectively.
+
+$P^{\infty}_{Weight}$ estimated here is consistent with the one estimated in @sec-gutcontent.
+
+```{r}
+#| fig-cap: Modeling of the evolution of earthworm percentage of initial weight throughout time in Petri dishes. The grey line correspond to the prediction of the model.  
+#| label: fig-GUTmod
+#| fig-height: 4
+#| fig-width: 6
+
+p_mod <- ggplot(
+  data = df_gut_mod_plot, 
+  aes(
+    x = t,
+    y = Per_Weight,
+    group = ID
+  )
+)+
+  geom_line(
+    linewidth = 0.8,
+    alpha = 0.5,
+    color = Nord_frost[4]
+  )+
+  geom_point(
+    alpha = 0.5,
+    size = 2.5,
+    color = Nord_frost[4]
+  )+
+  geom_line(
+    data = df_gut_mod_plot, 
+    aes(
+      x = t, 
+      y = Per_Weight_pred
+    ),
+    linewidth = 2,
+    color = Nord_polar[2],
+    alpha = 0.2
+  )+
+  
+  labs(
+    x = "Time (hours)",
+    y = "Percentage of initial weight (%)"
+  )+
+  scale_color_manual(values = c(Nord_aurora, Nord_frost, Nord_polar))+
+  theme_minimal()
+
+p_mod
 ```

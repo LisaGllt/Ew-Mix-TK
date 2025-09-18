@@ -35,6 +35,7 @@ f_load_libraries <- function() {
   library(sf)
   library(scales)
   library(colorspace)
+  library(IDPmisc)
 
   # 📊 Statistical Modeling & Bayesian Analysis
   library(brms) # Modélisation bayésienne avec Stan
@@ -48,6 +49,7 @@ f_load_libraries <- function() {
   library(ggmcmc)
   library(bayesnec)
   library(truncnorm)
+  library(minpack.lm)
 
   # 🔬 Regression & Hypothesis Testing
   library(car) # Tests statistiques et régressions avancées
@@ -548,24 +550,273 @@ f_In_experiments <- function(Molecule) {
   return(char_final)
 }
 
-f_create_mcmc_block <- function(name, seed) {
+f_In_experiments_3Uptake_1 <- function(Molecule) {
+  
+  df_TK_f <- f_read_data_TK(Molecule) |> 
+    mutate(ID = as.numeric(ID))
+  
+  C_clx_IMD <- 16 / 1000 # ng/g
+  C_clx_EPX <- 90 / 1000 # ng/g
+  
+  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD[1]
+  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX[1]
+  
+  sigma <- 1e-3
+  
+  df_TK_3x_2 <- subset(df_TK_f, Time_point < 22) |> 
+    mutate(
+      ID = ID + 1000,
+      C_worm_EPX = ifelse(C_worm_EPX == -1, -1, C_worm_EPX + rnorm(n(),0,sigma)),
+      Weight_nog = ifelse(w == -1, -1, Weight_nog + rnorm(n(),0,sigma))
+      )
+  
+  df_TK_3x_3 <- subset(df_TK_f, Time_point < 22) |> 
+    mutate(
+      ID = ID + 2000,
+      C_worm_EPX = ifelse(C_worm_EPX == -1, -1, C_worm_EPX + rnorm(n(),0,sigma)),
+      Weight_nog = ifelse(w == -1, -1, Weight_nog + rnorm(n(),0,sigma))
+      )
+  
+  df_TK_f <- rbind(df_TK_f, df_TK_3x_2, df_TK_3x_3)
+  
+  if (Molecule == "IMD") {
+    char_final <- ""
+    for (i in as.numeric(unique(df_TK_f$ID))) {
+      
+      df_TK_i <- subset(df_TK_f, ID == i) 
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww_nopopo <- paste(df_TK_i$Weight_nog, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiIMD <- paste(df_TK_i$C_worm_IMD, collapse = ",")
+      
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      length_expo <- length(df_TK_i$expo)
+      char_texpo <- char_tw
+      
+      if (i%%1000 <= 64){
+        char_Event <- ""
+      } else {
+        telim <- subset(df_TK_i, expo==0)$t[1]
+        char_Event <- paste("    event_Ce=Events(CeIMD,1,", telim, ", Replace,", C_clx_IMD,");", sep="")
+      }
+      
+      char_i <- paste(
+        paste("Experiment { #", "TK IMD - i = ", i),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
+        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$C_soil_IMD, ";", sep = ""),
+        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
+        char_Event,
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Data(Weight,", char_Ww_nopopo, ");", sep = ""),
+        paste("    Print(CiIMD,", char_tCi, ");", sep = ""),
+        paste("    Data(CiIMD,", char_CiIMD, ");", sep = ""),
+        paste("    expo=NDoses(", length_expo, ",\n               ",
+              char_expo, ",\n               ", char_texpo, ");",
+              sep = ""
+        ),
+        paste("}"),
+        sep = "\n"
+      )
+      char_final <- paste(char_final, char_i, sep = "\n")
+    } 
+  } # End IMD
+  
+  else if (Molecule == "EPX") {
+    char_final <- ""
+    
+    for (i in as.numeric(unique(df_TK_f$ID))) {
+      
+      df_TK_i <- subset(df_TK_f, ID == i) 
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww_nopopo <- paste(df_TK_i$Weight_nog, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiEPX <- paste(df_TK_i$C_worm_EPX, collapse = ",")
+      
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      length_expo <- length(df_TK_i$expo)
+      char_texpo <- char_tw
+      
+      if (i%%1000 <= 64){
+        char_Event <- ""
+      } else {
+        telim <- subset(df_TK_i, expo==0)$t[1]
+        char_Event <- paste("    event_Ce=Events(CeEPX,1,", telim, ", Replace,", C_clx_EPX,");", sep="")
+      }
+      
+      char_i <- paste(
+        paste("Experiment { #", "TK EPX - i = ", i),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
+        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$C_soil_EPX, ";", sep = ""),
+        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
+        char_Event,
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Data(Weight,", char_Ww_nopopo, ");", sep = ""),
+        paste("    Print(CiEPX,", char_tCi, ");", sep = ""),
+        paste("    Data(CiEPX,", char_CiEPX, ");", sep = ""),
+        paste("    expo=NDoses(", length_expo, ",\n               ",
+              char_expo, ",\n               ", char_texpo, ");",
+              sep = ""
+        ),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      char_final <- paste(char_final, char_i, sep = "\n")
+    } # End EPX
+  } else {
+    stop("Uncorrect specification of Molecule")
+  }
+  return(char_final)
+}
+
+f_In_experiments_3Uptake <- function(Molecule) {
+  
+  df_TK_f <- f_read_data_TK(Molecule) |> 
+    mutate(
+      ID = as.numeric(ID),
+      t = as.numeric(t)
+      )
+  
+  C_clx_IMD <- 16 / 1000 # ng/g
+  C_clx_EPX <- 90 / 1000 # ng/g
+  
+  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD[1]
+  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX[1]
+  
+  epsilon <- 1e-6
+  
+  df_TK_3x_p <- subset(df_TK_f, Time_point < 22) |> 
+    mutate(
+      t = abs(t + epsilon)
+    )
+  df_TK_3x_m <- subset(df_TK_f, Time_point < 22) |> 
+    mutate(
+      t = ifelse(t==0, t+1/2*epsilon, t - epsilon)
+    )
+  
+  df_TK_f <- rbind(df_TK_f, df_TK_3x_p, df_TK_3x_m) |> 
+    arrange(ID, t)
+  
+  
+  if (Molecule == "IMD") {
+    char_final <- ""
+    for (i in as.numeric(unique(df_TK_f$ID))) {
+      
+      df_TK_i <- subset(df_TK_f, ID == i) 
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww_nopopo <- paste(df_TK_i$Weight_nog, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiIMD <- paste(df_TK_i$C_worm_IMD, collapse = ",")
+      
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      length_expo <- length(df_TK_i$expo)
+      char_texpo <- char_tw
+      
+      if (i <= 64){
+        char_Event <- ""
+      } else {
+        telim <- subset(df_TK_i, expo==0)$t[1]
+        char_Event <- paste("    event_Ce=Events(CeIMD,1,", telim, ", Replace,", C_clx_IMD,");", sep="")
+      }
+      
+      char_i <- paste(
+        paste("Experiment { #", "TK IMD - i = ", i),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
+        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$C_soil_IMD, ";", sep = ""),
+        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
+        char_Event,
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Data(Weight,", char_Ww_nopopo, ");", sep = ""),
+        paste("    Print(CiIMD,", char_tCi, ");", sep = ""),
+        paste("    Data(CiIMD,", char_CiIMD, ");", sep = ""),
+        paste("    expo=NDoses(", length_expo, ",\n               ",
+              char_expo, ",\n               ", char_texpo, ");",
+              sep = ""
+        ),
+        paste("}"),
+        sep = "\n"
+      )
+      char_final <- paste(char_final, char_i, sep = "\n")
+    } 
+  } # End IMD
+  
+  else if (Molecule == "EPX") {
+    char_final <- ""
+    
+    for (i in as.numeric(unique(df_TK_f$ID))) {
+      
+      df_TK_i <- subset(df_TK_f, ID == i) 
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww_nopopo <- paste(df_TK_i$Weight_nog, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiEPX <- paste(df_TK_i$C_worm_EPX, collapse = ",")
+      
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      length_expo <- length(df_TK_i$expo)
+      char_texpo <- char_tw
+      
+      if (i <= 64){
+        char_Event <- ""
+      } else {
+        telim <- subset(df_TK_i, expo==0)$t[1]
+        char_Event <- paste("    event_Ce=Events(CeEPX,1,", telim, ", Replace,", C_clx_EPX,");", sep="")
+      }
+      
+      char_i <- paste(
+        paste("Experiment { #", "TK EPX - i = ", i),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
+        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$C_soil_EPX, ";", sep = ""),
+        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
+        char_Event,
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Data(Weight,", char_Ww_nopopo, ");", sep = ""),
+        paste("    Print(CiEPX,", char_tCi, ");", sep = ""),
+        paste("    Data(CiEPX,", char_CiEPX, ");", sep = ""),
+        paste("    expo=NDoses(", length_expo, ",\n               ",
+              char_expo, ",\n               ", char_texpo, ");",
+              sep = ""
+        ),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      char_final <- paste(char_final, char_i, sep = "\n")
+    } # End EPX
+  } else {
+    stop("Uncorrect specification of Molecule")
+  }
+  return(char_final)
+}
+
+f_create_mcmc_block <- function(name, seed, Nb_Iter) {
   
   sprintf(
     'MCMC( "%s.out",  # output file
       "",                # name of restart file
       "",                # name of data file
-      30000, 0,          # iterations, print prediction flag
+      %d, 0,             # iterations, print prediction flag
       1, 10000,          # printing frequency, iters to print
-      %d);             # random seed
+      %d);               # random seed
 
 Integrate (Lsodes,  1e-8, 1e-10, 0); # Integrate(Solver, RTOL, ATOL, ITOL);
     ',
-    name, seed
+    name, Nb_Iter, seed
   )
 }
 
-f_In_tot <- function(Molecule, text_priors, text_likelihood, text_param_ind = "") {
-  seeds <- c(C1 = 3333, C2 = 6666, C3 = 1212)
+f_In_tot <- function(Molecule, text_priors, text_likelihood, text_param_ind = "", Nb_Iter = 10000, seeds = c(C1 = 3333, C2 = 6666, C3 = 1212)) {
 
   text_Level_global <-
     "Level{ # Global
@@ -590,7 +841,7 @@ End."
   # .in generation and saving
   for (id in names(seeds)) {
     
-    text_start <- f_create_mcmc_block(paste0("TK_", Molecule, "_", id), seeds[[id]])
+    text_start <- f_create_mcmc_block(paste0("TK_", Molecule, "_", id), seeds[[id]], Nb_Iter)
 
     text_full <- paste(
       text_start,
@@ -616,7 +867,58 @@ End."
   }
 }
 
-f_Setpoint <- function(Molecule, PrintStep) {
+f_In_tot_3Uptake <- function(Molecule, text_priors, text_likelihood, text_param_ind = "", Nb_Iter = 10000, seeds = c(C1 = 3333, C2 = 6666, C3 = 1212)) {
+  
+  text_Level_global <-
+    "Level{ # Global
+    "
+  
+  text_Level_exp <- "
+Level{
+  "
+  
+  banner_exp <- "
+  ############## Individuals ###################
+  "
+  
+  text_experiment <- paste0(banner_exp, f_In_experiments_3Uptake(Molecule), sep = "\n")
+  
+  text_end <- "
+} # End
+} # End global
+
+End."
+  
+  # .in generation and saving
+  for (id in names(seeds)) {
+    
+    text_start <- f_create_mcmc_block(paste0("TK_", Molecule, "_", id), seeds[[id]], Nb_Iter)
+    
+    text_full <- paste(
+      text_start,
+      text_Level_global,
+      text_priors,
+      "\n",
+      text_likelihood,
+      text_Level_exp,
+      text_param_ind,
+      text_experiment,
+      text_end,
+      sep = "\n"
+    )[1]
+    
+    File_path <- paste0("mod/TK_", Molecule)
+    
+    file.remove(here::here(File_path, paste0("TK_", Molecule, "_", id, ".in")))
+    
+    writeLines(
+      text_full,
+      file(here::here(File_path, paste0("TK_", Molecule, "_", id, ".in")))
+    )
+  }
+}
+
+f_Setpoint <- function(Molecule, PrintStep, l_param_name_tot) {
   
   df_TK_f <- f_read_data_TK(Molecule)
   
@@ -627,34 +929,35 @@ f_Setpoint <- function(Molecule, PrintStep) {
     Ce0 <- 80.5
     Cclx <- 16 / 1000 # ng/g
 
-    text_start <- '#### Toxicokinetics of Imidacloprid in A. caliginosa
+    text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa
 #===============================================
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints.out", "tab_setpoint.out", 0, kuIMD , keIMD, a_growth, Vr_a_growth, Sigma_W, Sigma_CiIMD);
-'
+SetPoints("Setpoints.out", "tab_setpoint.out", 0,', l_param_name_tot,');
+')
     text_simulation <- paste0("
 	Simulation {
 
   # Events
     Winit=", Winit, ";
-    Ci0IMD=", Ci0IMD, ";
-    Ce0IMD=", Ce0IMD, ";
-    CclxIMD=", CclxIMD, ";
-    expo=NDoses(2, 1, 0, 0, 21);")
+    Ci0IMD=", Ci0, ";
+    Ce0IMD=", Ce0, ";
+    CclxIMD=", Cclx, ";
+    expo=NDoses(2, 1, 0, 0, 21);
+    event_Ce=Events(CeIMD,1,20.9951388888889, Replace,0.09);")
   } else if (Molecule == "EPX") {
     Ci0 <- 0.747549
     Ce0 <- 1000
     Cclx <- 90 / 1000 # ng/g
 
-    text_start <- '#### Toxicokinetics of Epoxiconazole in A. caliginosa
+    text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa
 #===============================================
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints.out", "tab_setpoint.out", 0, kuEPX , keEPX, a_growth, Vr_a_growth, Sigma_W, Sigma_CiEPX);
-'
+SetPoints("Setpoints.out", "tab_setpoint.out", 0,' ,l_param_name_tot,');
+')
     text_simulation <- paste0("
 	Simulation {
 
@@ -663,16 +966,32 @@ SetPoints("Setpoints.out", "tab_setpoint.out", 0, kuEPX , keEPX, a_growth, Vr_a_
     Ci0EPX=", Ci0, ";
     Ce0EPX=", Ce0, ";
     CclxEPX=", Cclx, ";
-    expo=NDoses(2, 1, 0, 0, 21);")
+    expo=NDoses(2, 1, 0, 0, 21);
+    event_Ce=Events(CeEPX,1,20.9951388888889, Replace,0.09);")
   }
 
-  text_print <- paste0("# Data
+  if (Molecule == "EPX"){
+    text_print <- paste0("# Data
 
-		PrintStep (Weight,
-					0, 42, ", PrintStep, ");
-		PrintStep (CiEPX,
-					0, 42, ", PrintStep, ");
+		PrintStep (Weight,"
+                         , PrintStep, ");
+		PrintStep (CiEPX,"
+                         , PrintStep, ");
+		PrintStep (C_exposure,"
+                         , PrintStep, ");
 	}")
+  }else if (Molecule == "IMD"){
+    text_print <- paste0("# Data
+
+		PrintStep (Weight,"
+                         , PrintStep, ");
+		PrintStep (CiIMD,"
+                         , PrintStep, ");
+		PrintStep (C_exposure,"
+                         , PrintStep, ");
+	}")
+  }
+  
 
   text_end <- "End."
 
@@ -692,7 +1011,7 @@ SetPoints("Setpoints.out", "tab_setpoint.out", 0, kuEPX , keEPX, a_growth, Vr_a_
   )
 }
 
-f_Setpoint_ind <- function(Molecule) {
+f_Setpoint_ind <- function(Molecule, l_param_name) {
   
   text_end <- "End."
   
@@ -727,7 +1046,7 @@ f_Setpoint_ind <- function(Molecule) {
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
-        char_Event <- paste("    event_Ce=Events(CeEPX,1,", telim, ", Replace,", C_clx_EPX,");", sep="")
+        char_Event <- paste("    event_Ce=Events(CeIMD,1,", telim, ", Replace,", C_clx_IMD,");", sep="")
       }
       
       char_i <- paste(
@@ -743,6 +1062,7 @@ f_Setpoint_ind <- function(Molecule) {
         char_Event,
         paste("    Print(Weight,", char_tw, ");", sep = ""),
         paste("    Print(CiIMD,", char_tw, ");", sep = ""),
+        paste("    Print(C_exposure,", char_tw, ");", sep = ""),
         paste("}"),
         sep = "\n"
       )
@@ -753,7 +1073,7 @@ f_Setpoint_ind <- function(Molecule) {
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0, kuIMD , keIMD, a_growth);
+SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0,', l_param_name,');
 
 ########## Individuals ################################################')
       
@@ -766,7 +1086,7 @@ SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp
       
       writeLines(
         text_full,
-        here::here(File_path, paste0("TK_", Molecule, "_Setpoint_ind", compteur_exp, ".in"))
+        here::here(File_path, paste0("TK_", Molecule, "_Setpoint_ind_", compteur_exp, ".in"))
       )
       
       
@@ -797,6 +1117,7 @@ SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp
         char_Event,
         paste("    Print(Weight,", char_tw, ");", sep = ""),
         paste("    Print(CiEPX,", char_tw, ");", sep = ""),
+        paste("    Print(C_exposure,", char_tw, ");", sep = ""),
         paste("}"),
         sep = "\n"
       )
@@ -807,7 +1128,7 @@ SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0, kuEPX , keEPX, a_growth);
+SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0,' , l_param_name, ');
 
 ########## Individuals ################################################')
       
@@ -829,7 +1150,7 @@ SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp
   
 }
 
-f_Setpoint_ind_full <- function(Molecule, print_times, nb_split) {
+f_Setpoint_ind_full <- function(Molecule, print_times, l_param_name) {
   
   text_end <- "End."
   
@@ -864,7 +1185,7 @@ f_Setpoint_ind_full <- function(Molecule, print_times, nb_split) {
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
-        char_Event <- paste("    event_Ce=Events(CeEPX,1,", telim, ", Replace,", C_clx_EPX,");", sep="")
+        char_Event <- paste("    event_Ce=Events(CeIMD,1,", telim, ", Replace,", C_clx_IMD,");", sep="")
       }
       
       char_i <- paste(
@@ -880,6 +1201,7 @@ f_Setpoint_ind_full <- function(Molecule, print_times, nb_split) {
         char_Event,
         paste("    PrintStep(Weight,", print_times, ");", sep = ""),
         paste("    PrintStep(CiIMD,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
         paste("}"),
         sep = "\n"
       )
@@ -890,7 +1212,7 @@ f_Setpoint_ind_full <- function(Molecule, print_times, nb_split) {
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0, kuIMD , keIMD, a_growth);
+SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0,' , l_param_name, ');
 
 ########## Individuals ################################################')
       
@@ -934,6 +1256,7 @@ SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteu
         char_Event,
         paste("    PrintStep(Weight,", print_times, ");", sep = ""),
         paste("    PrintStep(CiEPX,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
         paste("}"),
         sep = "\n"
       )
@@ -944,7 +1267,7 @@ SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteu
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0, kuEPX , keEPX, a_growth);
+SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0,', l_param_name,');
 
 ########## Individuals ################################################')
       

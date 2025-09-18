@@ -4,152 +4,18 @@
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints_ind_full_2.out", "tab_setpoint_ind.out", 0, kuIMD, keIMD, a_growth);
+SetPoints("Setpoints_ind_full_2.out", "tab_setpoint_ind_2.out", 0, kuIMD , keIMD, a_growth);
 
 ########## Individuals ################################################
+Simulation { # TK IMD - i =  6
+    Winit=0.482517;
+    Ci0IMD=4.9295181473998;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    expo=NDoses(3,1,2,2,0,0.868055555555556,2.20833333333333);
 
-Simulation { # TK IMD - i =  37
-    Winit=0.6878633;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,9.84861111111111,11.1923611111111);
     PrintStep(Weight,0, 44, 0.25);
     PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  38
-    Winit=0.5873602;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,9.84861111111111,11.1923611111111);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  39
-    Winit=0.5425976;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,9.84861111111111,11.1923611111111);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  40
-    Winit=0.790579;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,9.84861111111111,11.1923611111111);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  45
-    Winit=0.5825946;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,13.8409722222222,15.1569444444444);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  46
-    Winit=0.478262;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,13.8409722222222,15.1569444444444);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  47
-    Winit=0.5688935;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,13.8409722222222,15.1569444444444);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  48
-    Winit=0.4428604;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,13.8409722222222,15.1569444444444);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  53
-    Winit=0.526769;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,16.8347222222222,18.1263888888889);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  54
-    Winit=0.522514;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,16.8347222222222,18.1263888888889);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  55
-    Winit=0.5133232;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,16.8347222222222,18.1263888888889);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  56
-    Winit=0.4958777;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,16.8347222222222,18.1263888888889);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  61
-    Winit=0.5420019;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,20.8284722222222,22.10625);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  62
-    Winit=0.5782545;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,20.8284722222222,22.10625);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  63
-    Winit=0.5201312;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,20.8284722222222,22.10625);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
-}
-Simulation { # TK IMD - i =  64
-    Winit=0.5073662;
-    Ci0IMD=4.9295181473998;
-    Ce0IMD=89;
-    CclxIMD=0.016;
-    expo=NDoses(3,1,2,2,0,20.8284722222222,22.10625);
-    PrintStep(Weight,0, 44, 0.25);
-    PrintStep(CiIMD,0, 44, 0.25);
+    PrintStep(C_exposure,0, 44, 0.25);
 }
 End.

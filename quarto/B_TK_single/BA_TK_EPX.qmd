@@ -364,6 +364,27 @@ p
 
 ## Modeling of the toxicokinetics
 
+```{r increation, message=F, warning=F, eval=F}
+Nb_Iter <- 50000
+seeds <- c(C1 = 3333, C2 = 6656, C3 = 1212)
+
+text_priors <- "Distrib(kuEPX,     LogUniform,   0.0001, 100000); # min, max 
+Distrib(keEPX,    LogUniform,   0.0001, 100000); # min, max
+
+Distrib(a_growth,  TruncNormal,   0.005,   0.005,    -0.5,    1); # mean, sd, min, max
+Distrib (Vr_a_growth,  TruncNormal, 0.0015, 0.0015, 0, 1);
+
+Distrib(Sigma_W,     TruncNormal,  0.03, 0.01, 0.0001, 1);
+Distrib(Sigma_CiEPX, TruncNormal,  3.0, 3.0,    1, 1000);"
+
+text_likelihood <- "Likelihood(CiEPX,  LogNormal, Prediction(CiEPX),  Sigma_CiEPX);  # Calcul des vraisemblances (geometric mean, geometric standard deviation)
+Likelihood(Weight, Normal,    Prediction(Weight), Sigma_W);      # Calcul des vraisemblances"
+
+text_param_ind <- "Distrib(a_growth,  TruncNormal, a_growth,  Vr_a_growth, -1.0, 1);"
+
+f_In_tot(Molecule, text_priors, text_likelihood, text_param_ind, Nb_Iter, seeds)
+```
+
 ```{bash, eval=F, execute=F}
 pwd
 cd ..
@@ -377,9 +398,17 @@ wait
 ./mcsim.m_TK_EPX TK_EPX_C2.in &
 ./mcsim.m_TK_EPX TK_EPX_C3.in &
 wait
+
+<!-- or -->
+
+<!-- makemcsim m_TK_EPX.model & -->
+<!-- for j in $(seq 1 62); do -->
+<!-- ./mcsim.m_TK_EPX TK_EPX_C${j}.in -->
+<!-- done -->
 ```
 
 ```{r, message=F, warning=F}
+Molecule <- "EPX"
 path_mod_EPX <- here::here("mod/TK_EPX")
 ```
 
@@ -451,7 +480,7 @@ df_priors_dist <- MCMC_out_EPX$Priors |>
     Distribution == "TruncNormal" ~ list(rtruncnorm(n_samples, a = P3, b = P4, mean = P1, sd = P2))
   )) |> 
   unnest(samples) |> 
-  filter(!(Nom %in% c("kuEPX", "keEPX") & samples > 0.25))
+  filter(!(Nom %in% c("kuEPX", "keEPX") & samples > 0.05))
 
 col_prior <- Nord_polar[4]
 alpha_prior <- 0.5
@@ -530,29 +559,6 @@ p_chains <-
 
 p_chains
   
-```
-
-```{r}
-# refaire fit très très large
-
-# 1. Transformer en format large par chaîne
-mcmc_list <- lapply(split(MCMC_out_EPX$Chains, MCMC_out_EPX$Chains$Chain), function(d) {
-  wide <- d %>%
-    dplyr::select(Iteration, Parameter, value) %>%
-    pivot_wider(names_from = Parameter, values_from = value) %>%
-    arrange(Iteration)
-  
-  mcmc(as.matrix(wide[,-1])) # on enlève la colonne Iteration
-})
-
-# 2. Transformer en mcmc.list
-mcmc_list <- as.mcmc.list(mcmc_list)
-
-# 3. Plot corrélations croisées entre paramètres
-crosscorr.plot(mcmc_list, col = cm.colors(12), cex = 0.4)
-
-p <- pairs(as.matrix(mcmc_list))
-
 ```
 
 ```{r, include = F}
@@ -647,6 +653,33 @@ ggsave(
   )
 ```
 
+Correlations :
+
+```{r mcmclist, message=F, warning=F}
+# Large format per chain
+mcmc_list <- lapply(split(MCMC_out_EPX$Chains, MCMC_out_EPX$Chains$Chain), function(d) {
+  wide <- d %>%
+    dplyr::select(Iteration, Parameter, value) %>%
+    pivot_wider(names_from = Parameter, values_from = value) %>%
+    arrange(Iteration)
+  
+  mcmc(as.matrix(wide[,-1]))
+})
+
+mcmc_list <- as.mcmc.list(mcmc_list)
+
+```
+
+```{r corr, message=F, warning=F}
+#| fig-cap: Parameter correlations.
+#| label: fig-corr
+#| fig-height: 5
+#| fig-width: 6
+
+colramp_aurora <- colorRampPalette(rev(Nord_aurora[1:4]))
+ipairs(as.matrix(mcmc_list), colramp = colramp_aurora, pixs=0.25, cex.diag = 0.5)
+```
+
 ### Parameter estimation results
 
 ```{r EPXpost, message=F, warning=F}
@@ -668,17 +701,17 @@ MCMC_out_EPX$Chains <- MCMC_out_EPX$Chains |>
 p_post <- ggplot() +
   
   # Priors
-  # stat_halfeye(
-  #   data = df_priors_dist, 
-  #   aes(
-  #      x = samples,
-  #      #y = ..scaled..
-  #      ),
-  #   alpha = alpha_prior,
-  #   fill = col_prior,
-  #   color = col_prior,
-  #   normalize = "xy" 
-  #   ) +
+  stat_halfeye(
+    data = df_priors_dist,
+    aes(
+       x = samples,
+       #y = ..scaled..
+       ),
+    alpha = alpha_prior,
+    fill = col_prior,
+    color = col_prior,
+    normalize = "xy"
+    ) +
   
   # Posterior
   stat_halfeye(
@@ -776,6 +809,10 @@ Summary_res_EPX_f |> datatable(
 
 ### Comparison of observed vs. predicted data
 
+```{r setpointindfullin, message=F, warning=F, eval=F}
+f_Setpoint_ind(Molecule)
+```
+
 ```{bash, eval=F, execute=F}
 pwd
 cd ..
@@ -791,22 +828,29 @@ done
 ```{r EPXdataObs, message=F, warning=F}
 
 dObs_ind <- df_TK_EPX |> 
-  mutate(ID = as.numeric(ID))
+  mutate(
+    ID = as.numeric(ID),
+    Group = case_when(
+      ID < 65 ~ "Uptake",
+      ID > 64 ~ "Elimination"
+    )
+    )
+
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "CiEPX"] <- "CiEPX_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
 
+col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
+
 ```
 
-```{r, message=F, warning=F}
+```{r EPXdatapred, message=F, warning=F}
+
 Sim.Res.ind <- lapply(1:62, function(j) {
   read_tsv(file.path(path_mod_EPX, paste0("Setpoints_ind_", j, ".out"))) %>%
     mutate(sim = j)
 }) %>%
   bind_rows()
-```
-
-```{r EPXdatapred, message=F, warning=F}
 
 df_mod_ind <- NULL
 
@@ -857,10 +901,6 @@ for (i in 1:Nb_experiement){
 
 df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
 df_mod_CiEPX_ind <- subset(df_mod_ind, Endpt == "CiEPX")
-
-```
-
-```{r EPXdatapredobs, message=F, warning=F}
 
 df_predobs_CiEPX_ind <- dObs_ind |> 
   left_join(df_mod_CiEPX_ind, suffix = c("_obs", "_pred")) |> 
@@ -1014,10 +1054,11 @@ p_CiEPX_predobs <- ggplot(
   geom_pointrange(
     mapping = aes(
       ymin = low,
-      ymax = up
+      ymax = up,
+      color = Group
     ),
-    alpha = 0.5,
-    color = col_EPX
+    alpha = 0.5#,
+    #color = col_EPX
   )+
   
   xlim(
@@ -1032,6 +1073,9 @@ p_CiEPX_predobs <- ggplot(
     x = "Observed concentrations of EPX\nin earthworms (ng/g)",
     y = "Predicted concentrations of EPX\nin earthworms (ng/g)"
   )+
+  scale_color_manual(
+    values = col_exposure
+    )+
   scale_x_log10(
     #limits=c(1, 500)
     )+
@@ -1039,65 +1083,6 @@ p_CiEPX_predobs <- ggplot(
     #limits=c(1, 500)
     )+
   theme_minimal()
-
-p_CiEPX_zoom_predobs <- ggplot(
-  data = df_predobs_CiEPX_ind,
-  mapping = aes(
-      x = CiEPX_obs,
-      y = predict.endpoint
-    )
-  )+
-  geom_path(
-    data=df_line,
-    mapping=aes(x=x1, y=y1),
-    color = col_line1
-    )+
-  geom_line(
-    data=df_line,
-    mapping=aes(x=x_1, y=y_1),
-    color = col_line1
-    )+
-  geom_line(
-    data=df_line,
-    mapping=aes(x=x2, y=y2),
-    color = col_line2
-    )+
-  geom_line(
-    data=df_line,
-    mapping=aes(x=x_2, y=y_2),
-    color = col_line2
-    )+
-  geom_abline(
-    slope=1, 
-    intercept = 0, 
-    color = col_line0,
-    linewidth = 1
-    )+
-  geom_pointrange(
-    mapping = aes(
-      ymin = low,
-      ymax = up
-    ),
-    alpha = 0.5,
-    color = col_EPX
-  )+
-  
-  xlim(
-    xmin = 0.5,
-    xmax = max(df_predobs_CiEPX_ind$CiEPX_obs)
-  )+
-  ylim(
-    ymin = 0.5,
-    ymax = max(df_predobs_CiEPX_ind$predict.endpoint)
-  )+
-  labs(
-    x = "Observed concentrations of EPX\nin earthworms (ng/g)",
-    y = "Predicted concentrations of EPX\nin earthworms (ng/g)"
-  )+
-  scale_x_log10(limits=c(100, 2000))+
-  scale_y_log10(limits=c(100, 2000))+
-  theme_minimal()
-
 
 p_predobs <- p_W + p_CiEPX_predobs
 p_predobs
@@ -1154,6 +1139,15 @@ cat(
 
 ### Full individual trajectories
 
+```{r setpointindfullin, message=F, warning=F, eval=F}
+Time_min <- 0
+Time_max <- 44
+Time_step <- 0.25
+Time_pred <- seq(Time_min, Time_max, Time_step)
+print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
+f_Setpoint_ind_full(Molecule, print_times)
+```
+
 ```{bash, results=F, eval=F}
 pwd
 cd ..
@@ -1197,11 +1191,9 @@ for (i in 1:Nb_experiement){
   
   dObs_i <- subset(dObs_ind, ID == ID_i)
   
-  Time_pred = seq(0,44, 0.25) # !!!
+  Nom_Endpoints = c("Weight", "CiEPX", "C_exposure")
   
-  Nom_Endpoints = c("Weight", "CiEPX")
-  
-  Nsortie = 2
+  Nsortie = length(Nom_Endpoints)
   
   MPV = IC_min = IC_max = Endpoint = index = NULL
   
@@ -1235,6 +1227,7 @@ for (i in 1:Nb_experiement){
 
 df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
 df_mod_CiEPX_ind <- subset(df_mod_ind, Endpt == "CiEPX")
+df_mod_CeEPX_ind <- subset(df_mod_ind, Endpt == "C_exposure")
 
 time_limits <- dObs_ind %>%
   group_by(ID) %>%
@@ -1250,6 +1243,38 @@ df_mod_Weight_ind_t <- df_mod_Weight_ind %>%
   filter(Time <= time_cutoff) %>%
   dplyr::select(-time_cutoff) 
 
+df_mod_CeEPX_ind_t <- df_mod_CeEPX_ind %>%
+  left_join(time_limits, by = "ID") %>%
+  filter(Time <= time_cutoff) %>%
+  dplyr::select(-time_cutoff) 
+
+```
+
+```{r}
+y_segment <- 200
+
+df_phases <- dObs_ind |>
+  arrange(ID, Time) |>
+  group_by(ID) |>
+  mutate(
+    row = row_number(),
+    t_start = Time,
+    t_end = lead(Time),  
+    segment = row,
+    y = y_segment
+  ) |>
+  filter(!is.na(t_end)) |>  
+  dplyr::select(ID, segment, t_start, t_end, y) |>
+  ungroup() |> 
+  mutate(
+    Phase = case_when(
+      (segment == 1 & ID < 65) ~ 1,
+      (segment == 2 & ID < 65) ~ 3,
+      (segment == 1 & ID > 64) ~ 1,
+      (segment == 2 & ID > 64) ~ 2,
+      (segment == 3 & ID > 64) ~ 3
+    )
+  )
 ```
 
 ```{r EPXpredcurvesdata, message=F, warning=F}
@@ -1268,10 +1293,41 @@ dObs_ind_plot <- dObs_ind |>
   filter(ID %in% ID_tri)
 
 df_mod_CiEPX_ind_t_plot <- subset(df_mod_CiEPX_ind_t, ID %in% ID_tri)
+df_mod_CeEPX_ind_t_plot <- subset(df_mod_CeEPX_ind_t, ID %in% ID_tri)
+df_mod_Weight_ind_t_plot <- subset(df_mod_Weight_ind_t, ID %in% ID_tri)
+
+df_phases_plot <- subset(df_phases, ID %in% ID_tri)
 
 alpha_point <- 0.5
+col_exposure <- c(Nord_aurora[2], Nord_aurora[3], Nord_aurora[4])
 
 p_CiEPX_traj <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+  
+  # geom_line(
+  #   data=df_mod_CeEPX_ind_t_plot,
+  #   aes(
+  #     x=Time,
+  #     y= predict.endpoint,
+  #     group = ID
+  #     ),
+  #   color = Nord_polar[4],
+  #   lwd=1
+  #   )+
+
   geom_line(
     data=df_mod_CiEPX_ind_t_plot,
     aes(
@@ -1303,10 +1359,10 @@ p_CiEPX_traj <- ggplot()+
     lwd=1
     )+
   geom_ribbon(
-    data=df_mod_CiEPX_ind_t_plot, 
+    data=df_mod_CiEPX_ind_t_plot,
     aes(
-      x=Time, 
-      ymax= up, 
+      x=Time,
+      ymax= up,
       ymin= low,
       group = ID
       ),
@@ -1323,6 +1379,7 @@ p_CiEPX_traj <- ggplot()+
     alpha = 0.7,
     color = col_red
   )+
+  
   #scale_y_log10()+
   # facet_wrap(
   #   ~ID,
@@ -1337,6 +1394,11 @@ p_CiEPX_traj <- ggplot()+
     scales = "free_x",
     page = 1
     )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
   labs(
     x = "Time (days)",
     y = "CiEPX (ng/g)"
@@ -1345,6 +1407,10 @@ p_CiEPX_traj <- ggplot()+
   theme_minimal()
 
 p_CiEPX_traj 
+
+p_CiEPX_traj_log <- p_CiEPX_traj + scale_y_log10()
+
+p_CiEPX_traj_log
 
 ```
 
@@ -1363,68 +1429,6 @@ ggsave(
   )
 ```
 
-```{r}
-ID_test <- 25
-
-p_CiEPX_traj_i <- ggplot()+
-  geom_line(
-    data=subset(df_mod_CiEPX_ind_t, ID==ID_test),
-    aes(
-      x=Time,
-      y= low,
-      group = ID
-      ),
-    linetype="dotted",
-    color = col_EPX
-    )+
-  geom_line(
-    data=subset(df_mod_CiEPX_ind_t, ID==ID_test),
-    aes(
-      x=Time,
-      y= up,
-      group = ID
-      ),
-    linetype="dotted",
-    color = col_EPX
-    )+
-  geom_line(
-    data=subset(df_mod_CiEPX_ind_t, ID==ID_test),
-    aes(
-      x=Time,
-      y= predict.endpoint,
-      group = ID
-      ),
-    color = col_EPX,
-    lwd=1
-    )+
-  geom_ribbon(
-    data=subset(df_mod_CiEPX_ind_t, ID==ID_test), 
-    aes(
-      x=Time, 
-      ymax= up, 
-      ymin= low,
-      group = ID
-      ),
-    fill = col_EPX,
-    alpha=0.1
-    )+
-  geom_point(
-    data = subset(dObs_ind_plot, ID == ID_test),
-    aes(
-      x = Time,
-      y = CiEPX_obs
-    ),
-    size = 2,
-    alpha = 0.7,
-    color = col_red
-  )+
-  geom_vline(xintercept = 6.85069444444444, color = "red")+
-  #scale_y_log10()+
-  theme_minimal()
-
-p_CiEPX_traj_i 
-```
-
 ```{r EPXpredcurvesdataW, message=F, warning=F}
 #| fig-cap: Weight predictions
 #| fig-label: fig-EPXdatapredfullW
@@ -1435,7 +1439,7 @@ alpha_point <- 0.5
 
 p_W <- ggplot()+
   geom_line(
-    data=df_mod_Weight_ind_t,
+    data=df_mod_Weight_ind_t_plot,
     aes(
       x=Time,
       y= low,
@@ -1445,7 +1449,7 @@ p_W <- ggplot()+
     color = col_EPX
     )+
   geom_line(
-    data=df_mod_Weight_ind_t,
+    data=df_mod_Weight_ind_t_plot,
     aes(
       x=Time,
       y= up,
@@ -1455,7 +1459,7 @@ p_W <- ggplot()+
     color = col_EPX
     )+
   geom_line(
-    data=df_mod_Weight_ind_t,
+    data=df_mod_Weight_ind_t_plot,
     aes(
       x=Time,
       y= predict.endpoint,
@@ -1465,7 +1469,7 @@ p_W <- ggplot()+
     lwd=1
     )+
   geom_ribbon(
-    data=df_mod_Weight_ind_t, 
+    data=df_mod_Weight_ind_t_plot, 
     aes(
       x=Time, 
       ymax= up, 
@@ -1520,6 +1524,16 @@ ggsave(
 
 The goal here is to recreate the concentration dynamic in the average earthworm during our exposition scheme but without the fasting phase that was required for chemical analysis and during which elimination was happening.
 
+```{r setpointin, message=F, warning=F}
+
+Time_min <- 0
+Time_max <- 42
+Time_step <- 0.25
+Time_pred <- seq(Time_min, Time_max, Time_step)
+print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
+f_Setpoint(Molecule, print_times)
+```
+
 ```{bash, results=F, eval=F}
 pwd
 cd ..
@@ -1533,10 +1547,10 @@ wait
 ```{r EPXreadSetpoint, message=F, warning=F}
 
 Sim.Res <- as.data.frame(fread(here::here(path_mod_EPX, "Setpoints.out"),sep="\t"))
-  Time_pred = seq( 0, 42, 0.01) # A changer !!!
+
   
-  Nom_Endpoints =c("Weight_1", "CiEPX_1")
-  Nsortie = 2
+  Nom_Endpoints =c("Weight_1", "CiEPX_1", "C_exposure_1")
+  Nsortie = 3
   MPV = IC_min = IC_max = Endpoint = index = NULL
 
   for (i in 1:length(Nom_Endpoints)){
@@ -1553,12 +1567,14 @@ Sim.Res <- as.data.frame(fread(here::here(path_mod_EPX, "Setpoints.out"),sep="\t
 
     }
 
-  df_mod <- data.frame(predict.endpoint = MPV,
-                       Time    = c( rep(Time_pred, Nsortie))  ,
-                       low     = IC_min,
-                       up      = IC_max,
-                       Endpt   = Endpoint,
-                       Experiment = c(rep(rep("Experience 1", length(Time_pred)), Nsortie)))
+  df_mod <- data.frame(
+    predict.endpoint = MPV,
+    Time    = c( rep(Time_pred, Nsortie)),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint,
+    Experiment = c(rep(rep("Experience 1", length(Time_pred)), Nsortie))
+    )
   
 df_mod_Weight <- subset(df_mod, Endpt == "Weight_1")
 df_mod_CiEPX <- subset(df_mod, Endpt == "CiEPX_1") 
@@ -1641,119 +1657,3 @@ p
     path=here::here("fig/TK/")
     )
 ```
-
-<!-- ```{r, warning = F, message = F} -->
-
-<!-- #| fig-cap: Estimated toxicokinetic of IMD & EPX concentration in earthworms exposed to 100 ng/g of IMD and 1000 ng/g of EPX, respectively (IMD in dark blue and EPX in light blue). Estimated toxicokinetic of the EPX concentration in earthworms exposed to 0.1 mg/kg of EPX. Points represent the experimental data, the curve represents the estimated toxicokinetic curve and the transparent band corresponds to the credibility interval of the model.  -->
-
-<!-- #| fig-label: fig-EPXIMD -->
-
-<!-- #| fig-width: 8 -->
-
-<!-- #| fig-height: 4 -->
-
-<!-- p <- p_CiIMD + p_CiEPX -->
-
-<!-- p -->
-
-<!-- ``` -->
-
-<!-- ```{r, include=F} -->
-
-<!-- ggsave( -->
-
-<!--   filename="TK_IMDEPX_predcurves.png",  -->
-
-<!--   plot=p,  -->
-
-<!--   width=10, height = 4,  -->
-
-<!--   path=here::here("fig/TK/") -->
-
-<!--   ) -->
-
-<!-- ggsave( -->
-
-<!--   filename="TK_IMDEPX_predcurves.svg",  -->
-
-<!--   plot=p,  -->
-
-<!--   width=10, height = 4,  -->
-
-<!--   path=here::here("fig/TK/") -->
-
-<!--   ) -->
-
-<!-- ``` -->
-
-<!-- ```{r, warning = F, message = F} -->
-
-<!-- #| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line.  -->
-
-<!-- #| label: fig-IMDEPXpredobs -->
-
-<!-- #| fig-height: 4 -->
-
-<!-- #| fig-width: 6 -->
-
-<!-- p <- p_CiIMD_zoom_predobs + p_CiEPX_predobs -->
-
-<!-- p -->
-
-<!-- ``` -->
-
-<!-- ```{r, include=F} -->
-
-<!-- ggsave( -->
-
-<!--   filename="TK_IMDEPX_predobs.jpg",  -->
-
-<!--   plot=p,  -->
-
-<!--   width=8, height = 4,  -->
-
-<!--   path=here::here("fig/TK/") -->
-
-<!--   ) -->
-
-<!-- ggsave( -->
-
-<!--   filename="TK_IMDEPX_predobs.png",  -->
-
-<!--   plot=p,  -->
-
-<!--   width=8, height = 4,  -->
-
-<!--   path=here::here("fig/TK/") -->
-
-<!--   ) -->
-
-<!-- ggsave( -->
-
-<!--   filename="TK_IMDEPX_predobs.svg",  -->
-
-<!--   plot=p,  -->
-
-<!--   width=8, height = 4,  -->
-
-<!--   path=here::here("fig/TK/") -->
-
-<!--   ) -->
-
-<!-- ``` -->
-
-<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-
-<b> Session Information </b>
-
-</button>
-
-:::: {#collapseOne .accordion-collapse .collapse}
-<div>
-
-```{r}
-sessionInfo()
-```
-
-</div>
-::::

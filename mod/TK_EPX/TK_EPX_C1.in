@@ -1,16 +1,16 @@
 MCMC( "TK_EPX_C1.out",  # output file
       "",                # name of restart file
       "",                # name of data file
-      30000, 0,          # iterations, print prediction flag
+      20000, 0,             # iterations, print prediction flag
       1, 10000,          # printing frequency, iters to print
-      3333);             # random seed
+      3333);               # random seed
 
 Integrate (Lsodes,  1e-8, 1e-10, 0); # Integrate(Solver, RTOL, ATOL, ITOL);
     
 Level{ # Global
     
-Distrib(kuEPX,     LogUniform,   0.01, 100000); # min, max 
-Distrib(keEPX,    LogUniform,   0.01, 100000); # min, max
+Distrib(kuEPX,     LogUniform,   0.00001, 100000); # min, max 
+Distrib(keEPX,    LogUniform,   0.00001, 100000); # min, max
 
 Distrib(a_growth,  TruncNormal,   0.005,   0.005,    -0.5,    1); # mean, sd, min, max
 Distrib (Vr_a_growth,  TruncNormal, 0.0015, 0.0015, 0, 1);
