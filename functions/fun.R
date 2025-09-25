@@ -36,6 +36,7 @@ f_load_libraries <- function() {
   library(scales)
   library(colorspace)
   library(IDPmisc)
+  library(ggforce)
 
   # 📊 Statistical Modeling & Bayesian Analysis
   library(brms) # Modélisation bayésienne avec Stan
@@ -816,7 +817,7 @@ Integrate (Lsodes,  1e-8, 1e-10, 0); # Integrate(Solver, RTOL, ATOL, ITOL);
   )
 }
 
-f_In_tot <- function(Molecule, text_priors, text_likelihood, text_param_ind = "", Nb_Iter = 10000, seeds = c(C1 = 3333, C2 = 6666, C3 = 1212)) {
+f_In_tot <- function(File_path, Molecule, text_priors, text_likelihood, text_param_ind = "", Nb_Iter = 10000, seeds = c(C1 = 3333, C2 = 6666, C3 = 1212)) {
 
   text_Level_global <-
     "Level{ # Global
@@ -855,8 +856,6 @@ End."
       text_end,
       sep = "\n"
     )[1]
-
-    File_path <- paste0("mod/TK_", Molecule)
     
     file.remove(here::here(File_path, paste0("TK_", Molecule, "_", id, ".in")))
 
@@ -918,7 +917,7 @@ End."
   }
 }
 
-f_Setpoint <- function(Molecule, PrintStep, l_param_name_tot) {
+f_Setpoint <- function(File_path, Molecule, PrintStep, l_param_name_tot) {
   
   df_TK_f <- f_read_data_TK(Molecule)
   
@@ -1003,19 +1002,15 @@ SetPoints("Setpoints.out", "tab_setpoint.out", 0,' ,l_param_name_tot,');
     sep = "\n"
   )
 
-  File_path <- paste0("mod/TK_", Molecule)
-
   writeLines(
     text_full,
     here::here(File_path, paste0("TK_", Molecule, "_Setpoint.in"))
   )
 }
 
-f_Setpoint_ind <- function(Molecule, l_param_name) {
+f_Setpoint_ind <- function(File_path, Molecule, l_param_name) {
   
   text_end <- "End."
-  
-  File_path <- paste0("mod/TK_", Molecule)
 
   df_TK_f <- f_read_data_TK(Molecule)
   
@@ -1150,11 +1145,9 @@ SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp
   
 }
 
-f_Setpoint_ind_full <- function(Molecule, print_times, l_param_name) {
+f_Setpoint_ind_full <- function(File_path, Molecule, print_times, l_param_name) {
   
   text_end <- "End."
-  
-  File_path <- paste0("mod/TK_", Molecule)
   
   df_TK_f <- f_read_data_TK(Molecule)
   
@@ -1286,6 +1279,315 @@ SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteu
       stop("Incorrect specification of Molecule")
     }
   }
+}
+
+
+f_read_data_TK_mix <- function(){
+  
+  rW     <- 0.851
+  Ci0IMD <- 4.929
+  Ci0EPX <- 0.768
+  
+  df_TK_mix <- read_excel(here::here("data/Data_TK_mix.xlsx")) |>
+    mutate(
+      ID = as.factor(ID),
+      w = w / 1000, # Conversion mg to g
+      Dose_EPX = Dose_EPX * 1000, # mg/kg to ng/g (mg/kg = microg/g = 1000 ng/g)
+      Dose_IMD = Dose_IMD * 1000
+    ) |> 
+    mutate(
+      Weight = case_when(
+        t < 28.5 ~ rW * w,
+        t > 28.5 ~ w
+      ), # Weight without gut content
+      expo = case_when(
+        t < 28 ~ 1,
+        t >= 28 ~ 2
+      ) # Exposure state
+    )
+  
+  df_TK_mix[df_TK_mix$t == 0, ]$CiIMD <- Ci0IMD
+  df_TK_mix[df_TK_mix$t == 0, ]$CiEPX <- Ci0EPX
+  
+  return(df_TK_mix)
+}
+
+f_MonteCarlo_mix_ind <- function(File_path, Molecule, N_draws) {
+  
+  text_end <- "End."
+  
+  df_TK_f <- f_read_data_TK_mix() |> 
+    mutate(across(where(is.numeric), ~ replace_na(.x, -1)))
+  
+  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$CiIMD[1]
+  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$CiEPX[1]
+  C_clx_IMD <- 16 / 1000 # ng/g
+  C_clx_EPX <- 90 / 1000 # ng/g
+  
+  compteur_exp <- 0
+  
+  for (i in as.numeric(as.character(unique(df_TK_f$ID)))){
+    
+    compteur_exp <- compteur_exp + 1
+    
+    if (Molecule == "IMD"){
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiIMD <- paste(df_TK_i$CiIMD, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK Mix IMD - i = ", i),
+        
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$Dose_IMD, ";", sep = ""),
+        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Print(CiIMD,", char_tw, ");", sep = ""),
+        paste("    Print(C_exposure,", char_tw, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa (Mixture edition)
+#===============================================
+
+
+MonteCarlo ("MonteCarlo_ind_', Molecule, '_',compteur_exp,'.out",',N_draws,', 1212);
+
+# IMD 1 comp 0%
+kuIMD = 1.59155;
+keIMD = 0.0446806;
+# a_growth = 0.00351619;
+# Vr_a_growth = 0.00124984;
+Sigma_W = 0.0456952;
+Sigma_CiIMD = 1.45777;
+
+Distrib (a_growth, Normal, 0.00351619, 0.00124984);
+
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("MonteCarlo_ind_", Molecule, "_", compteur_exp, ".in"))
+      )
+      
+      
+    } else if (Molecule == "EPX"){
+      #print(i)
+      
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiEPX <- paste(df_TK_i$CiEPX, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK EPX - i = ", i),
+        
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$Dose_EPX, ";", sep = ""),
+        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Print(CiEPX,", char_tw, ");", sep = ""),
+        paste("    Print(C_exposure,", char_tw, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
+#===============================================
+
+
+MonteCarlo ("MonteCarlo_ind_', Molecule, '_',compteur_exp,'.out",',N_draws,', 1212);
+
+# EPX 2 comp 15%
+kuEPX = 2.793920;
+keEPX = 1.70593;
+kperiph = 0.000041689;
+# a_growth_mean = 0.00355594;
+# Vr_a_growth = 0.00148897;
+Sigma_W = 0.0448117;
+Sigma_CiEPX = 1.2612;
+
+Distrib(a_growth, Normal, 0.00355594, 0.00148897);
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("MonteCarlo_ind_", Molecule, "_", compteur_exp, ".in"))
+      )
+    } else {
+      stop("Incorrect specification of Molecule")
+    }
+  }
+  
+}
+
+f_MonteCarlo_mix_ind_full <- function(File_path, Molecule, N_draws, print_times) {
+  
+  text_end <- "End."
+  
+  df_TK_f <- f_read_data_TK_mix() |> 
+    mutate(across(where(is.numeric), ~ replace_na(.x, -1)))
+  
+  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$CiIMD[1]
+  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$CiEPX[1]
+  C_clx_IMD <- 16 / 1000 # ng/g
+  C_clx_EPX <- 90 / 1000 # ng/g
+  
+  compteur_exp <- 0
+  
+  for (i in as.numeric(as.character(unique(df_TK_f$ID)))){
+    
+    compteur_exp <- compteur_exp + 1
+    
+    if (Molecule == "IMD"){
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiIMD <- paste(df_TK_i$CiIMD, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK Mix IMD - i = ", i),
+        
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$Dose_IMD, ";", sep = ""),
+        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    PrintStep(Weight,", print_times, ");", sep = ""),
+        paste("    PrintStep(CiIMD,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa (Mixture edition)
+#===============================================
+
+
+MonteCarlo ("MonteCarlo_ind_full_', Molecule, '_',compteur_exp,'.out",',N_draws,', 1212);
+
+# IMD 1 comp 0%
+kuIMD = 1.59155;
+keIMD = 0.0446806;
+# a_growth = 0.00351619;
+# Vr_a_growth = 0.00124984;
+Sigma_W = 0.0456952;
+Sigma_CiIMD = 1.45777;
+
+Distrib (a_growth, Normal, 0.00351619, 0.00124984);
+
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("MonteCarlo_ind_full_", Molecule, "_", compteur_exp, ".in"))
+      )
+      
+      
+    } else if (Molecule == "EPX"){
+      #print(i)
+      
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiEPX <- paste(df_TK_i$CiEPX, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK EPX - i = ", i),
+        
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$Dose_EPX, ";", sep = ""),
+        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    PrintStep(Weight,", print_times, ");", sep = ""),
+        paste("    PrintStep(CiEPX,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
+#===============================================
+
+
+MonteCarlo ("MonteCarlo_ind_full_', Molecule, '_',compteur_exp,'.out",',N_draws,', 1212);
+
+# EPX 2 comp 15%
+kuEPX = 2.793920;
+keEPX = 1.70593;
+kperiph = 0.000041689;
+# a_growth_mean = 0.00355594;
+# Vr_a_growth = 0.00148897;
+Sigma_W = 0.0448117;
+Sigma_CiEPX = 1.2612;
+
+Distrib(a_growth, Normal, 0.00355594, 0.00148897);
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("MonteCarlo_ind_full_", Molecule, "_", compteur_exp, ".in"))
+      )
+    } else {
+      stop("Incorrect specification of Molecule")
+    }
+  }
+  
 }
 
 ## MCSim to R ----

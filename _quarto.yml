@@ -2,8 +2,7 @@ project:
   type: book
 
 book:
-  title: "**Toxic cocktails in our soils** - Unravelling the effect of a fungicide and insecticide mixture on earthworm growth and reproduction
-"
+  title: "**Behind the toxic cocktail** - Toxicokinetic mechanisms of pesticide mixture interactions in earthworms"
   subtitle: "Git repository"
   author:
     - name: "Lisa Gollot"
@@ -19,12 +18,17 @@ book:
     - quarto/A_Earthworm_culture.qmd
     - part: quarto/B_TK_single/B_TK_EPX_IMD.qmd
       chapters:
+        - quarto/B_TK_single/B0_TK_MM.qmd
         - quarto/B_TK_single/BA_TK_IMD.qmd
-        - quarto/B_TK_single/BA_TK_EPX.qmd
-    # - part: quarto/C_TK_mix/C_TD_EPX_IMD_mix.qmd
-    #   chapters: 
-    #     - quarto/C_TK_mix/CA_Preliminary_tests.qmd
-    #     - quarto/C_TK_mix/CB_Effect_single.qmd
+        - quarto/B_TK_single/BA_TK_EPX_1comp.qmd
+        - quarto/B_TK_single/BA_TK_EPX_1comp15.qmd
+        - quarto/B_TK_single/BB_TK_EPX_2comp.qmd
+        - quarto/B_TK_single/BC_TK_EPX_2comp15.qmd
+        - quarto/B_TK_single/BD_TK_EPX_2comp30.qmd
+    - part: quarto/C_TK_mix/C_TK_mix.qmd
+      chapters: 
+         - quarto/C_TK_mix/CA_TK_mix_protocole.qmd
+         - quarto/C_TK_mix/CB_TK_mix_predictions.qmd
     - quarto/references.qmd
   navbar:
     right:

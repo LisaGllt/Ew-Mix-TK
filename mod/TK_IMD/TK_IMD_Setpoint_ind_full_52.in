@@ -4,7 +4,7 @@
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints_ind_full_52.out", "tab_setpoint_ind_52.out", 0, kuIMD , keIMD, a_growth);
+SetPoints("Setpoints_ind_full_52.out", "tab_setpoint_ind_52.out", 0,kuIMD, keIMD, a_growth);
 
 ########## Individuals ################################################
 Simulation { # TK IMD - i =  104

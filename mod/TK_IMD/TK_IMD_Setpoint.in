@@ -3,7 +3,7 @@
 
 Integrate(Lsodes, 1E-6, 1E-8, 1);
 
-SetPoints("Setpoints.out", "tab_setpoint.out", 0, kuIMD , keIMD, a_growth, Vr_a_growth, Sigma_W, Sigma_CiIMD);
+SetPoints("Setpoints.out", "tab_setpoint.out", 0,kuIMD, keIMD, a_growth, Vr_a_growth, Sigma_W, Sigma_CiIMD);
 
 
 	Simulation {

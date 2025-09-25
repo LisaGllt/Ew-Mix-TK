@@ -32,5 +32,7 @@ Sigma_CiEPX = 2.7;
 					0, 43, 0.25);
 		PrintStep (CiEPX,
 					0, 43, 0.25);
+		PrintStep (C_exposure,
+					0, 43, 0.25);
 	}
 End.

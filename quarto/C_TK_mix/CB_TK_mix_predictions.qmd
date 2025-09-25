@@ -1,0 +1,1021 @@
+```{r, include=F}
+library(here)
+source(file = here::here("functions/fun.R"))
+
+f_load_libraries_colors()
+col_Molecule <- rev(col_Molecule)
+path_fig <- here::here("fig/TK_mix")
+```
+
+# Is there an interaction between IMD & EPX at the TK level ?
+
+We want to answer the following question : Can we predict the concentrations in EPX and IMD in earthworms exposed to different ratios of the mixture ?
+
+## Data importation
+
+```{r data}
+
+df_TK_mix <- f_read_data_TK_mix() |> 
+  mutate(
+    Ratio_plot = case_when(
+      Ratio == "E" ~ "1:0 (EPX only)",
+      Ratio == "F" ~ "3:1",
+      Ratio == "G" ~ "1:1",
+      Ratio == "H" ~ "1:3",
+      Ratio == "I" ~ "0:1 (IMD only)",
+    )
+  )
+
+```
+
+## Simulations for IMD
+
+```{r}
+path_mod_mix <- here::here("mod/TK_Mix_IMD")
+Nb_experiement <- length(unique(df_TK_mix$ID))
+Molecule <- "IMD"
+N_draws <- 1000
+
+f_MonteCarlo_mix_ind(path_mod_mix, Molecule, N_draws)
+
+```
+
+```{bash, results=F, eval=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_Mix_IMD
+pwd
+
+for j in $(seq 1 20); do
+./mcsim.m_TK_IMD MonteCarlo_ind_IMD_${j}.in
+done
+
+```
+
+### Predicted vs. Observed
+
+```{r EPXdatapred, message=F, warning=F}
+
+dObs_ind <- df_TK_mix |> 
+  mutate(
+    ID = as.numeric(ID)
+    )
+
+colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CiIMD"] <- "CiIMD_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
+
+col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
+
+Sim.Res.ind <- lapply(1:20, function(j) {
+  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_IMD_", j, ".out"))) %>%
+    mutate(sim = j)
+}) %>%
+  bind_rows()
+
+df_mod_ind <- NULL
+
+for (i in 1:Nb_experiement){
+  
+  ID_i <- unique(dObs_ind$ID)[i]
+
+  Sim.Res.ind_i  <- subset(Sim.Res.ind, sim == i) |> 
+    dplyr::select(where(~ !all(is.na(.x))))
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Time_pred = dObs_i$Time # !!!
+  
+  Nom_Endpoints = c("Weight", "CiIMD", "C_exposure")
+  
+  Nsortie = 3
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind_i), fixed=FALSE)
+
+    
+    Data_sim = as.matrix( Sim.Res.ind_i[ , index] )
+    
+    MPV    = c(  MPV,  apply(Data_sim, 2, median, na.rm=TRUE) )
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+
+  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
+}
+
+df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
+df_mod_CiIMD_ind <- subset(df_mod_ind, Endpt == "CiIMD")
+
+df_predobs_CiIMD_ind <- dObs_ind |> 
+  left_join(df_mod_CiIMD_ind, suffix = c("_obs", "_pred")) |> 
+  dplyr::select(-c(Weight_obs, CiEPX)) |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na() |> 
+  filter(Time != 0)
+
+df_predobs_Weight_ind <- dObs_ind |> 
+  left_join(df_mod_Weight_ind, suffix = c("_obs", "_pred"))|>
+  dplyr::select(-c(CiIMD_obs, CiEPX)) |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na() |> 
+  filter(Time != 0)
+
+```
+
+```{r predobsIMD, message=F, warning=F}
+#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line. 
+#| label: fig-IMDpredobs
+#| fig-height: 4
+#| fig-width: 8
+
+fact_1 <- 2
+fact_2 <- 5
+
+col_line0 <- Nord_polar[1]
+col_line1 <- Nord_polar[4]
+col_line2 <- Nord_snow[1]
+
+seq_line <- seq(0.1, 1.2, 0.01)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line*fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line/fact_1,
+  x2  = seq_line,
+  y2  = seq_line*fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line/fact_2
+  )
+
+p_WIMD <- ggplot(
+  data = df_predobs_Weight_ind,
+  mapping = aes(
+      x = Weight_obs,
+      y = predict.endpoint
+    )
+  )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x1, y=y1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_1, y=y_1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x2, y=y2),
+    color = col_line2
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_2, y=y_2),
+    color = col_line2
+    )+
+  
+  geom_abline(
+    slope=1, 
+    intercept = 0, 
+    color = col_line0,
+    linewidth = 1
+    )+
+  geom_pointrange(
+    mapping = aes(
+      ymin = low,
+      ymax = up
+    ),
+    alpha = 0.5,
+    color = col_IMD
+  )+
+  scale_x_log10(
+    limits=c(0.2, 1.2)
+    )+
+  scale_y_log10(
+    limits=c(0.2, 1.2)
+    )+
+  labs(
+    x = "Observed weight of earthworms (g)",
+    y = "Predicted weight of earthworms (g)"
+  )+
+  theme_minimal()
+
+fact_1 <- 2
+fact_2 <- 5
+
+seq_line <- seq(0.1, 10000, 10)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line*fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line/fact_1,
+  x2  = seq_line,
+  y2  = seq_line*fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line/fact_2
+  )
+
+p_CiIMD_predobs <- ggplot(
+  data = df_predobs_CiIMD_ind,
+  mapping = aes(
+      x = CiIMD_obs,
+      y = predict.endpoint
+    )
+  )+
+  geom_path(
+    data=df_line,
+    mapping=aes(x=x1, y=y1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_1, y=y_1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x2, y=y2),
+    color = col_line2
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_2, y=y_2),
+    color = col_line2
+    )+
+  geom_abline(
+    slope=1, 
+    intercept = 0, 
+    color = col_line0,
+    linewidth = 1
+    )+
+  geom_pointrange(
+    mapping = aes(
+      ymin = low,
+      ymax = up,
+      color = Ratio_plot
+    ),
+    alpha = 0.5
+  )+
+  # 
+  # xlim(
+  #   xmin = 0.5,
+  #   xmax = max(df_predobs_CiIMD_ind$CiIMD_obs)
+  # )+
+  # ylim(
+  #   ymin = 0.5,
+  #   ymax = max(df_predobs_CiIMD_ind$predict.endpoint)
+  # )+
+  labs(
+    x = "Observed concentrations of IMD\nin earthworms (ng/g)",
+    y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
+  )+
+  scale_color_manual(values = Nord_aurora)+
+  scale_x_log10(
+    #limits=c(1, 500)
+    )+
+  scale_y_log10(
+    #limits=c(1, 500)
+    )+
+  theme_minimal()
+
+p_predobs_IMD <- p_WIMD + p_CiIMD_predobs + plot_layout(ncol=2)
+
+```
+
+### Full trajectories
+
+```{r}
+Time_min <- 0
+Time_max <- 35
+Time_step <- 0.25
+Time_pred <- seq(Time_min, Time_max, Time_step)
+print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
+
+f_MonteCarlo_mix_ind_full(path_mod_mix, Molecule, N_draws, print_times)
+```
+
+```{bash, eval=F, execute=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_Mix_IMD
+pwd
+
+for j in $(seq 1 20); do
+./mcsim.m_TK_IMD MonteCarlo_ind_full_IMD_${j}.in
+done
+```
+
+```{r IMDdatapredfull, message=F, warning=F}
+#| cache: false
+
+dObs_ind <- df_TK_mix |> 
+  mutate(
+    ID = as.numeric(ID)
+    )
+
+colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CiIMD"] <- "CiIMD_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
+
+col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
+
+Sim.Res.ind.full <- lapply(1:20, function(j) {
+  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_full_IMD_", j, ".out"))) %>%
+    mutate(sim = j)
+}) %>%
+  bind_rows()
+
+
+df_mod_ind <- NULL
+
+for (i in 1:Nb_experiement){
+  
+  ID_i <- unique(dObs_ind$ID)[i]
+
+  Sim.Res.ind.full_i  <- subset(Sim.Res.ind.full, sim == i) |> 
+    dplyr::select(where(~ !all(is.na(.x))))
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Nom_Endpoints = c("Weight", "CiIMD", "C_exposure")
+  
+  Nsortie = length(Nom_Endpoints)
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind.full_i), fixed=FALSE)
+
+    
+    Data_sim = as.matrix( Sim.Res.ind.full_i[ , index] )
+    
+    MPV    = c(   MPV,  apply(Data_sim, 2, median, na.rm=TRUE))
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+
+  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
+}
+
+df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight") |> 
+  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+
+df_mod_CiIMD_ind <- subset(df_mod_ind, Endpt == "CiIMD")|> 
+  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+
+df_mod_CeIMD_ind <- subset(df_mod_ind, Endpt == "C_exposure")|> 
+  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+
+```
+
+```{r IMDpredcurvesdata, message=F, warning=F}
+#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-label: fig-IMDdatapredfull
+#| fig-width: 8
+#| fig-height: 10
+
+col_ratio <- nord(palette = "frost", n=5)
+
+dObs_ind_plot <- dObs_ind |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na() 
+
+alpha_point <- 0.5
+col_exposure <- c(Nord_aurora[2], Nord_aurora[3], Nord_aurora[4])
+
+p_CiIMD_traj <- ggplot()+
+
+  geom_line(
+    data=df_mod_CiIMD_ind,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+      color = col_IMD,
+      fill = col_IMD,
+    linetype="dotted"
+    )+
+  geom_line(
+    data=df_mod_CiIMD_ind,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+      color = col_IMD,
+      fill = col_IMD,
+    linetype="dotted"
+    )+
+  geom_line(
+    data=df_mod_CiIMD_ind,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+      color = col_IMD,
+      fill = col_IMD,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiIMD_ind,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+      fill = col_IMD,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot,
+    aes(
+      x = Times,
+      y = CiIMD_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  scale_color_manual(values = col_ratio)+
+  scale_fill_manual(values = col_ratio)+
+  
+  scale_x_continuous(
+    breaks = seq(0, max(df_mod_CiIMD_ind$Time), by = 28),       # gros ticks
+    minor_breaks = seq(0, max(df_mod_CiIMD_ind$Time), by = 14)  # petits ticks
+    )+
+  
+  facet_wrap(
+    ~Ratio_plot+ID,
+    ncol = 4,
+    scales = "free_x"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "Concentration of IMD\nin earthworms (ng/g)"
+  )+
+  theme_minimal()
+
+```
+
+## Simulations for EPX
+
+```{r}
+path_mod_mix <- here::here("mod/TK_Mix_EPX")
+Nb_experiement <- length(unique(df_TK_mix$ID))
+Molecule <- "EPX"
+N_draws <- 1000
+
+f_MonteCarlo_mix_ind(path_mod_mix, Molecule, N_draws)
+
+```
+
+```{bash, results=F, eval=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_Mix_EPX
+pwd
+
+for j in $(seq 1 20); do
+./mcsim.m_TK_EPX MonteCarlo_ind_EPX_${j}.in
+done
+
+```
+
+### Predicted vs. Observed
+
+```{r IMDdatapredobs, message=F, warning=F}
+
+dObs_ind <- df_TK_mix |> 
+  mutate(
+    ID = as.numeric(ID)
+    )
+
+colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CiEPX"] <- "CiEPX_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
+
+col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
+
+Sim.Res.ind <- lapply(1:20, function(j) {
+  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_EPX_", j, ".out"))) %>%
+    mutate(sim = j)
+}) %>%
+  bind_rows()
+
+df_mod_ind <- NULL
+
+for (i in 1:Nb_experiement){
+  
+  ID_i <- unique(dObs_ind$ID)[i]
+
+  Sim.Res.ind_i  <- subset(Sim.Res.ind, sim == i) |> 
+    dplyr::select(where(~ !all(is.na(.x))))
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Time_pred = dObs_i$Time # !!!
+  
+  Nom_Endpoints = c("Weight", "CiEPX", "C_exposure")
+  
+  Nsortie = 3
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind_i), fixed=FALSE)
+
+    
+    Data_sim = as.matrix( Sim.Res.ind_i[ , index] )
+    
+    MPV    = c(  MPV,  apply(Data_sim, 2, median, na.rm=TRUE) )
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+
+  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
+}
+
+df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
+df_mod_CiEPX_ind <- subset(df_mod_ind, Endpt == "CiEPX")
+
+df_predobs_CiEPX_ind <- dObs_ind |> 
+  left_join(df_mod_CiEPX_ind, suffix = c("_obs", "_pred")) |> 
+  dplyr::select(-c(Weight_obs, CiIMD)) |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na() |> 
+  filter(Time != 0)
+
+df_predobs_Weight_ind <- dObs_ind |> 
+  left_join(df_mod_Weight_ind, suffix = c("_obs", "_pred"))|>
+  dplyr::select(-c(CiEPX_obs, CiIMD)) |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na() |> 
+  filter(Time != 0)
+
+```
+
+```{r predobsEPX, message=F, warning=F}
+#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line. 
+#| label: fig-EPXpredobs
+#| fig-height: 4
+#| fig-width: 8
+
+fact_1 <- 2
+fact_2 <- 5
+
+col_line0 <- Nord_polar[1]
+col_line1 <- Nord_polar[4]
+col_line2 <- Nord_snow[1]
+
+seq_line <- seq(0.1, 1.2, 0.01)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line*fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line/fact_1,
+  x2  = seq_line,
+  y2  = seq_line*fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line/fact_2
+  )
+
+p_WEPX <- ggplot(
+  data = df_predobs_Weight_ind,
+  mapping = aes(
+      x = Weight_obs,
+      y = predict.endpoint
+    )
+  )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x1, y=y1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_1, y=y_1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x2, y=y2),
+    color = col_line2
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_2, y=y_2),
+    color = col_line2
+    )+
+  
+  geom_abline(
+    slope=1, 
+    intercept = 0, 
+    color = col_line0,
+    linewidth = 1
+    )+
+  geom_pointrange(
+    mapping = aes(
+      ymin = low,
+      ymax = up
+    ),
+    alpha = 0.5,
+    color = col_EPX
+  )+
+  scale_x_log10(
+    limits=c(0.2, 1.2)
+    )+
+  scale_y_log10(
+    limits=c(0.2, 1.2)
+    )+
+  labs(
+    x = "Observed weight of earthworms (g)",
+    y = "Predicted weight of earthworms (g)"
+  )+
+  theme_minimal()
+
+fact_1 <- 2
+fact_2 <- 5
+
+seq_line <- seq(1, 100000, 10)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line*fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line/fact_1,
+  x2  = seq_line,
+  y2  = seq_line*fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line/fact_2
+  )
+
+
+p_CiEPX_predobs <- ggplot(
+  data = df_predobs_CiEPX_ind,
+  mapping = aes(
+      x = CiEPX_obs,
+      y = predict.endpoint
+    )
+  )+
+  geom_path(
+    data=df_line,
+    mapping=aes(x=x1, y=y1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_1, y=y_1),
+    color = col_line1
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x2, y=y2),
+    color = col_line2
+    )+
+  geom_line(
+    data=df_line,
+    mapping=aes(x=x_2, y=y_2),
+    color = col_line2
+    )+
+  geom_abline(
+    slope=1, 
+    intercept = 0, 
+    color = col_line0,
+    linewidth = 1
+    )+
+  geom_pointrange(
+    mapping = aes(
+      ymin = low,
+      ymax = up,
+      color = Ratio_plot
+    ),
+    alpha = 0.5
+  )+
+  
+  xlim(
+    xmin = 0.5,
+    xmax = max(df_predobs_CiEPX_ind$CiEPX_obs)
+  )+
+  ylim(
+    ymin = 0.5,
+    ymax = max(df_predobs_CiEPX_ind$predict.endpoint)
+  )+
+  labs(
+    x = "Observed concentrations of EPX\nin earthworms (ng/g)",
+    y = "Predicted concentrations of EPX\nin earthworms (ng/g)"
+  )+
+  scale_color_manual(values = Nord_aurora)+
+  scale_x_log10(
+    #limits=c(1, 500)
+    )+
+  scale_y_log10(
+    #limits=c(1, 500)
+    )+
+  theme_minimal()
+
+p_predobs_EPX <- p_WEPX + p_CiEPX_predobs + plot_layout(ncol=2)
+
+```
+
+### Full trajectories
+
+```{r}
+Time_min <- 0
+Time_max <- 35
+Time_step <- 0.25
+Time_pred <- seq(Time_min, Time_max, Time_step)
+print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
+
+f_MonteCarlo_mix_ind_full(path_mod_mix, Molecule, N_draws, print_times)
+```
+
+```{bash, eval=F, execute=F}
+pwd
+cd ..
+cd ..
+cd mod/TK_Mix_EPX
+pwd
+
+for j in $(seq 1 20); do
+./mcsim.m_TK_EPX MonteCarlo_ind_full_EPX_${j}.in
+done
+```
+
+```{r EPXdatapredfull, message=F, warning=F}
+#| cache: false
+
+dObs_ind <- df_TK_mix |> 
+  mutate(
+    ID = as.numeric(ID)
+    )
+
+colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CiEPX"] <- "CiEPX_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
+
+col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
+
+Sim.Res.ind.full <- lapply(1:20, function(j) {
+  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_full_EPX_", j, ".out"))) %>%
+    mutate(sim = j)
+}) %>%
+  bind_rows()
+
+
+df_mod_ind <- NULL
+
+for (i in 1:Nb_experiement){
+  
+  ID_i <- unique(dObs_ind$ID)[i]
+
+  Sim.Res.ind.full_i  <- subset(Sim.Res.ind.full, sim == i) |> 
+    dplyr::select(where(~ !all(is.na(.x))))
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Nom_Endpoints = c("Weight", "CiEPX", "C_exposure")
+  
+  Nsortie = length(Nom_Endpoints)
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind.full_i), fixed=FALSE)
+
+    
+    Data_sim = as.matrix( Sim.Res.ind.full_i[ , index] )
+    
+    MPV    = c(   MPV,  apply(Data_sim, 2, median, na.rm=TRUE))
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+
+  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
+}
+
+df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight") |> 
+  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+
+df_mod_CiEPX_ind <- subset(df_mod_ind, Endpt == "CiEPX")|> 
+  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+
+df_mod_CeEPX_ind <- subset(df_mod_ind, Endpt == "C_exposure")|> 
+  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+
+```
+
+```{r EPXpredcurvesdata, message=F, warning=F}
+#| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-label: fig-EPXdatapredfull
+#| fig-width: 8
+#| fig-height: 10
+
+library(ggforce)
+
+col_ratio <- nord(palette = "frost", n=5)
+
+
+dObs_ind_plot <- dObs_ind |> 
+  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
+  drop_na() 
+
+alpha_point <- 0.5
+col_exposure <- c(Nord_aurora[2], Nord_aurora[3], Nord_aurora[4])
+
+p_CiEPX_traj <- ggplot()+
+
+  geom_line(
+    data=df_mod_CiEPX_ind,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+      color = col_EPX,
+      fill = col_EPX,
+    linetype="dotted"
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+      color = col_EPX,
+      fill = col_EPX,
+    linetype="dotted"
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+      color = col_EPX,
+      fill = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+      fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot,
+    aes(
+      x = Times,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  scale_color_manual(values = col_ratio)+
+  scale_fill_manual(values = col_ratio)+
+  
+  scale_x_continuous(
+    breaks = seq(0, max(df_mod_CiEPX_ind$Time), by = 28),       # gros ticks
+    minor_breaks = seq(0, max(df_mod_CiEPX_ind$Time), by = 14)  # petits ticks
+    )+
+  
+  facet_wrap(
+    ~Ratio_plot+ID,
+    ncol = 4,
+    scales = "free_x"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "Concentration of EPX\nin earthworms (ng/g)"
+  )+
+  theme_minimal()
+
+```
+
+## Summary
+
+```{r, message=F, warning=F}
+#| fig-cap: Results of the model fits on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line. 
+#| label: fig-MIXpredobs
+#| fig-height: 10
+#| fig-width: 10
+
+p_predobs_full <- p_WEPX + p_CiEPX_predobs + p_WIMD + p_CiIMD_predobs + plot_layout(ncol=2)
+p_predobs_full
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_MIX_predobs.png", 
+  plot=p_predobs_full, 
+  width=8, height = 8, 
+  path=path_fig
+  )
+ggsave(
+  filename="TK_MIX_preobs.svg", 
+  plot=p_predobs_full, 
+  width=8, height = 8, 
+  path=path_fig
+  )
+```
+
+```{r, message=F, warning=F}
+#| fig-cap: Estimated toxicokinetic of the EPX & IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-label: fig-MIXdatapredfull
+#| fig-width: 8
+#| fig-height: 16
+
+p_traj_full <- p_CiEPX_traj + p_CiIMD_traj + plot_layout(ncol=1)
+p_traj_full
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_MIX_traj.png", 
+  plot=p_traj_full, 
+  width=12, height = 8, 
+  path=path_fig
+  )
+ggsave(
+  filename="TK_MIX_traj.svg", 
+  plot=p_traj_full, 
+  width=12, height = 8, 
+  path=path_fig
+  )
+```

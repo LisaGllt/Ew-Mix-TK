@@ -8,11 +8,12 @@ p <- ggplot(
   data = df_sim,
   aes(
     x = Time,
-    y = C_exposition
+    y = C_exposure
   )
 )+
   geom_line()+
-  xlim(0,3)
+  xlim(0,43)+
+  scale_y_log10()
 
 p
 
