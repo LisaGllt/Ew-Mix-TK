@@ -13,7 +13,7 @@ We want to answer the following question : Can we predict the concentrations in 
 
 ## Data importation
 
-```{r data}
+```{r data, warning=F, message=F}
 
 df_TK_mix <- f_read_data_TK_mix() |> 
   mutate(
@@ -26,6 +26,126 @@ df_TK_mix <- f_read_data_TK_mix() |>
     )
   )
 
+Ci0IMD <- mean(subset(df_TK_mix, Ratio == "E")$CiIMD, na.rm=T)
+Ci0EPX <- mean(subset(df_TK_mix, Ratio == "I")$CiEPX, na.rm=T)
+
+df_TK_mix_mean <- subset(df_TK_mix, t>0) |> 
+  group_by(Ratio) |> 
+  mutate(
+    Dose_IMD = mean(Dose_IMD, na.rm=T),
+    Dose_EPX = mean(Dose_EPX, na.rm=T),
+    BAFIMD_obs = mean(CiIMD/Dose_IMD, na.rm=T),
+    BAFEPX_obs = mean(CiEPX/Dose_EPX, na.rm=T)
+  ) |> 
+  ungroup(Ratio)
+
+```
+
+```{r, warning=F, message=F}
+#| fig-cap: Results 
+#| label: fig-DataRes
+#| fig-height: 6
+#| fig-width: 8
+
+pIMD <- ggplot(
+  data = subset(df_TK_mix, t>0),
+  aes(
+    x = Ratio,
+    y = CiIMD
+  )
+)+
+  geom_dotplot(
+    aes(
+    color=Ratio, 
+    fill=Ratio
+    ),
+    binaxis='y', 
+    stackdir='center', 
+    dotsize=1, 
+    alpha=0.7
+    )+
+  scale_color_manual(values = Nord_aurora)+
+  scale_fill_manual(values = Nord_aurora)+
+  theme_minimal()
+
+pEPX <- ggplot(
+  data = subset(df_TK_mix, t>0),
+  aes(
+    x = Ratio,
+    y = CiEPX
+  )
+)+
+  geom_dotplot(
+    aes(
+    color=Ratio, 
+    fill=Ratio
+    ),
+    binaxis='y', 
+    stackdir='center', 
+    dotsize=1, 
+    alpha=0.7
+    )+
+  scale_color_manual(values = Nord_aurora)+
+  scale_fill_manual(values = Nord_aurora)+
+  theme_minimal()
+
+pIMDe <- ggplot(
+  data = subset(df_TK_mix_mean, (No_vdt==1 & Nb_rep == 1  & t==28)),
+  aes(
+    x = Ratio,
+    y = Dose_IMD
+  )
+)+
+  geom_col(
+    aes(
+    color=Ratio, 
+    fill=Ratio
+    ),
+    alpha=0.7
+    )+
+  geom_text(
+    aes(
+      label = signif(BAFIMD_obs, 3),
+      color = Ratio,
+      y = max(Dose_IMD) * 1.02
+      ),
+    vjust = 0,         
+    size = 3            
+  ) +
+  scale_color_manual(values = Nord_aurora)+
+  scale_fill_manual(values = Nord_aurora)+
+  theme_minimal()
+
+pEPXe <- ggplot(
+  data = subset(df_TK_mix_mean,  (No_vdt==1 & Nb_rep == 1 & t==28)),
+  aes(
+    x = Ratio,
+    y = Dose_EPX
+  )
+)+
+  geom_col(
+    aes(
+    color=Ratio, 
+    fill=Ratio
+    ),
+    alpha=0.7
+    )+
+  geom_text(
+    aes(
+      label = signif(BAFEPX_obs, 3),
+      color = Ratio,
+      y = max(Dose_EPX) * 1.02
+      ),
+    vjust = 0,         
+    size = 3            
+  ) +
+  scale_color_manual(values = Nord_aurora)+
+  scale_fill_manual(values = Nord_aurora)+
+  theme_minimal()
+
+p <- (pIMD + pEPX)/(pIMDe + pEPXe)
+p
+
 ```
 
 ## Simulations for IMD
@@ -36,7 +156,9 @@ Nb_experiement <- length(unique(df_TK_mix$ID))
 Molecule <- "IMD"
 N_draws <- 1000
 
-f_MonteCarlo_mix_ind(path_mod_mix, Molecule, N_draws)
+f_Simulation_mix_ind(path_mod_mix, Molecule)
+
+# MODIFIER GROWTH RATE enlver les expo == 2
 
 ```
 
@@ -48,7 +170,7 @@ cd mod/TK_Mix_IMD
 pwd
 
 for j in $(seq 1 20); do
-./mcsim.m_TK_IMD MonteCarlo_ind_IMD_${j}.in
+  ./mcsim.m_TK_IMD "Simulation_ind_IMD_${j}.in" "Simulation_ind_IMD_${j}.out"
 done
 
 ```
@@ -68,71 +190,26 @@ colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
 
 col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
-Sim.Res.ind <- lapply(1:20, function(j) {
-  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_IMD_", j, ".out"))) %>%
-    mutate(sim = j)
+IDs <- unique(df_TK_mix$ID)
+
+df_sim <- lapply(1:20, function(j) {
+  f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_IMD_", j, ".out"))) %>%
+    mutate(
+      sim = j,
+      ID = as.numeric(IDs[j])
+      )
 }) %>%
   bind_rows()
 
-df_mod_ind <- NULL
-
-for (i in 1:Nb_experiement){
-  
-  ID_i <- unique(dObs_ind$ID)[i]
-
-  Sim.Res.ind_i  <- subset(Sim.Res.ind, sim == i) |> 
-    dplyr::select(where(~ !all(is.na(.x))))
-  
-  dObs_i <- subset(dObs_ind, ID == ID_i)
-  
-  Time_pred = dObs_i$Time # !!!
-  
-  Nom_Endpoints = c("Weight", "CiIMD", "C_exposure")
-  
-  Nsortie = 3
-  
-  MPV = IC_min = IC_max = Endpoint = index = NULL
-  
-  for (j in 1:length(Nom_Endpoints)){
-    
-    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind_i), fixed=FALSE)
-
-    
-    Data_sim = as.matrix( Sim.Res.ind_i[ , index] )
-    
-    MPV    = c(  MPV,  apply(Data_sim, 2, median, na.rm=TRUE) )
-    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
-    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
-    
-    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
-  }
-  
-  df_mod_ind_i <- data.frame(
-    predict.endpoint = MPV,
-    Time    = rep(Time_pred, Nsortie),
-    low     = IC_min,
-    up      = IC_max,
-    Endpt   = Endpoint
-    )
-  
-  df_mod_ind_i <- df_mod_ind_i %>%
-    mutate(ID=ID_i)
-
-  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
-}
-
-df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
-df_mod_CiIMD_ind <- subset(df_mod_ind, Endpt == "CiIMD")
-
 df_predobs_CiIMD_ind <- dObs_ind |> 
-  left_join(df_mod_CiIMD_ind, suffix = c("_obs", "_pred")) |> 
+  left_join(df_sim, suffix = c("_obs", "_pred")) |> 
   dplyr::select(-c(Weight_obs, CiEPX)) |> 
   mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
   drop_na() |> 
   filter(Time != 0)
 
 df_predobs_Weight_ind <- dObs_ind |> 
-  left_join(df_mod_Weight_ind, suffix = c("_obs", "_pred"))|>
+  left_join(df_sim, suffix = c("_obs", "_pred"))|>
   dplyr::select(-c(CiIMD_obs, CiEPX)) |> 
   mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
   drop_na() |> 
@@ -170,7 +247,7 @@ p_WIMD <- ggplot(
   data = df_predobs_Weight_ind,
   mapping = aes(
       x = Weight_obs,
-      y = predict.endpoint
+      y = Weight
     )
   )+
   geom_line(
@@ -200,11 +277,7 @@ p_WIMD <- ggplot(
     color = col_line0,
     linewidth = 1
     )+
-  geom_pointrange(
-    mapping = aes(
-      ymin = low,
-      ymax = up
-    ),
+  geom_point(
     alpha = 0.5,
     color = col_IMD
   )+
@@ -240,7 +313,7 @@ p_CiIMD_predobs <- ggplot(
   data = df_predobs_CiIMD_ind,
   mapping = aes(
       x = CiIMD_obs,
-      y = predict.endpoint
+      y = CiIMD
     )
   )+
   geom_path(
@@ -269,10 +342,8 @@ p_CiIMD_predobs <- ggplot(
     color = col_line0,
     linewidth = 1
     )+
-  geom_pointrange(
+  geom_point(
     mapping = aes(
-      ymin = low,
-      ymax = up,
       color = Ratio_plot
     ),
     alpha = 0.5
@@ -312,7 +383,7 @@ Time_step <- 0.25
 Time_pred <- seq(Time_min, Time_max, Time_step)
 print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
 
-f_MonteCarlo_mix_ind_full(path_mod_mix, Molecule, N_draws, print_times)
+f_Simulation_mix_ind_full(path_mod_mix, Molecule, print_times)
 ```
 
 ```{bash, eval=F, execute=F}
@@ -323,7 +394,7 @@ cd mod/TK_Mix_IMD
 pwd
 
 for j in $(seq 1 20); do
-./mcsim.m_TK_IMD MonteCarlo_ind_full_IMD_${j}.in
+  ./mcsim.m_TK_IMD "Simulation_ind_full_IMD_${j}.in" "Simulation_ind_full_IMD_${j}.out"
 done
 ```
 
@@ -341,76 +412,38 @@ colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
 
 col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
-Sim.Res.ind.full <- lapply(1:20, function(j) {
-  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_full_IMD_", j, ".out"))) %>%
-    mutate(sim = j)
+
+df_sim_full <- lapply(1:20, function(j) {
+  f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_full_IMD_", j, ".out"))) %>%
+    mutate(
+      sim = j,
+      ID = as.numeric(IDs[j])
+      )
 }) %>%
   bind_rows()
 
 
-df_mod_ind <- NULL
-
-for (i in 1:Nb_experiement){
-  
-  ID_i <- unique(dObs_ind$ID)[i]
-
-  Sim.Res.ind.full_i  <- subset(Sim.Res.ind.full, sim == i) |> 
-    dplyr::select(where(~ !all(is.na(.x))))
-  
-  dObs_i <- subset(dObs_ind, ID == ID_i)
-  
-  Nom_Endpoints = c("Weight", "CiIMD", "C_exposure")
-  
-  Nsortie = length(Nom_Endpoints)
-  
-  MPV = IC_min = IC_max = Endpoint = index = NULL
-  
-  for (j in 1:length(Nom_Endpoints)){
-    
-    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind.full_i), fixed=FALSE)
-
-    
-    Data_sim = as.matrix( Sim.Res.ind.full_i[ , index] )
-    
-    MPV    = c(   MPV,  apply(Data_sim, 2, median, na.rm=TRUE))
-    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
-    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
-    
-    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
-  }
-  
-  df_mod_ind_i <- data.frame(
-    predict.endpoint = MPV,
-    Time    = rep(Time_pred, Nsortie),
-    low     = IC_min,
-    up      = IC_max,
-    Endpt   = Endpoint
-    )
-  
-  df_mod_ind_i <- df_mod_ind_i %>%
-    mutate(ID=ID_i)
-
-  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
-}
-
-df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight") |> 
+df_mod_Weight_ind <- df_sim_full |> 
   left_join(dObs_ind, suffix = c("_obs", "_pred")) 
 
-df_mod_CiIMD_ind <- subset(df_mod_ind, Endpt == "CiIMD")|> 
+df_mod_CiIMD_ind <- df_sim_full|> 
   left_join(dObs_ind, suffix = c("_obs", "_pred")) 
 
-df_mod_CeIMD_ind <- subset(df_mod_ind, Endpt == "C_exposure")|> 
+df_mod_CeIMD_ind <- df_sim_full|> 
   left_join(dObs_ind, suffix = c("_obs", "_pred")) 
 
 ```
 
 ```{r IMDpredcurvesdata, message=F, warning=F}
-#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
 #| fig-label: fig-IMDdatapredfull
 #| fig-width: 8
 #| fig-height: 10
 
+library(ggforce)
+
 col_ratio <- nord(palette = "frost", n=5)
+
 
 dObs_ind_plot <- dObs_ind |> 
   mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
@@ -421,49 +454,17 @@ col_exposure <- c(Nord_aurora[2], Nord_aurora[3], Nord_aurora[4])
 
 p_CiIMD_traj <- ggplot()+
 
+
   geom_line(
     data=df_mod_CiIMD_ind,
     aes(
       x=Time,
-      y= low,
-      group = ID
-      ),
-      color = col_IMD,
-      fill = col_IMD,
-    linetype="dotted"
-    )+
-  geom_line(
-    data=df_mod_CiIMD_ind,
-    aes(
-      x=Time,
-      y= up,
-      group = ID
-      ),
-      color = col_IMD,
-      fill = col_IMD,
-    linetype="dotted"
-    )+
-  geom_line(
-    data=df_mod_CiIMD_ind,
-    aes(
-      x=Time,
-      y= predict.endpoint,
+      y= CiIMD,
       group = ID
       ),
       color = col_IMD,
       fill = col_IMD,
     lwd=1
-    )+
-  geom_ribbon(
-    data=df_mod_CiIMD_ind,
-    aes(
-      x=Time,
-      ymax= up,
-      ymin= low,
-      group = ID
-      ),
-      fill = col_IMD,
-    alpha=0.1
     )+
   geom_point(
     data = dObs_ind_plot,
@@ -502,9 +503,8 @@ p_CiIMD_traj <- ggplot()+
 path_mod_mix <- here::here("mod/TK_Mix_EPX")
 Nb_experiement <- length(unique(df_TK_mix$ID))
 Molecule <- "EPX"
-N_draws <- 1000
 
-f_MonteCarlo_mix_ind(path_mod_mix, Molecule, N_draws)
+f_Simulation_mix_ind(path_mod_mix, Molecule)
 
 ```
 
@@ -516,14 +516,14 @@ cd mod/TK_Mix_EPX
 pwd
 
 for j in $(seq 1 20); do
-./mcsim.m_TK_EPX MonteCarlo_ind_EPX_${j}.in
+  ./mcsim.m_TK_EPX "Simulation_ind_EPX_${j}.in" "Simulation_ind_EPX_${j}.out"
 done
 
 ```
 
 ### Predicted vs. Observed
 
-```{r IMDdatapredobs, message=F, warning=F}
+```{r EPXdatapredobs, message=F, warning=F}
 
 dObs_ind <- df_TK_mix |> 
   mutate(
@@ -536,75 +536,31 @@ colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
 
 col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
-Sim.Res.ind <- lapply(1:20, function(j) {
-  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_EPX_", j, ".out"))) %>%
-    mutate(sim = j)
+IDs <- unique(df_TK_mix$ID)
+
+df_sim <- lapply(1:20, function(j) {
+  f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_EPX_", j, ".out"))) %>%
+    mutate(
+      sim = j,
+      ID = as.numeric(IDs[j])
+      )
 }) %>%
   bind_rows()
 
-df_mod_ind <- NULL
-
-for (i in 1:Nb_experiement){
-  
-  ID_i <- unique(dObs_ind$ID)[i]
-
-  Sim.Res.ind_i  <- subset(Sim.Res.ind, sim == i) |> 
-    dplyr::select(where(~ !all(is.na(.x))))
-  
-  dObs_i <- subset(dObs_ind, ID == ID_i)
-  
-  Time_pred = dObs_i$Time # !!!
-  
-  Nom_Endpoints = c("Weight", "CiEPX", "C_exposure")
-  
-  Nsortie = 3
-  
-  MPV = IC_min = IC_max = Endpoint = index = NULL
-  
-  for (j in 1:length(Nom_Endpoints)){
-    
-    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind_i), fixed=FALSE)
-
-    
-    Data_sim = as.matrix( Sim.Res.ind_i[ , index] )
-    
-    MPV    = c(  MPV,  apply(Data_sim, 2, median, na.rm=TRUE) )
-    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
-    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
-    
-    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
-  }
-  
-  df_mod_ind_i <- data.frame(
-    predict.endpoint = MPV,
-    Time    = rep(Time_pred, Nsortie),
-    low     = IC_min,
-    up      = IC_max,
-    Endpt   = Endpoint
-    )
-  
-  df_mod_ind_i <- df_mod_ind_i %>%
-    mutate(ID=ID_i)
-
-  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
-}
-
-df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight")
-df_mod_CiEPX_ind <- subset(df_mod_ind, Endpt == "CiEPX")
-
 df_predobs_CiEPX_ind <- dObs_ind |> 
-  left_join(df_mod_CiEPX_ind, suffix = c("_obs", "_pred")) |> 
+  left_join(df_sim, suffix = c("_obs", "_pred")) |> 
   dplyr::select(-c(Weight_obs, CiIMD)) |> 
   mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
   drop_na() |> 
   filter(Time != 0)
 
 df_predobs_Weight_ind <- dObs_ind |> 
-  left_join(df_mod_Weight_ind, suffix = c("_obs", "_pred"))|>
+  left_join(df_sim, suffix = c("_obs", "_pred"))|>
   dplyr::select(-c(CiEPX_obs, CiIMD)) |> 
   mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
   drop_na() |> 
   filter(Time != 0)
+
 
 ```
 
@@ -638,7 +594,7 @@ p_WEPX <- ggplot(
   data = df_predobs_Weight_ind,
   mapping = aes(
       x = Weight_obs,
-      y = predict.endpoint
+      y = Weight
     )
   )+
   geom_line(
@@ -668,11 +624,7 @@ p_WEPX <- ggplot(
     color = col_line0,
     linewidth = 1
     )+
-  geom_pointrange(
-    mapping = aes(
-      ymin = low,
-      ymax = up
-    ),
+  geom_point(
     alpha = 0.5,
     color = col_EPX
   )+
@@ -709,7 +661,7 @@ p_CiEPX_predobs <- ggplot(
   data = df_predobs_CiEPX_ind,
   mapping = aes(
       x = CiEPX_obs,
-      y = predict.endpoint
+      y = CiEPX
     )
   )+
   geom_path(
@@ -738,10 +690,8 @@ p_CiEPX_predobs <- ggplot(
     color = col_line0,
     linewidth = 1
     )+
-  geom_pointrange(
+  geom_point(
     mapping = aes(
-      ymin = low,
-      ymax = up,
       color = Ratio_plot
     ),
     alpha = 0.5
@@ -781,7 +731,7 @@ Time_step <- 0.25
 Time_pred <- seq(Time_min, Time_max, Time_step)
 print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
 
-f_MonteCarlo_mix_ind_full(path_mod_mix, Molecule, N_draws, print_times)
+f_Simulation_mix_ind_full(path_mod_mix, Molecule, print_times)
 ```
 
 ```{bash, eval=F, execute=F}
@@ -792,7 +742,7 @@ cd mod/TK_Mix_EPX
 pwd
 
 for j in $(seq 1 20); do
-./mcsim.m_TK_EPX MonteCarlo_ind_full_EPX_${j}.in
+  ./mcsim.m_TK_EPX "Simulation_ind_full_EPX_${j}.in" "Simulation_ind_full_EPX_${j}.out"
 done
 ```
 
@@ -810,65 +760,24 @@ colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
 
 col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
-Sim.Res.ind.full <- lapply(1:20, function(j) {
-  read_tsv(file.path(path_mod_mix, paste0("MonteCarlo_ind_full_EPX_", j, ".out"))) %>%
-    mutate(sim = j)
+
+df_sim_full <- lapply(1:20, function(j) {
+  f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_full_EPX_", j, ".out"))) %>%
+    mutate(
+      sim = j,
+      ID = as.numeric(IDs[j])
+      )
 }) %>%
   bind_rows()
 
 
-df_mod_ind <- NULL
-
-for (i in 1:Nb_experiement){
-  
-  ID_i <- unique(dObs_ind$ID)[i]
-
-  Sim.Res.ind.full_i  <- subset(Sim.Res.ind.full, sim == i) |> 
-    dplyr::select(where(~ !all(is.na(.x))))
-  
-  dObs_i <- subset(dObs_ind, ID == ID_i)
-  
-  Nom_Endpoints = c("Weight", "CiEPX", "C_exposure")
-  
-  Nsortie = length(Nom_Endpoints)
-  
-  MPV = IC_min = IC_max = Endpoint = index = NULL
-  
-  for (j in 1:length(Nom_Endpoints)){
-    
-    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind.full_i), fixed=FALSE)
-
-    
-    Data_sim = as.matrix( Sim.Res.ind.full_i[ , index] )
-    
-    MPV    = c(   MPV,  apply(Data_sim, 2, median, na.rm=TRUE))
-    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
-    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
-    
-    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
-  }
-  
-  df_mod_ind_i <- data.frame(
-    predict.endpoint = MPV,
-    Time    = rep(Time_pred, Nsortie),
-    low     = IC_min,
-    up      = IC_max,
-    Endpt   = Endpoint
-    )
-  
-  df_mod_ind_i <- df_mod_ind_i %>%
-    mutate(ID=ID_i)
-
-  df_mod_ind <- rbind(df_mod_ind, df_mod_ind_i)
-}
-
-df_mod_Weight_ind <- subset(df_mod_ind, Endpt == "Weight") |> 
+df_mod_Weight_ind <- df_sim_full |> 
   left_join(dObs_ind, suffix = c("_obs", "_pred")) 
 
-df_mod_CiEPX_ind <- subset(df_mod_ind, Endpt == "CiEPX")|> 
+df_mod_CiEPX_ind <- df_sim_full|> 
   left_join(dObs_ind, suffix = c("_obs", "_pred")) 
 
-df_mod_CeEPX_ind <- subset(df_mod_ind, Endpt == "C_exposure")|> 
+df_mod_CeEPX_ind <- df_sim_full|> 
   left_join(dObs_ind, suffix = c("_obs", "_pred")) 
 
 ```
@@ -893,49 +802,17 @@ col_exposure <- c(Nord_aurora[2], Nord_aurora[3], Nord_aurora[4])
 
 p_CiEPX_traj <- ggplot()+
 
+
   geom_line(
     data=df_mod_CiEPX_ind,
     aes(
       x=Time,
-      y= low,
-      group = ID
-      ),
-      color = col_EPX,
-      fill = col_EPX,
-    linetype="dotted"
-    )+
-  geom_line(
-    data=df_mod_CiEPX_ind,
-    aes(
-      x=Time,
-      y= up,
-      group = ID
-      ),
-      color = col_EPX,
-      fill = col_EPX,
-    linetype="dotted"
-    )+
-  geom_line(
-    data=df_mod_CiEPX_ind,
-    aes(
-      x=Time,
-      y= predict.endpoint,
+      y= CiEPX,
       group = ID
       ),
       color = col_EPX,
       fill = col_EPX,
     lwd=1
-    )+
-  geom_ribbon(
-    data=df_mod_CiEPX_ind,
-    aes(
-      x=Time,
-      ymax= up,
-      ymin= low,
-      group = ID
-      ),
-      fill = col_EPX,
-    alpha=0.1
     )+
   geom_point(
     data = dObs_ind_plot,

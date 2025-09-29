@@ -843,6 +843,20 @@ Summary_res_EPX_f
 
 ```
 
+```{r bic}
+# BIC calculation
+
+LL <- f_get_mode(MCMC_out_EPX$df_LnPost$LnPosterior)
+
+n <- length(na.omit(df_TK_EPX$Weight)) + length(na.omit(df_TK_EPX$CiEPX))
+k <- Nb_param -2
+
+BIC <- -2*LL + k*log(n)
+
+cat("n = ", n,"\nk = ", k, "\nLL = ", LL, "\nBIC = ", BIC)
+
+```
+
 ### Comparison of observed vs. predicted data
 
 ```{r setpointindin, message=F, warning=F, eval=F}
@@ -1194,20 +1208,19 @@ df_residuals_CiEPX <- df_predobs_CiEPX_ind |>
 p_residus <- ggplot(df_residuals_CiEPX)+
   geom_point(
     aes(
-      x = Time_relative,
+      x = Time_point,
       y = Ratio_Residual,
       color = Group
     ),
     alpha=0.7
   )+
   labs(
-    x = "Temps d'accumulation / d'élimination (sans compter la dépuration)",
-    y = "Résidus CiEPX"
+    x = "Time point (days)",
+    y = "Predicted/observed ratio"
   )+
   scale_color_manual(
     values = col_exposure
     )+
-  facet_wrap(~Group)+
   scale_x_continuous(
     breaks = unique(df_residuals_CiEPX$Time_relative)
   )+
@@ -1215,6 +1228,21 @@ p_residus <- ggplot(df_residuals_CiEPX)+
   theme_minimal()
 
 p_residus
+```
+
+```{r, include = F}
+ggsave(
+  filename = "TK_EPX_predobsratio.png",
+  plot = p_residus,
+  width = 6, height = 4,
+  path = path_fig
+)
+ggsave(
+  filename = "TK_EPX_predobsratio.svg",
+  plot = p_residus,
+  width = 6, height = 4,
+  path = path_fig
+)
 ```
 
 ### Full individual trajectories
@@ -1509,6 +1537,19 @@ ggsave(
 ggsave(
   filename="TK_EPX_comptrajpred.svg", 
   plot=p_CiEPX_traj , 
+  width=8, height = 10, 
+  path=path_fig
+  )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_log.png", 
+  plot=p_CiEPX_traj_log , 
+  width=8, height = 10, 
+  path=path_fig
+  )
+ggsave(
+  filename="TK_EPX_comptrajpred_log.svg", 
+  plot=p_CiEPX_traj_log , 
   width=8, height = 10, 
   path=path_fig
   )

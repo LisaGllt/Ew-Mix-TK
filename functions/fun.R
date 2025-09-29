@@ -1590,6 +1590,318 @@ Distrib(a_growth, Normal, 0.00355594, 0.00148897);
   
 }
 
+f_GrowthRate <- function(data){
+  
+  df_GrowthRate <- data.frame() 
+  
+  for (i in unique(data$ID)){
+    
+    data_i <- subset(data, ID == i) 
+    
+    if (length(na.omit(data_i$L))<2) {
+      a.Est <- NA
+      
+    }else if(length(na.omit(data_i$L))==2){ 
+      
+      a.Est <- (subset(data_i, !t==0)$L - subset(data_i, t==0)$L)/subset(data_i, !t==0)$t # (L(t=t)-L(t=0))/t
+      
+    }else{
+      lm_i <- lm(L~t, data=data_i)
+      a.Est <- lm_i$coefficients[2]
+    }
+    
+    df_GrowthRate_i <- data.frame(
+      ID = i,
+      a_growth = a.Est
+    )
+    
+    df_GrowthRate <- rbind(df_GrowthRate, df_GrowthRate_i)
+  }
+  
+  return(df_GrowthRate) 
+}
+
+f_Simulation_mix_ind <- function(File_path, Molecule) {
+  
+  text_end <- "End."
+  
+  df_TK_f <- f_read_data_TK_mix() |> 
+    mutate(across(where(is.numeric), ~ replace_na(.x, -1))) |> 
+    mutate(
+      L = Weight^(1/3)
+    )
+  
+  df_growth_rate_mix <- f_GrowthRate(subset(df_TK_f, t < 28.5))
+  
+  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "E")$CiIMD, na.rm=T)
+  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio == "I")$CiEPX, na.rm=T)
+  C_clx_IMD <- 16 / 1000 # ng/g
+  C_clx_EPX <- 90 / 1000 # ng/g
+  
+  compteur_exp <- 0
+  
+  for (i in as.numeric(as.character(unique(df_TK_f$ID)))){
+    
+    compteur_exp <- compteur_exp + 1
+    
+    if (Molecule == "IMD"){
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiIMD <- paste(df_TK_i$CiIMD, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      a_growth_i <- subset(df_growth_rate_mix, ID==i)$a_growth
+      Dose_i <- subset(df_TK_i, t == 0)$Dose_IMD
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK Mix IMD - i = ", i),
+        paste("    a_growth=", a_growth_i, ";", sep = ""),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", Dose_i, ";", sep = ""),
+        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Print(CiIMD,", char_tw, ");", sep = ""),
+        paste("    Print(C_exposure,", char_tw, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa (Mixture edition)
+#===============================================
+
+# IMD 1 comp 0%
+kuIMD = 1.59155;
+keIMD = 0.0446806;
+# a_growth = 0.00351619;
+# Vr_a_growth = 0.00124984;
+Sigma_W = 0.0456952;
+Sigma_CiIMD = 1.45777;
+
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("Simulation_ind_", Molecule, "_", compteur_exp, ".in"))
+      )
+      
+      
+    } else if (Molecule == "EPX"){
+      #print(i)
+      
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiEPX <- paste(df_TK_i$CiEPX, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      a_growth_i <- subset(df_growth_rate_mix, ID==i)$a_growth
+      Dose_i <- subset(df_TK_i, t == 0)$Dose_EPX
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK EPX - i = ", i),
+        
+        paste("    a_growth=", a_growth_i, ";", sep = ""),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", Dose_i, ";", sep = ""),
+        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    Print(Weight,", char_tw, ");", sep = ""),
+        paste("    Print(CiEPX,", char_tw, ");", sep = ""),
+        paste("    Print(C_exposure,", char_tw, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
+#===============================================
+
+# EPX 2 comp 15%
+kuEPX = 2.793920;
+keEPX = 1.70593;
+kperiph = 0.000041689;
+# a_growth_mean = 0.00355594;
+# Vr_a_growth = 0.00148897;
+Sigma_W = 0.0448117;
+Sigma_CiEPX = 1.2612;
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("Simulation_ind_", Molecule, "_", compteur_exp, ".in"))
+      )
+    } else {
+      stop("Incorrect specification of Molecule")
+    }
+  }
+  
+}
+
+f_Simulation_mix_ind_full <- function(File_path, Molecule, print_times) {
+  
+  text_end <- "End."
+  
+  df_TK_f <- f_read_data_TK_mix() |> 
+    mutate(across(where(is.numeric), ~ replace_na(.x, -1))) |> 
+    mutate(
+      L = Weight^(1/3)
+    )
+  
+  df_growth_rate_mix <- f_GrowthRate(subset(df_TK_f, t < 28.5))
+  
+  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "E")$CiIMD, na.rm=T)
+  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio == "I")$CiEPX, na.rm=T)
+  C_clx_IMD <- 16 / 1000 # ng/g
+  C_clx_EPX <- 90 / 1000 # ng/g
+  
+  compteur_exp <- 0
+  
+  for (i in as.numeric(as.character(unique(df_TK_f$ID)))){
+    
+    compteur_exp <- compteur_exp + 1
+    
+    if (Molecule == "IMD"){
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiIMD <- paste(df_TK_i$CiIMD, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      a_growth_i <- subset(df_growth_rate_mix, ID==i)$a_growth
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK Mix IMD - i = ", i),
+        paste("    a_growth=", a_growth_i, ";", sep = ""),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$Dose_IMD, ";", sep = ""),
+        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    PrintStep(Weight,", print_times, ");", sep = ""),
+        paste("    PrintStep(CiIMD,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa (Mixture edition)
+#===============================================
+
+# IMD 1 comp 0%
+kuIMD = 1.59155;
+keIMD = 0.0446806;
+# a_growth = 0.00351619;
+# Vr_a_growth = 0.00124984;
+Sigma_W = 0.0456952;
+Sigma_CiIMD = 1.45777;
+
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("Simulation_ind_full_", Molecule, "_", compteur_exp, ".in"))
+      )
+      
+      
+    } else if (Molecule == "EPX"){
+      #print(i)
+      
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiEPX <- paste(df_TK_i$CiEPX, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      a_growth_i <- subset(df_growth_rate_mix, ID==i)$a_growth
+      
+      Dose <- subset(df_TK_i, t == 0)$Dose_EPX
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK EPX - i = ", i),
+        paste("    a_growth=", a_growth_i, ";", sep = ""),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
+        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", Dose, ";", sep = ""),
+        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        paste("    PrintStep(Weight,", print_times, ");", sep = ""),
+        paste("    PrintStep(CiEPX,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
+#===============================================
+
+# EPX 2 comp 15%
+kuEPX = 2.793920;
+keEPX = 1.70593;
+kperiph = 0.000041689;
+# a_growth_mean = 0.00355594;
+# Vr_a_growth = 0.00148897;
+Sigma_W = 0.0448117;
+Sigma_CiEPX = 1.2612;
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("Simulation_ind_full_", Molecule, "_", compteur_exp, ".in"))
+      )
+    } else {
+      stop("Incorrect specification of Molecule")
+    }
+  }
+  
+}
+
 ## MCSim to R ----
 
 f_MCSim_read_sim <- function(path_sim_out){

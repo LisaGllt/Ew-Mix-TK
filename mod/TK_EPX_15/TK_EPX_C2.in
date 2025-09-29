@@ -3,7 +3,7 @@ MCMC( "TK_EPX_C2.out",  # output file
       "",                # name of data file
       100000, 0,             # iterations, print prediction flag
       1, 10000,          # printing frequency, iters to print
-      6656);               # random seed
+      6654);               # random seed
 
 Integrate (Lsodes,  1e-8, 1e-10, 0); # Integrate(Solver, RTOL, ATOL, ITOL);
     

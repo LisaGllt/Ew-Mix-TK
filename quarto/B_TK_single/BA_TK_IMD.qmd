@@ -705,6 +705,20 @@ Summary_res_IMD_f
 
 ```
 
+```{r bic}
+# BIC calculation
+
+LL <- f_get_mode(MCMC_out_IMD$df_LnPost$LnPosterior)
+
+n <- length(na.omit(df_TK_IMD$Weight)) + length(na.omit(df_TK_IMD$CiIMD))
+k <- Nb_param -2
+
+BIC <- -2*LL + k*log(n)
+
+cat("n = ", n,"\nk = ", k, "\nLL = ", LL, "\nBIC = ", BIC)
+
+```
+
 ### Comparison of observed vs. predicted data
 
 Creation of the `.in` files that will enable the obtention of the prediction of the model for all of our data points :
@@ -1037,15 +1051,16 @@ cat(
 
 ```{r, message=F, warning=FALSE}
 #| fig-cap: Residuals
-#| label: fig-EPXresiduals
+#| label: fig-IMDresiduals
 #| fig-height: 4
 #| fig-width: 6
 
 df_residuals_CiIMD <- df_predobs_CiIMD_ind |> 
   mutate(
     Residual = predict.endpoint - CiIMD_obs,
-    Log_residual = log(Residual^2),
-    Ratio = (predict.endpoint/CiIMD_obs),
+    Ratio_Residual = predict.endpoint/CiIMD_obs
+    ) |> 
+  mutate(
     Time_point = as.numeric(as.character(Time_point_f)),
     Group = factor(Group, c("Uptake", "Elimination")),
     Time_relative = case_when(
@@ -1057,26 +1072,41 @@ df_residuals_CiIMD <- df_predobs_CiIMD_ind |>
 p_residus <- ggplot(df_residuals_CiIMD)+
   geom_point(
     aes(
-      x = Time_relative,
-      y = Ratio,
+      x = Time_point,
+      y = Ratio_Residual,
       color = Group
     ),
     alpha=0.7
   )+
   labs(
-    x = "Time of accumulation / elimination (without time of fasting)",
+    x = "Time point (days)",
     y = "Predicted/observed ratio"
   )+
   scale_color_manual(
     values = col_exposure
     )+
-  facet_wrap(~Group)+
   scale_x_continuous(
     breaks = unique(df_residuals_CiIMD$Time_relative)
   )+
   scale_y_log10()+
   theme_minimal()
+
 p_residus
+```
+
+```{r, include = F}
+ggsave(
+  filename = "TK_IMD_predobsratio.png",
+  plot = p_residus,
+  width = 6, height = 4,
+  path = path_fig
+)
+ggsave(
+  filename = "TK_IMD_predobsratio.svg",
+  plot = p_residus,
+  width = 6, height = 4,
+  path = path_fig
+)
 ```
 
 ### Full individual trajectories
