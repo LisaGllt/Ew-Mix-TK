@@ -371,10 +371,10 @@ f_vec_pars <- function(df_pars) {
 # MCSim files creation 
 
 f_read_data_TK <- function(Molecule) {
-  df_TK <- read_excel(here::here("data/Data_TK_long.xlsx")) |>
+  df_TK <- read_excel(here::here("data/Data_TK_long.xlsx"), sheet = 1) |>
     mutate(
       Time_point_f = as.factor(Time_point),
-      ID = as.factor(ID),
+     # ID = as.factor(ID),
       w = w / 1000, # Conversion mg to g
       Dose = Dose * 1000 # mg/kg to ng/g (mg/kg = microg/g = 1000 ng/g)
     ) |>
@@ -390,7 +390,7 @@ f_read_data_TK <- function(Molecule) {
 
   if (Molecule == "EPX") {
     df_TK_f <- df_TK |>
-      dplyr::select(Molecule, Dose, ID, expo, Phase, w, C_worm_EPX, C_worm_IMD, t, Time_point, ID_recipient) |>
+      dplyr::select(Molecule, Dose, ID, expo, Phase, w, C_worm_EPX, C_worm_IMD, t, Time_point, ID_recipient, Nb_rep, Experiment) |>
       filter(Molecule == "EPX") |>
       mutate(
         C_soil_IMD = case_when(
@@ -406,15 +406,17 @@ f_read_data_TK <- function(Molecule) {
       ) |>
       mutate(across(where(is.numeric), ~ replace_na(.x, -1))) |>
       arrange(ID)
+    
+    df_TK_Ctrl <- read_excel(here::here("data/Data_TK_long.xlsx"), sheet = 2)
 
-    C_worm_t0_IMD <- mean(subset(df_TK, Molecule == "EPX")$C_worm_IMD, na.rm = T)
-    C_worm_t0_EPX <- mean(subset(df_TK, Molecule == "IMD")$C_worm_EPX, na.rm = T)
+    C_worm_t0_IMD <- mean(df_TK_Ctrl$C_worm_IMD, na.rm = T)
+    C_worm_t0_EPX <- mean(df_TK_Ctrl$C_worm_EPX, na.rm = T)
 
     df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD <- C_worm_t0_IMD
     df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX <- C_worm_t0_EPX
   } else if (Molecule == "IMD") {
     df_TK_f <- df_TK |>
-      dplyr::select(Molecule, Dose, ID, expo, Phase, w, C_worm_EPX, C_worm_IMD, t, Time_point, ID_recipient) |>
+      dplyr::select(Molecule, Dose, ID, expo, Phase, w, C_worm_EPX, C_worm_IMD, t, Time_point, ID_recipient, Nb_rep, Experiment) |>
       filter(Molecule == "IMD") |>
       mutate(
         C_soil_IMD = case_when(
@@ -430,9 +432,11 @@ f_read_data_TK <- function(Molecule) {
       ) |>
       mutate(across(where(is.numeric), ~ replace_na(.x, -1))) |>
       arrange(ID)
+    
+    df_TK_Ctrl <- read_excel(here::here("data/Data_TK_long.xlsx"), sheet = 2)
 
-    C_worm_t0_IMD <- mean(subset(df_TK, Molecule == "EPX")$C_worm_IMD, na.rm = T)
-    C_worm_t0_EPX <- mean(subset(df_TK, Molecule == "IMD")$C_worm_EPX, na.rm = T)
+    C_worm_t0_IMD <- mean(df_TK_Ctrl$C_worm_IMD, na.rm = T)
+    C_worm_t0_EPX <- mean(df_TK_Ctrl$C_worm_EPX, na.rm = T)
 
     df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD <- C_worm_t0_IMD
     df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX <- C_worm_t0_EPX
@@ -454,7 +458,6 @@ f_In_experiments <- function(Molecule) {
   C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX[1]
 
 
-
   if (Molecule == "IMD") {
     char_final <- ""
     for (i in as.numeric(unique(df_TK_f$ID))) {
@@ -471,7 +474,7 @@ f_In_experiments <- function(Molecule) {
       length_expo <- length(df_TK_i$expo)
       char_texpo <- char_tw
       
-      if (i <= 64){
+      if (i <= 64|i>128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -517,7 +520,7 @@ f_In_experiments <- function(Molecule) {
       length_expo <- length(df_TK_i$expo)
       char_texpo <- char_tw
       
-      if (i <= 64){
+      if (i <= 64|i>128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -811,7 +814,7 @@ f_create_mcmc_block <- function(name, seed, Nb_Iter) {
       1, 10000,          # printing frequency, iters to print
       %d);               # random seed
 
-Integrate (Lsodes,  1e-8, 1e-10, 0); # Integrate(Solver, RTOL, ATOL, ITOL);
+Integrate (Lsodes,  1e-5, 1e-7, 0); # Integrate(Solver, RTOL, ATOL, ITOL);
     ',
     name, Nb_Iter, seed
   )
@@ -1037,7 +1040,7 @@ f_Setpoint_ind <- function(File_path, Molecule, l_param_name) {
       
       char_ta <- paste(df_TK_i$t[1:2], collapse = ",")
       
-      if (i <= 64){
+      if (i <= 64 | i > 128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -1095,7 +1098,7 @@ SetPoints("Setpoints_ind_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp
       char_CiEPX <- paste(df_TK_i$C_worm_EPX, collapse = ",")
       char_expo <- paste(df_TK_i$expo, collapse = ",")
       
-      if (i <= 64){
+      if (i <= 64 | i > 128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -1174,7 +1177,7 @@ f_Setpoint_ind_full <- function(File_path, Molecule, print_times, l_param_name) 
       
       char_ta <- paste(df_TK_i$t[1:2], collapse = ",")
       
-      if (i <= 64){
+      if (i <= 64 | i > 128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -1232,7 +1235,7 @@ SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteu
       char_CiEPX <- paste(df_TK_i$C_worm_EPX, collapse = ",")
       char_expo <- paste(df_TK_i$expo, collapse = ",")
       
-      if (i <= 64){
+      if (i <= 64 | i > 128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -1345,7 +1348,7 @@ f_MonteCarlo_mix_ind <- function(File_path, Molecule, N_draws) {
         
         paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
         paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
-        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$Dose_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$CeIMD, ";", sep = ""),
         paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
         paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
         paste("    Print(Weight,", char_tw, ");", sep = ""),
@@ -1404,7 +1407,7 @@ Distrib (a_growth, Normal, 0.00351619, 0.00124984);
         
         paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
         paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
-        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$Dose_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$CeEPX, ";", sep = ""),
         paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
         paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
         paste("    Print(Weight,", char_tw, ");", sep = ""),
@@ -1484,7 +1487,7 @@ f_MonteCarlo_mix_ind_full <- function(File_path, Molecule, N_draws, print_times)
         
         paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
         paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
-        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$Dose_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$CeIMD, ";", sep = ""),
         paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
         paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
         paste("    PrintStep(Weight,", print_times, ");", sep = ""),
@@ -1543,7 +1546,7 @@ Distrib (a_growth, Normal, 0.00351619, 0.00124984);
         
         paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
         paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
-        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$Dose_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$CeEPX, ";", sep = ""),
         paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
         paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
         paste("    PrintStep(Weight,", print_times, ");", sep = ""),
@@ -1655,7 +1658,7 @@ f_Simulation_mix_ind <- function(File_path, Molecule) {
       char_expo <- paste(df_TK_i$expo, collapse = ",")
       
       a_growth_i <- subset(df_growth_rate_mix, ID==i)$a_growth
-      Dose_i <- subset(df_TK_i, t == 0)$Dose_IMD
+      Dose_i <- subset(df_TK_i, t == 0)$CeIMD
       
       char_i <- paste(
         paste("Simulation { #", "TK Mix IMD - i = ", i),
@@ -1676,12 +1679,12 @@ f_Simulation_mix_ind <- function(File_path, Molecule) {
 #===============================================
 
 # IMD 1 comp 0%
-kuIMD = 1.59155;
-keIMD = 0.0446806;
+kuIMD = 1.58669;
+keIMD = 0.048173;
 # a_growth = 0.00351619;
 # Vr_a_growth = 0.00124984;
-Sigma_W = 0.0456952;
-Sigma_CiIMD = 1.45777;
+Sigma_W = 0.0393328;
+Sigma_CiIMD = 1.45184;
 
 
 ########## Individuals ################################################')
@@ -1712,7 +1715,7 @@ Sigma_CiIMD = 1.45777;
       char_expo <- paste(df_TK_i$expo, collapse = ",")
       
       a_growth_i <- subset(df_growth_rate_mix, ID==i)$a_growth
-      Dose_i <- subset(df_TK_i, t == 0)$Dose_EPX
+      Dose_i <- subset(df_TK_i, t == 0)$CeEPX
       
       char_i <- paste(
         paste("Simulation { #", "TK EPX - i = ", i),
@@ -1733,14 +1736,15 @@ Sigma_CiIMD = 1.45777;
       text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
 #===============================================
 
-# EPX 2 comp 15%
-kuEPX = 2.793920;
-keEPX = 1.70593;
-kperiph = 0.000041689;
+# EPX 2 comp Phi%
+kuEPX = 1.64823;
+keEPX = 1.68255;
+kperiph = 0.00000003061920;
+phi = 0.912028;
 # a_growth_mean = 0.00355594;
 # Vr_a_growth = 0.00148897;
-Sigma_W = 0.0448117;
-Sigma_CiEPX = 1.2612;
+Sigma_W = 0.0476993;
+Sigma_CiEPX = 1.28122;
 
 ########## Individuals ################################################')
       
@@ -1774,8 +1778,8 @@ f_Simulation_mix_ind_full <- function(File_path, Molecule, print_times) {
   
   df_growth_rate_mix <- f_GrowthRate(subset(df_TK_f, t < 28.5))
   
-  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "E")$CiIMD, na.rm=T)
-  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio == "I")$CiEPX, na.rm=T)
+  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "N")$CiIMD, na.rm=T)
+  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio == "N")$CiEPX, na.rm=T)
   C_clx_IMD <- 16 / 1000 # ng/g
   C_clx_EPX <- 90 / 1000 # ng/g
   
@@ -1802,7 +1806,7 @@ f_Simulation_mix_ind_full <- function(File_path, Molecule, print_times) {
         paste("    a_growth=", a_growth_i, ";", sep = ""),
         paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
         paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
-        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$Dose_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$CeIMD, ";", sep = ""),
         paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
         paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
         paste("    PrintStep(Weight,", print_times, ");", sep = ""),
@@ -1816,12 +1820,12 @@ f_Simulation_mix_ind_full <- function(File_path, Molecule, print_times) {
 #===============================================
 
 # IMD 1 comp 0%
-kuIMD = 1.59155;
-keIMD = 0.0446806;
+kuIMD = 1.58669;
+keIMD = 0.048173;
 # a_growth = 0.00351619;
 # Vr_a_growth = 0.00124984;
-Sigma_W = 0.0456952;
-Sigma_CiIMD = 1.45777;
+Sigma_W = 0.0393328;
+Sigma_CiIMD = 1.45184;
 
 
 ########## Individuals ################################################')
@@ -1853,7 +1857,7 @@ Sigma_CiIMD = 1.45777;
       
       a_growth_i <- subset(df_growth_rate_mix, ID==i)$a_growth
       
-      Dose <- subset(df_TK_i, t == 0)$Dose_EPX
+      Dose <- subset(df_TK_i, t == 0)$CeEPX
       
       char_i <- paste(
         paste("Simulation { #", "TK EPX - i = ", i),
@@ -1873,14 +1877,15 @@ Sigma_CiIMD = 1.45777;
       text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
 #===============================================
 
-# EPX 2 comp 15%
-kuEPX = 2.793920;
-keEPX = 1.70593;
-kperiph = 0.000041689;
+# EPX 2 comp Phi%
+kuEPX = 1.64823;
+keEPX = 1.68255;
+kperiph = 0.00000003061920;
+phi = 0.912028;
 # a_growth_mean = 0.00355594;
 # Vr_a_growth = 0.00148897;
-Sigma_W = 0.0448117;
-Sigma_CiEPX = 1.2612;
+Sigma_W = 0.0476993;
+Sigma_CiEPX = 1.28122;
 
 ########## Individuals ################################################')
       
@@ -1903,6 +1908,11 @@ Sigma_CiEPX = 1.2612;
 }
 
 ## MCSim to R ----
+
+f_get_mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
 
 f_MCSim_read_sim <- function(path_sim_out){
   library(readr)
@@ -1970,7 +1980,7 @@ f_MCSim <- function(path_mod) {
   np <- length(Parameter)
 
   Experiment <- grep(pattern = "Experiment", Initialize, value = T)
-  nexperiement <- length(Experiment)
+  nexperiment <- length(Experiment)
 
   ParTable <- as.data.frame(matrix(NA, np, 6))
   colnames(ParTable) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
@@ -2095,7 +2105,7 @@ f_MCSim <- function(path_mod) {
     Files_in        = Files_in,
     Files_out       = Files_out,
     Nb_param        = np,
-    Nb_experiement  = nexperiement,
+    Nb_experiment   = nexperiment,
     Priors          = ParTable,
     Nb_iter_kept    = nb, # Last iterations used to describe the posterior distributions
     Chains          = df_res.mcmc,
@@ -2141,7 +2151,7 @@ f_MCSim_ind <- function(path_mod) {
   np_tmp <- length(Parameter) # Used just to be able to count the number of parameters with individual variation
 
   Experiment <- grep(pattern = "Experiment", Initialize, value = T)
-  nexperiement <- length(Experiment)
+  nexperiment <- length(Experiment)
   ParTable <- as.data.frame(matrix(NA, np_tmp, 6))
 
   colnames(ParTable) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
@@ -2220,11 +2230,11 @@ f_MCSim_ind <- function(path_mod) {
 
   # 4. AIC and BIC calculations ----
 
-  MaxVraiss <- Data_All[Mode[1], ncol(Data_All)]
-
-  AIC <- -2 * MaxVraiss + 2 * np
-  Ndata <- 13 # number of observed data used
-  BIC <- -2 * MaxVraiss + log(Ndata) * np
+  # MaxVraiss <- Data_All[Mode[1], ncol(Data_All)]
+  # 
+  # AIC <- -2 * MaxVraiss + 2 * np
+  # Ndata <- 13 # number of observed data used
+  # BIC <- -2 * MaxVraiss + log(Ndata) * np
 
   # 5. tab_setpoint.out construction ----
 
@@ -2264,7 +2274,7 @@ f_MCSim_ind <- function(path_mod) {
 
   # Version LG
 
-  for (i in 1:nexperiement) {
+  for (i in 1:nexperiment) {
     # print(i)
     start <- Nb_param_IndVar * (i - 1) + 1
     end <- Nb_param_IndVar * i
@@ -2294,10 +2304,11 @@ f_MCSim_ind <- function(path_mod) {
   tmp.names <- Devc <- LnData <- LnPost_start <- LnPost <- NULL
 
   for (i in 1:NC) {
-    temp <- -2 * Data_V[[i]][IterSelect, 3] # -2log(vraisemblance), tableau
+    temp <- -2 * Data_V[[i]][IterSelect, ncol(Data_V[[i]])] # -2log(vraisemblance), tableau
     Devc <- cbind(Devc, temp)
-    LnPost_start <- cbind(LnPost_start, Data_V[[i]][(100):(2 * Niter / 4), 3])
-    LnPost <- cbind(LnPost, Data_V[[i]][IterSelect, 3])
+    LnPost_start <- cbind(LnPost_start, Data_V[[i]][seq(100, 2 * Niter / 4), ncol(Data_V[[i]]), drop = FALSE])
+    LnPost <- cbind(LnPost, Data_V[[i]][IterSelect, ncol(Data_V[[i]])])
+    LnData <- cbind(LnData, Data_V[[i]][IterSelect, (ncol(Data_V[[i]])-1)])
     tmp.names <- c(tmp.names, paste("Chain", i))
   }
 
@@ -2309,6 +2320,9 @@ f_MCSim_ind <- function(path_mod) {
 
   df_Devc <- data.frame(iteration = IterSelect[1:nrow(Devc)], RatioDeviance = Devc / min(Devc)) %>%
     pivot_longer(-iteration, names_to = "Chain", values_to = "RatioDeviance")
+  
+  df_LnData <- data.frame(iteration = IterSelect[1:nrow(Devc)], LnData) %>%
+    pivot_longer(-iteration, names_to = "Chain", values_to = "LnData")
 
   # 7. Outputs ----
   tab_setpoint <- tab_setpoint |>
@@ -2322,12 +2336,13 @@ f_MCSim_ind <- function(path_mod) {
     Files_in        = Files_in,
     Files_out       = Files_out,
     Nb_param        = np,
-    Nb_experiement  = nexperiement,
+    Nb_experiment   = nexperiment,
     Priors          = ParTable,
     Nb_iter_kept    = nb,         # Last iterations used to describe the posterior distributions
     Chains          = df_res.mcmc,
     df_LnPost_start = df_LnPost_start,
     df_LnPost       = df_LnPost,
+    df_LnData       = df_LnData,
     df_Devc         = df_Devc,
     Summary_res     = Res,
     AIC             = AIC,

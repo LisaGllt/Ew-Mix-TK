@@ -38,6 +38,7 @@ sf
 scales
 colorspace
 IDPmisc
+ggforce
 Rcpp
 brms
 StanHeaders
@@ -88,4 +89,3 @@ plan
 latex2exp
 extrafont
 data.table
-ggforce

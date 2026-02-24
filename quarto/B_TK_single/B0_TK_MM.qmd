@@ -185,7 +185,7 @@ df_TK_full <- read_excel(here::here("data/Data_TK_long.xlsx")) |>
     Phase == "Frozen" ~ 2
     )
   ) |> 
-  filter(Keep == "Yes") |> 
+  filter(Keep == "Yes" & Experiment == "TK") |> 
   group_by(ID) |> 
   mutate(t = as.numeric(difftime(Date, first(Date), units = "days"))) |> 
   dplyr::ungroup()
@@ -215,7 +215,7 @@ df_TK_fasting <- t1_df %>%
     )
 ```
 
-```{r}
+```{r, warning=F, message=F}
 #| fig-cap: Relationship between fresh weight before and after fasting. 
 #| fig-label: fig-Wfasting
 #| fig-width: 5
@@ -235,7 +235,7 @@ ggplot(
       y=w_nopopo,
       color = Molecule
       ),
-    alpha = 0.3
+    alpha = 0.7
   )+
   geom_abline(
     intercept = 0,
@@ -244,10 +244,10 @@ ggplot(
   )+
   annotate(
     geom="text", 
-    x = 0.7, y = 1.1, 
-    label = paste0("W_no_gut_content = W_gut_content x ", signif(lm.fasting$coefficients[1],4), "\n adj-R2 = ", signif(summary(lm.fasting)$adj.r.squared, 4)), 
+    x = 0.8, y = 1.1, 
+    label = paste0("W_no_gut_content = W_gut_content x ", signif(lm.fasting$coefficients[1],4), "\n R2 = ", signif(summary(lm.fasting)$r.squared, 4)), 
     color = col_red,
-    size = 3
+    size = 3.5
     )+
   scale_color_manual(values = col_Molecule)+
   lims(x=c(0.4, 1.2), y=c(0.4, 1.2))+
@@ -260,9 +260,9 @@ ggplot(
 
 ```
 
-### Toxicokinetics modeling
+## Toxicokinetics modeling
 
-## One compartment model
+### One compartment model
 
 The dynamics of internal pesticide concentrations in earthworms were first modeled using a one-compartment toxicokinetic model that explicitly accounts for growth dilution effects. In this framework, the internal concentration changes over time as a balance between uptake from soil, elimination to the external medium, and dilution by growth. This dynamic is governed by @eq-TKsimple.
 
@@ -307,7 +307,7 @@ $$
 \end{align}
 $$ {#eq-1comp}
 
-## Two-compartment model
+### Two-compartment model
 
 Because epoxiconazole is a lipophilic substance, a two-compartment model, built upon the one-compartment model, was also tested. In this extended representation, the earthworm body is considered as consisting of a central compartment (e.g., blood or well-perfused tissues) and a peripheral compartment (e.g., storage or poorly perfused tissues), with bidirectional exchanges between them. Uptake from soil occurs only into the central compartment, from which the substance can either be eliminated to the external medium or distributed to the peripheral compartment. The peripheral compartment acts as a storage site that can delay elimination and buffer fluctuations in exposure, which is particularly relevant for hydrophobic compounds expected to partition into lipid-rich tissues. Such a structure allows us to account for a biphasic accumulation and elimination pattern, typically characterized by a fast initial phase driven by the central compartment and a slower phase reflecting the exchange with the peripheral compartment. The internal concentration is now described by @eq-2comp, where the dynamics of the central and peripheral compartments are jointly expressed, enabling a more mechanistic representation of toxicokinetics for lipophilic pesticides in earthworms.
 
@@ -321,7 +321,7 @@ $$
 \end{aligned}
 $$ {#eq-2comp}
 
-## Exposure through gut content while in Petri dishes ?
+### Exposure through gut content while in Petri dishes ?
 
 Before freezing, earthworms were transferred to Petri dishes lined with moist filter paper for about a day to allow gut clearance and to avoid measuring soil residues in the digestive tract. During this depuration period, worms were no longer in direct contact with contaminated soil; however, residual dietary exposure may still occur due to the ingestion of contaminated soil particles retained in the gut. This exposure pathway is considered negligible for hydrophilic compounds (i.e. imidacloprid) but can represent a significant fraction of the total uptake for hydrophobic substances (log Kow \> 4.5), with reported contributions ranging from 15 to 40% [@belfroid_1995; @jager_2003a]. Epoxiconazole is moderately hydrophobic (log Kow = 3.3), for which little information is available.
 
@@ -439,8 +439,9 @@ mod.gut <- nlsLM(Per_Weight ~ Per_Weight_void + (100-Per_Weight_void)*exp(-lambd
                )
 
 summary(mod.gut)
-cat("95% confidence intervals\n")
+cat("95% confidence intervals:\n") 
 confint2(mod.gut, level = 0.95)
+
 
 DT50_gut <- signif(as.numeric(log(2)/ coef(mod.gut)["lambda"]), 3)
 Per_Weight_void <- signif(as.numeric(coef(mod.gut)["Per_Weight_void"]), 3)
@@ -500,6 +501,8 @@ p_mod <- ggplot(
 p_mod
 ```
 
+### Synthesis of state variables and parameters
+
 | Symbol | Code Symbol | Description | Unit |
 |----|----|----|----|
 | $W$ | `Weight` | Weight of the earthworm without gut content | g(worm) |
@@ -508,7 +511,7 @@ p_mod
 | $a$ | `a_growth` | Growth rate of the earthworm in soil | g<sup>1/3</sup>(worm)·d⁻¹ |
 | $C_{\text{ext}}$ | `CeEPX` or `CeIMD` |  | Soil concentration of contaminant |
 | $C_{\text{ext}}^{0}$ | `Ce0EPX` or `Ce0IMD` | Soil concentration of contaminant at the start of the experiment | ng·g(soil)⁻¹ |
-| $C_{\text{clx}}^0$ | Cclx0 | Natural soil concentration in contaminant | ng·g(soil)⁻¹ |
+| $C_{\text{clx}}^0$ | `Cclx0` | Natural soil concentration in contaminant | ng·g(soil)⁻¹ |
 | $DT_{50}$ | `DT50EPX` or `DT50IMD` | Half-life of the contaminant in soil | d⁻¹ |
 | $DT_{50,\text{depuration}}$ | `DT50gut` | Half-life of the gut content in Petri dishes | d⁻¹ |
 | $\varphi$ | `phi` | Fraction of the uptake that is due to gut content | – |
@@ -519,10 +522,10 @@ p_mod
 
 : State variables and parameters list. {#tbl-Variables}
 
-## Priors used
+### Priors used
 
 Large and weakly informative priors were assigned to the toxicokinetic rate constants in order to cover a wide range of plausible values. Specifically, the uptake ($k_u$), elimination ($k_e$), and inter-compartmental exchange rates ($k_{periph}$) were given log-uniform priors between 10$^{−5}$ and 10$^5$, ensuring that the posterior estimates would be primarily informed by the data rather than overly restrictive assumptions. For the growth process, truncated normal priors were specified for both the mean growth rate and its inter-individual variation, reflecting prior biological knowledge of adult earthworm growth while avoiding unrealistic values. Measurement processes were also integrated in the model: observed body weights were assigned truncated normal distributions to ensure positivity and consistency with biological constraints, while internal concentrations were assumed to follow truncated log-normal distributions, which are more appropriate for right-skewed data and guarantee non-negative values.
 
-## Model implementation
+### Model implementation
 
 Model calibration was performed with a bayesian inference software, MCSim, using 3 chains and 100 000. Posterior distributions were drawn using the last 10 000 iterations of each chain. Other statistical analyses were performed using the software R.

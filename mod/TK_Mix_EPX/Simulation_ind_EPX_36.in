@@ -1,0 +1,26 @@
+#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
+#===============================================
+
+# EPX 2 comp Phi%
+kuEPX = 1.64823;
+keEPX = 1.68255;
+kperiph = 0.00000003061920;
+phi = 0.912028;
+# a_growth_mean = 0.00355594;
+# Vr_a_growth = 0.00148897;
+Sigma_W = 0.0476993;
+Sigma_CiEPX = 1.28122;
+
+########## Individuals ################################################
+Simulation { # TK EPX - i =  34
+    a_growth=0.00410156737923981;
+    Winit=0.4540936;
+    Ci0EPX=82.2349597626437;
+    Ce0EPX=5157.2;
+    CclxEPX=0.09;
+    expo=NDoses(3,1,2,2,0,28,29.1);
+    Print(Weight,0,28,29.1);
+    Print(CiEPX,0,28,29.1);
+    Print(C_exposure,0,28,29.1);
+}
+End.

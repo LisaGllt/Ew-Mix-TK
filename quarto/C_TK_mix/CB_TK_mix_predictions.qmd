@@ -1,10 +1,14 @@
-```{r, include=F}
+```{r lib, include=F}
+#| cache: False
+
 library(here)
 source(file = here::here("functions/fun.R"))
 
 f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 path_fig <- here::here("fig/TK_mix")
+# pal_Ratio <- c(Nord_frost[4], Nord_aurora[5], Nord_aurora[1:4])
+pal_Ratio <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
 ```
 
 # Is there an interaction between IMD & EPX at the TK level ?
@@ -14,8 +18,7 @@ We want to answer the following question : Can we predict the concentrations in 
 ## Data importation
 
 ```{r data, warning=F, message=F}
-
-df_TK_mix <- f_read_data_TK_mix() |> 
+df_TK_mix <- f_read_data_TK_mix() |>
   mutate(
     Ratio_plot = case_when(
       Ratio == "E" ~ "1:0 (EPX only)",
@@ -23,142 +26,294 @@ df_TK_mix <- f_read_data_TK_mix() |>
       Ratio == "G" ~ "1:1",
       Ratio == "H" ~ "1:3",
       Ratio == "I" ~ "0:1 (IMD only)",
-    )
+      Ratio == "N" ~ "Ctrl"
+    ),
+    Ratio_plot = factor(Ratio_plot, levels = Ratio_plot[!duplicated(Ratio)])
   )
 
-Ci0IMD <- mean(subset(df_TK_mix, Ratio == "E")$CiIMD, na.rm=T)
-Ci0EPX <- mean(subset(df_TK_mix, Ratio == "I")$CiEPX, na.rm=T)
+Ci0IMD <- mean(subset(df_TK_mix, Ratio == "E")$CiIMD, na.rm = T)
+Ci0EPX <- mean(subset(df_TK_mix, Ratio == "I")$CiEPX, na.rm = T)
 
-df_TK_mix_mean <- subset(df_TK_mix, t>0) |> 
-  group_by(Ratio) |> 
+df_TK_mix_mean_Ce <- subset(df_TK_mix, t = 0) |>
+  group_by(Ratio, Line) |>
   mutate(
-    Dose_IMD = mean(Dose_IMD, na.rm=T),
-    Dose_EPX = mean(Dose_EPX, na.rm=T),
-    BAFIMD_obs = mean(CiIMD/Dose_IMD, na.rm=T),
-    BAFEPX_obs = mean(CiEPX/Dose_EPX, na.rm=T)
+    CeIMD = mean(CeIMD, na.rm = T),
+    CeEPX = mean(CeEPX, na.rm = T)
   ) |> 
-  ungroup(Ratio)
+  dplyr::select(CeIMD, CeEPX) |> 
+  unique()
 
+df_TK_mix_mean <- subset(df_TK_mix, t > 28) |>
+  dplyr::select(-c(CeIMD, CeEPX)) |> 
+  group_by(Ratio, Line) |>
+  mutate(
+    Dose_IMD = mean(Dose_IMD, na.rm = T),
+    Dose_EPX = mean(Dose_EPX, na.rm = T)
+  ) |> 
+  ungroup() |> 
+  left_join(df_TK_mix_mean_Ce, by = c("Ratio", "Line")) |> 
+  group_by(Ratio, Line) |>
+  mutate(
+    BAFIMD_obs = mean(CiIMD / CeIMD, na.rm = T),
+    BAFEPX_obs = mean(CiEPX / CeEPX, na.rm = T)
+  ) |> 
+  ungroup() 
 ```
 
 ```{r, warning=F, message=F}
-#| fig-cap: Results 
+#| fig-cap: Results
 #| label: fig-DataRes
 #| fig-height: 6
 #| fig-width: 8
 
 pIMD <- ggplot(
-  data = subset(df_TK_mix, t>0),
+  data = subset(df_TK_mix, t > 0),
   aes(
     x = Ratio,
     y = CiIMD
   )
-)+
+) +
   geom_dotplot(
     aes(
-    color=Ratio, 
-    fill=Ratio
+      color = Ratio,
+      fill = Ratio
     ),
-    binaxis='y', 
-    stackdir='center', 
-    dotsize=1, 
-    alpha=0.7
-    )+
-  scale_color_manual(values = Nord_aurora)+
-  scale_fill_manual(values = Nord_aurora)+
+    binaxis = "y",
+    stackdir = "center",
+    dotsize = 1,
+    alpha = 0.7
+  ) +
+  facet_wrap(~Line, scales = "free")+
+  scale_color_manual(values = pal_Ratio) +
+  scale_fill_manual(values = pal_Ratio) +
   theme_minimal()
 
 pEPX <- ggplot(
-  data = subset(df_TK_mix, t>0),
+  data = subset(df_TK_mix, t > 0),
   aes(
     x = Ratio,
     y = CiEPX
   )
-)+
+) +
   geom_dotplot(
     aes(
-    color=Ratio, 
-    fill=Ratio
+      color = Ratio,
+      fill = Ratio
     ),
-    binaxis='y', 
-    stackdir='center', 
-    dotsize=1, 
-    alpha=0.7
-    )+
-  scale_color_manual(values = Nord_aurora)+
-  scale_fill_manual(values = Nord_aurora)+
+    binaxis = "y",
+    stackdir = "center",
+    dotsize = 1,
+    alpha = 0.7
+  ) +
+  facet_wrap(~Line, scales = "free")+
+  scale_color_manual(values = pal_Ratio) +
+  scale_fill_manual(values = pal_Ratio) +
   theme_minimal()
 
 pIMDe <- ggplot(
-  data = subset(df_TK_mix_mean, (No_vdt==1 & Nb_rep == 1  & t==28)),
+  data = subset(df_TK_mix_mean, (No_vdt == 1 & Nb_rep == 1)),
   aes(
     x = Ratio,
-    y = Dose_IMD
+    y = CeIMD
   )
-)+
+) +
   geom_col(
     aes(
-    color=Ratio, 
-    fill=Ratio
-    ),
-    alpha=0.7
-    )+
-  geom_text(
-    aes(
-      label = signif(BAFIMD_obs, 3),
       color = Ratio,
-      y = max(Dose_IMD) * 1.02
-      ),
-    vjust = 0,         
-    size = 3            
+      fill = Ratio
+    ),
+    alpha = 0.7
   ) +
-  scale_color_manual(values = Nord_aurora)+
-  scale_fill_manual(values = Nord_aurora)+
+  # geom_text(
+  #   aes(
+  #     label = signif(BAFIMD_obs, 3),
+  #     color = Ratio,
+  #     y = max(Dose_IMD) * 1.02
+  #   ),
+  #   vjust = 0,
+  #   size = 3
+  # ) +
+  facet_wrap(~Line, scales = "free")+
+  scale_color_manual(values = pal_Ratio) +
+  scale_fill_manual(values = pal_Ratio) +
   theme_minimal()
 
 pEPXe <- ggplot(
-  data = subset(df_TK_mix_mean,  (No_vdt==1 & Nb_rep == 1 & t==28)),
+  data = subset(df_TK_mix_mean, (No_vdt == 1 & Nb_rep == 1)),
   aes(
     x = Ratio,
-    y = Dose_EPX
+    y = CeEPX
   )
-)+
+) +
   geom_col(
     aes(
-    color=Ratio, 
-    fill=Ratio
-    ),
-    alpha=0.7
-    )+
-  geom_text(
-    aes(
-      label = signif(BAFEPX_obs, 3),
       color = Ratio,
-      y = max(Dose_EPX) * 1.02
-      ),
-    vjust = 0,         
-    size = 3            
+      fill = Ratio
+    ),
+    alpha = 0.7
   ) +
-  scale_color_manual(values = Nord_aurora)+
-  scale_fill_manual(values = Nord_aurora)+
+  # geom_text(
+  #   aes(
+  #     label = signif(BAFEPX_obs, 3),
+  #     color = Ratio,
+  #     y = max(Dose_EPX) * 1.02
+  #   ),
+  #   vjust = 0,
+  #   size = 3
+  # ) +
+  facet_wrap(~Line, scales = "free")+
+  scale_color_manual(values = pal_Ratio) +
+  scale_fill_manual(values = pal_Ratio) +
   theme_minimal()
 
-p <- (pIMD + pEPX)/(pIMDe + pEPXe)
+p <- (pIMD + pEPX) / (pIMDe + pEPXe)
+p
+```
+
+```{r}
+#| fig-cap: Results
+#| label: fig-DataRes2
+#| fig-height: 4
+#| fig-width: 8
+
+pIMD <- ggplot() +
+  geom_point(
+    data = df_TK_mix_mean,
+    aes(
+      x = CeIMD,
+      y = CiIMD,
+      color = Ratio
+    )
+  ) +
+  labs(
+    x = "Concentration d'IMD dans le sol (ng/g)",
+    y = "Concentration d'IMD dans le ver (ng/g)"
+  ) +
+  scale_color_manual(values = pal_Ratio) +
+  theme_minimal()
+
+pEPX <- ggplot() +
+  geom_point(
+    data = df_TK_mix_mean,
+    aes(
+      x = CeEPX,
+      y = CiEPX,
+      color = Ratio
+    )
+  ) +
+  labs(
+    x = "Concentration d'EPX dans le sol (ng/g)",
+    y = "Concentration d'EPX dans le ver (ng/g)"
+  ) +
+  scale_color_manual(values = pal_Ratio) +
+  theme_minimal()
+
+
+p <- pIMD + pEPX +
+  plot_layout(ncol = 2, guides = "collect")
+p
+```
+
+```{r}
+#| fig-cap: Results
+#| label: fig-DataRes3
+#| fig-height: 4
+#| fig-width: 8
+
+pIMD <- ggplot() +
+  geom_point(
+    data = df_TK_mix_mean,
+    aes(
+      x = Dose_IMD,
+      y = CiIMD / CeIMD,
+      color = Ratio
+    )
+  ) +
+  labs(
+    x = "Concentration d'IMD dans le sol (ng/g)",
+    y = "Ratio des oncentrations d'IMD dans le sol et le ver (ng/g)"
+  ) +
+  scale_y_log10()+
+  scale_color_manual(values = pal_Ratio) +
+  theme_minimal()
+
+pEPX <- ggplot() +
+  geom_point(
+    data = df_TK_mix_mean,
+    aes(
+      x = Dose_EPX,
+      y = CiEPX / CeEPX,
+      color = Ratio
+    )
+  ) +
+  labs(
+    x = "Concentration d'EPX dans le sol (ng/g)",
+    y = "Ratio des concentrations d'EPX dans le sol et le ver (ng/g)"
+  ) +
+  scale_y_log10()+
+  scale_color_manual(values = pal_Ratio) +
+  theme_minimal()
+
+
+p <- pIMD + pEPX +
+  plot_layout(ncol = 2, guides = "collect")
+p
+```
+
+## Quantity in earthworms vs. quantity in the cosm
+
+```{r}
+df_TK_mix_Qtity <- df_TK_mix_mean |> 
+  mutate(
+    Q_EPX_ew = CiEPX * Weight, # ng/g x g
+    Q_IMD_ew = CiIMD * Weight,
+    Q_EPX_cosm = CeEPX * 200, # ng/g x 200
+    Q_IMD_cosm = CeIMD * 200,
+    R_Q_EPX_ew_cosm = Q_EPX_ew / Q_EPX_cosm * 100,
+    R_Q_IMD_ew_cosm = Q_IMD_ew / Q_IMD_cosm * 100
+  )
+
+p <- ggplot(
+  data = df_TK_mix_Qtity,
+  aes(
+    x = paste0(Ratio, Line)
+  )
+)+
+  geom_point(
+    mapping = aes(
+      y = R_Q_EPX_ew_cosm
+    ),
+    color = col_EPX,
+    alpha = 0.5,
+    size = 3
+  )+
+  geom_point(
+    mapping = aes(
+      y = R_Q_IMD_ew_cosm
+    ),
+    color = col_IMD,
+    alpha = 0.5,
+    size = 3
+  )+
+  scale_y_log10()+
+  labs(
+    x = "Condition",
+    y = "Quantité de substance dans un ver\nen % de la quantité dans un cosme"
+  )+
+  theme_minimal(14)
 p
 
 ```
 
 ## Simulations for IMD
 
-```{r}
+```{r increationIMD}
 path_mod_mix <- here::here("mod/TK_Mix_IMD")
 Nb_experiement <- length(unique(df_TK_mix$ID))
 Molecule <- "IMD"
 N_draws <- 1000
 
 f_Simulation_mix_ind(path_mod_mix, Molecule)
-
-# MODIFIER GROWTH RATE enlver les expo == 2
 
 ```
 
@@ -169,7 +324,7 @@ cd ..
 cd mod/TK_Mix_IMD
 pwd
 
-for j in $(seq 1 20); do
+for j in $(seq 1 43); do
   ./mcsim.m_TK_IMD "Simulation_ind_IMD_${j}.in" "Simulation_ind_IMD_${j}.out"
 done
 
@@ -178,50 +333,57 @@ done
 ### Predicted vs. Observed
 
 ```{r EPXdatapred, message=F, warning=F}
-
-dObs_ind <- df_TK_mix |> 
+dObs_ind <- df_TK_mix |>
   mutate(
     ID = as.numeric(ID)
-    )
+  )
 
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "CiIMD"] <- "CiIMD_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
 
-col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
+#col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
 IDs <- unique(df_TK_mix$ID)
 
-df_sim <- lapply(1:20, function(j) {
+df_sim <- lapply(1:43, function(j) {
   f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_IMD_", j, ".out"))) %>%
     mutate(
       sim = j,
       ID = as.numeric(IDs[j])
-      )
+    )
 }) %>%
   bind_rows()
 
-df_predobs_CiIMD_ind <- dObs_ind |> 
-  left_join(df_sim, suffix = c("_obs", "_pred")) |> 
-  dplyr::select(-c(Weight_obs, CiEPX)) |> 
-  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
-  drop_na() |> 
+df_predobs_CiIMD_ind <- dObs_ind |>
+  filter(Ratio != "N" & Line != 1) |> 
+  mutate(Line_plot = case_when(
+    Line == 2 ~ "Low doses (Isobole 2)",
+    Line == 5 ~ "High doses (Isobole 5)"
+  )
+  ) |> 
+  left_join(df_sim, suffix = c("_obs", "_pred")) |>
+  dplyr::select(-c(Weight_obs, CiEPX, CeIMD, CeEPX)) |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |> 
   filter(Time != 0)
 
-df_predobs_Weight_ind <- dObs_ind |> 
-  left_join(df_sim, suffix = c("_obs", "_pred"))|>
-  dplyr::select(-c(CiIMD_obs, CiEPX)) |> 
-  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
-  drop_na() |> 
+df_predobs_Weight_ind <- dObs_ind |>
+  filter(Ratio != "N" & Line != 1) |> 
+  left_join(df_sim, suffix = c("_obs", "_pred")) |>
+  dplyr::select(-c(CiIMD_obs, CiEPX, CeIMD, CeEPX)) |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |> 
   filter(Time != 0)
 
+# mean(subset(dObs_ind, Line == 5)$CiIMD, na.rm=TRUE)
 ```
 
 ```{r predobsIMD, message=F, warning=F}
-#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line. 
+#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line.
 #| label: fig-IMDpredobs
 #| fig-height: 4
 #| fig-width: 8
+
+pal_Ratio_bis <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
 
 fact_1 <- 2
 fact_2 <- 5
@@ -234,144 +396,135 @@ seq_line <- seq(0.1, 1.2, 0.01)
 
 df_line <- data.frame(
   x1  = seq_line,
-  y1  = seq_line*fact_1,
+  y1  = seq_line * fact_1,
   x_1 = seq_line,
-  y_1 = seq_line/fact_1,
+  y_1 = seq_line / fact_1,
   x2  = seq_line,
-  y2  = seq_line*fact_2,
+  y2  = seq_line * fact_2,
   x_2 = seq_line,
-  y_2 = seq_line/fact_2
-  )
+  y_2 = seq_line / fact_2
+)
 
 p_WIMD <- ggplot(
   data = df_predobs_Weight_ind,
   mapping = aes(
-      x = Weight_obs,
-      y = Weight
-    )
-  )+
+    x = Weight_obs,
+    y = Weight
+  )
+) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x1, y=y1),
+    data = df_line,
+    mapping = aes(x = x1, y = y1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_1, y=y_1),
+    data = df_line,
+    mapping = aes(x = x_1, y = y_1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x2, y=y2),
+    data = df_line,
+    mapping = aes(x = x2, y = y2),
     color = col_line2
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_2, y=y_2),
+    data = df_line,
+    mapping = aes(x = x_2, y = y_2),
     color = col_line2
-    )+
-  
+  ) +
   geom_abline(
-    slope=1, 
-    intercept = 0, 
+    slope = 1,
+    intercept = 0,
     color = col_line0,
     linewidth = 1
-    )+
+  ) +
   geom_point(
     alpha = 0.5,
     color = col_IMD
-  )+
+  ) +
   scale_x_log10(
-    limits=c(0.2, 1.2)
-    )+
+    limits = c(0.2, 1.2)
+  ) +
   scale_y_log10(
-    limits=c(0.2, 1.2)
-    )+
+    limits = c(0.2, 1.2)
+  ) +
   labs(
     x = "Observed weight of earthworms (g)",
     y = "Predicted weight of earthworms (g)"
-  )+
+  ) +
   theme_minimal()
 
 fact_1 <- 2
 fact_2 <- 5
 
-seq_line <- seq(0.1, 10000, 10)
+seq_line <- seq(1, 50000, 10)
 
 df_line <- data.frame(
   x1  = seq_line,
-  y1  = seq_line*fact_1,
+  y1  = seq_line * fact_1,
   x_1 = seq_line,
-  y_1 = seq_line/fact_1,
+  y_1 = seq_line / fact_1,
   x2  = seq_line,
-  y2  = seq_line*fact_2,
+  y2  = seq_line * fact_2,
   x_2 = seq_line,
-  y_2 = seq_line/fact_2
-  )
+  y_2 = seq_line / fact_2
+)
 
 p_CiIMD_predobs <- ggplot(
   data = df_predobs_CiIMD_ind,
   mapping = aes(
-      x = CiIMD_obs,
-      y = CiIMD
-    )
-  )+
+    x = CiIMD_obs,
+    y = CiIMD
+  )
+) +
   geom_path(
-    data=df_line,
-    mapping=aes(x=x1, y=y1),
+    data = df_line,
+    mapping = aes(x = x1, y = y1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_1, y=y_1),
+    data = df_line,
+    mapping = aes(x = x_1, y = y_1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x2, y=y2),
+    data = df_line,
+    mapping = aes(x = x2, y = y2),
     color = col_line2
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_2, y=y_2),
+    data = df_line,
+    mapping = aes(x = x_2, y = y_2),
     color = col_line2
-    )+
+  ) +
   geom_abline(
-    slope=1, 
-    intercept = 0, 
+    slope = 1,
+    intercept = 0,
     color = col_line0,
     linewidth = 1
-    )+
+  ) +
   geom_point(
     mapping = aes(
-      color = Ratio_plot
+      color = Ratio_plot,
+      shape = Line_plot
     ),
     alpha = 0.5
-  )+
-  # 
-  # xlim(
-  #   xmin = 0.5,
-  #   xmax = max(df_predobs_CiIMD_ind$CiIMD_obs)
-  # )+
-  # ylim(
-  #   ymin = 0.5,
-  #   ymax = max(df_predobs_CiIMD_ind$predict.endpoint)
-  # )+
+  ) +
   labs(
     x = "Observed concentrations of IMD\nin earthworms (ng/g)",
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
-  )+
-  scale_color_manual(values = Nord_aurora)+
+  ) +
+  scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
+  scale_shape_manual(values = c(shape_EPX, shape_IMD, shape_IMD, shape_IMD), name = "Isobole Number")+
   scale_x_log10(
-    #limits=c(1, 500)
-    )+
+    limits=c(0.1, 50000)
+  ) +
   scale_y_log10(
-    #limits=c(1, 500)
-    )+
+    limits=c(0.1, 50000)
+  ) +
   theme_minimal()
 
-p_predobs_IMD <- p_WIMD + p_CiIMD_predobs + plot_layout(ncol=2)
-
+p_predobs_IMD <- p_WIMD + p_CiIMD_predobs + plot_layout(ncol = 2)
 ```
 
 ### Full trajectories
@@ -381,7 +534,7 @@ Time_min <- 0
 Time_max <- 35
 Time_step <- 0.25
 Time_pred <- seq(Time_min, Time_max, Time_step)
-print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
+print_times <- paste(Time_min, Time_max, Time_step, sep = ", ")
 
 f_Simulation_mix_ind_full(path_mod_mix, Molecule, print_times)
 ```
@@ -393,7 +546,7 @@ cd ..
 cd mod/TK_Mix_IMD
 pwd
 
-for j in $(seq 1 20); do
+for j in $(seq 1 43); do
   ./mcsim.m_TK_IMD "Simulation_ind_full_IMD_${j}.in" "Simulation_ind_full_IMD_${j}.out"
 done
 ```
@@ -401,71 +554,65 @@ done
 ```{r IMDdatapredfull, message=F, warning=F}
 #| cache: false
 
-dObs_ind <- df_TK_mix |> 
+dObs_ind <- df_TK_mix |>
   mutate(
     ID = as.numeric(ID)
-    )
+  )
 
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "CiIMD"] <- "CiIMD_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CeIMD"] <- "CeIMD_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
 
 col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
 
-df_sim_full <- lapply(1:20, function(j) {
+df_sim_full <- lapply(1:43, function(j) {
   f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_full_IMD_", j, ".out"))) %>%
     mutate(
       sim = j,
       ID = as.numeric(IDs[j])
-      )
+    )
 }) %>%
   bind_rows()
 
 
-df_mod_Weight_ind <- df_sim_full |> 
-  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+df_mod_Weight_ind <- df_sim_full |>
+  left_join(dObs_ind, suffix = c("_obs", "_pred"))
 
-df_mod_CiIMD_ind <- df_sim_full|> 
-  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+df_mod_CiIMD_ind <- df_sim_full |>
+  left_join(dObs_ind, suffix = c("_obs", "_pred"))
 
-df_mod_CeIMD_ind <- df_sim_full|> 
-  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
-
+df_mod_CeIMD_ind <- df_sim_full |>
+  left_join(dObs_ind, suffix = c("_obs", "_pred"))
 ```
 
 ```{r IMDpredcurvesdata, message=F, warning=F}
-#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
 #| fig-label: fig-IMDdatapredfull
 #| fig-width: 8
 #| fig-height: 10
 
-library(ggforce)
+col_ratio <- nord(palette = "frost", n = 5)
 
-col_ratio <- nord(palette = "frost", n=5)
-
-
-dObs_ind_plot <- dObs_ind |> 
-  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
-  drop_na() 
+dObs_ind_plot <- dObs_ind |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) 
 
 alpha_point <- 0.5
 col_exposure <- c(Nord_aurora[2], Nord_aurora[3], Nord_aurora[4])
 
-p_CiIMD_traj <- ggplot()+
-
-
+p_CiIMD_traj <- ggplot() +
   geom_line(
-    data=df_mod_CiIMD_ind,
+    data = df_mod_CiIMD_ind,
     aes(
-      x=Time,
-      y= CiIMD,
+      x = Time,
+      y = CiIMD,
       group = ID
-      ),
-      color = col_IMD,
-      fill = col_IMD,
-    lwd=1
-    )+
+    ),
+    color = col_IMD,
+    fill = col_IMD,
+    lwd = 1
+  ) +
   geom_point(
     data = dObs_ind_plot,
     aes(
@@ -475,37 +622,33 @@ p_CiIMD_traj <- ggplot()+
     size = 2,
     alpha = 0.7,
     color = col_red
-  )+
-  scale_color_manual(values = col_ratio)+
-  scale_fill_manual(values = col_ratio)+
-  
+  ) +
+  scale_color_manual(values = col_ratio) +
+  scale_fill_manual(values = col_ratio) +
   scale_x_continuous(
-    breaks = seq(0, max(df_mod_CiIMD_ind$Time), by = 28),       # gros ticks
-    minor_breaks = seq(0, max(df_mod_CiIMD_ind$Time), by = 14)  # petits ticks
-    )+
-  
+    breaks = seq(0, max(df_mod_CiIMD_ind$Time), by = 28), # gros ticks
+    minor_breaks = seq(0, max(df_mod_CiIMD_ind$Time), by = 14) # petits ticks
+  ) +
   facet_wrap(
-    ~Ratio_plot+ID,
+    ~ Ratio_plot + ID,
     ncol = 4,
     scales = "free_x"
-    )+
+  ) +
   labs(
     x = "Time (days)",
     y = "Concentration of IMD\nin earthworms (ng/g)"
-  )+
+  ) +
   theme_minimal()
-
 ```
 
 ## Simulations for EPX
 
-```{r}
+```{r increationEPX}
 path_mod_mix <- here::here("mod/TK_Mix_EPX")
 Nb_experiement <- length(unique(df_TK_mix$ID))
 Molecule <- "EPX"
 
 f_Simulation_mix_ind(path_mod_mix, Molecule)
-
 ```
 
 ```{bash, results=F, eval=F}
@@ -515,7 +658,7 @@ cd ..
 cd mod/TK_Mix_EPX
 pwd
 
-for j in $(seq 1 20); do
+for j in $(seq 1 43); do
   ./mcsim.m_TK_EPX "Simulation_ind_EPX_${j}.in" "Simulation_ind_EPX_${j}.out"
 done
 
@@ -524,11 +667,10 @@ done
 ### Predicted vs. Observed
 
 ```{r EPXdatapredobs, message=F, warning=F}
-
-dObs_ind <- df_TK_mix |> 
+dObs_ind <- df_TK_mix |>
   mutate(
     ID = as.numeric(ID)
-    )
+  )
 
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "CiEPX"] <- "CiEPX_obs"
@@ -538,37 +680,51 @@ col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
 IDs <- unique(df_TK_mix$ID)
 
-df_sim <- lapply(1:20, function(j) {
+df_sim <- lapply(1:43, function(j) {
   f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_EPX_", j, ".out"))) %>%
     mutate(
       sim = j,
       ID = as.numeric(IDs[j])
-      )
+    )
 }) %>%
   bind_rows()
 
-df_predobs_CiEPX_ind <- dObs_ind |> 
-  left_join(df_sim, suffix = c("_obs", "_pred")) |> 
-  dplyr::select(-c(Weight_obs, CiIMD)) |> 
-  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
-  drop_na() |> 
+df_predobs_CiEPX_ind <- dObs_ind |>
+  filter(Ratio != "N" & Line != 1) |> 
+  mutate(Line_plot = case_when(
+    Line == 2 ~ "Low doses (Isobole 2)",
+    Line == 5 ~ "High doses (Isobole 5)"
+  )
+  ) |> 
+  left_join(df_sim, suffix = c("_obs", "_pred")) |>
+  dplyr::select(-c(Weight_obs, CiIMD, CeIMD, CeEPX)) |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |>
   filter(Time != 0)
 
-df_predobs_Weight_ind <- dObs_ind |> 
-  left_join(df_sim, suffix = c("_obs", "_pred"))|>
-  dplyr::select(-c(CiEPX_obs, CiIMD)) |> 
-  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
-  drop_na() |> 
+df_predobs_Weight_ind <- dObs_ind |>
+  filter(Ratio != "N" & Line != 1) |> 
+  left_join(df_sim, suffix = c("_obs", "_pred")) |>
+  dplyr::select(-c(CiEPX_obs, CiIMD, CeIMD, CeEPX)) |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |>
   filter(Time != 0)
 
 
+df_predobs_CiEPX_ind_ratio <- df_predobs_CiEPX_ind |>
+  mutate(
+    Ratio_predobs = CiEPX / CiEPX_obs,
+    Residuals = CiEPX - CiEPX_obs
+  )
+
+# mean(subset(df_predobs_CiEPX_ind_ratio, Line == 5)$Ratio_predobs, na.rm=TRUE)
 ```
 
 ```{r predobsEPX, message=F, warning=F}
-#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line. 
+#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line.
 #| label: fig-EPXpredobs
 #| fig-height: 4
 #| fig-width: 8
+
+pal_Ratio_bis <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
 
 fact_1 <- 2
 fact_2 <- 5
@@ -581,63 +737,62 @@ seq_line <- seq(0.1, 1.2, 0.01)
 
 df_line <- data.frame(
   x1  = seq_line,
-  y1  = seq_line*fact_1,
+  y1  = seq_line * fact_1,
   x_1 = seq_line,
-  y_1 = seq_line/fact_1,
+  y_1 = seq_line / fact_1,
   x2  = seq_line,
-  y2  = seq_line*fact_2,
+  y2  = seq_line * fact_2,
   x_2 = seq_line,
-  y_2 = seq_line/fact_2
-  )
+  y_2 = seq_line / fact_2
+)
 
 p_WEPX <- ggplot(
   data = df_predobs_Weight_ind,
   mapping = aes(
-      x = Weight_obs,
-      y = Weight
-    )
-  )+
+    x = Weight_obs,
+    y = Weight
+  )
+) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x1, y=y1),
+    data = df_line,
+    mapping = aes(x = x1, y = y1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_1, y=y_1),
+    data = df_line,
+    mapping = aes(x = x_1, y = y_1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x2, y=y2),
+    data = df_line,
+    mapping = aes(x = x2, y = y2),
     color = col_line2
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_2, y=y_2),
+    data = df_line,
+    mapping = aes(x = x_2, y = y_2),
     color = col_line2
-    )+
-  
+  ) +
   geom_abline(
-    slope=1, 
-    intercept = 0, 
+    slope = 1,
+    intercept = 0,
     color = col_line0,
     linewidth = 1
-    )+
+  ) +
   geom_point(
     alpha = 0.5,
     color = col_EPX
-  )+
+  ) +
   scale_x_log10(
-    limits=c(0.2, 1.2)
-    )+
+    limits = c(0.2, 1.2)
+  ) +
   scale_y_log10(
-    limits=c(0.2, 1.2)
-    )+
+    limits = c(0.2, 1.2)
+  ) +
   labs(
     x = "Observed weight of earthworms (g)",
     y = "Predicted weight of earthworms (g)"
-  )+
+  ) +
   theme_minimal()
 
 fact_1 <- 2
@@ -647,79 +802,79 @@ seq_line <- seq(1, 100000, 10)
 
 df_line <- data.frame(
   x1  = seq_line,
-  y1  = seq_line*fact_1,
+  y1  = seq_line * fact_1,
   x_1 = seq_line,
-  y_1 = seq_line/fact_1,
+  y_1 = seq_line / fact_1,
   x2  = seq_line,
-  y2  = seq_line*fact_2,
+  y2  = seq_line * fact_2,
   x_2 = seq_line,
-  y_2 = seq_line/fact_2
-  )
+  y_2 = seq_line / fact_2
+)
 
 
 p_CiEPX_predobs <- ggplot(
   data = df_predobs_CiEPX_ind,
   mapping = aes(
-      x = CiEPX_obs,
-      y = CiEPX
-    )
-  )+
+    x = CiEPX_obs,
+    y = CiEPX
+  )
+) +
   geom_path(
-    data=df_line,
-    mapping=aes(x=x1, y=y1),
+    data = df_line,
+    mapping = aes(x = x1, y = y1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_1, y=y_1),
+    data = df_line,
+    mapping = aes(x = x_1, y = y_1),
     color = col_line1
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x2, y=y2),
+    data = df_line,
+    mapping = aes(x = x2, y = y2),
     color = col_line2
-    )+
+  ) +
   geom_line(
-    data=df_line,
-    mapping=aes(x=x_2, y=y_2),
+    data = df_line,
+    mapping = aes(x = x_2, y = y_2),
     color = col_line2
-    )+
+  ) +
   geom_abline(
-    slope=1, 
-    intercept = 0, 
+    slope = 1,
+    intercept = 0,
     color = col_line0,
     linewidth = 1
-    )+
+  ) +
   geom_point(
     mapping = aes(
-      color = Ratio_plot
+      color = Ratio_plot,
+      shape = Line_plot
     ),
     alpha = 0.5
-  )+
-  
+  ) +
   xlim(
     xmin = 0.5,
     xmax = max(df_predobs_CiEPX_ind$CiEPX_obs)
-  )+
+  ) +
   ylim(
     ymin = 0.5,
     ymax = max(df_predobs_CiEPX_ind$predict.endpoint)
-  )+
+  ) +
   labs(
     x = "Observed concentrations of EPX\nin earthworms (ng/g)",
     y = "Predicted concentrations of EPX\nin earthworms (ng/g)"
-  )+
-  scale_color_manual(values = Nord_aurora)+
+  ) +
+  scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
+  scale_shape_manual(values = c(shape_EPX, shape_IMD, shape_IMD, shape_IMD), name = "Isobole Number")+
   scale_x_log10(
-    #limits=c(1, 500)
-    )+
+    limits=c(5, 100000)
+  ) +
   scale_y_log10(
-    #limits=c(1, 500)
-    )+
+    limits=c(5, 100000)
+  ) +
   theme_minimal()
 
-p_predobs_EPX <- p_WEPX + p_CiEPX_predobs + plot_layout(ncol=2)
-
+p_predobs_EPX <- p_WEPX + p_CiEPX_predobs + plot_layout(ncol = 2)
 ```
 
 ### Full trajectories
@@ -729,7 +884,7 @@ Time_min <- 0
 Time_max <- 35
 Time_step <- 0.25
 Time_pred <- seq(Time_min, Time_max, Time_step)
-print_times <- paste(Time_min, Time_max, Time_step, sep=", ")
+print_times <- paste(Time_min, Time_max, Time_step, sep = ", ")
 
 f_Simulation_mix_ind_full(path_mod_mix, Molecule, print_times)
 ```
@@ -741,7 +896,7 @@ cd ..
 cd mod/TK_Mix_EPX
 pwd
 
-for j in $(seq 1 20); do
+for j in $(seq 1 43); do
   ./mcsim.m_TK_EPX "Simulation_ind_full_EPX_${j}.in" "Simulation_ind_full_EPX_${j}.out"
 done
 ```
@@ -749,71 +904,65 @@ done
 ```{r EPXdatapredfull, message=F, warning=F}
 #| cache: false
 
-dObs_ind <- df_TK_mix |> 
+dObs_ind <- df_TK_mix |>
   mutate(
     ID = as.numeric(ID)
-    )
+  )
 
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "CiEPX"] <- "CiEPX_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CeEPX"] <- "CeEPX_obs"
 colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
 
 col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
 
-df_sim_full <- lapply(1:20, function(j) {
+df_sim_full <- lapply(1:43, function(j) {
   f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_full_EPX_", j, ".out"))) %>%
     mutate(
       sim = j,
       ID = as.numeric(IDs[j])
-      )
+    )
 }) %>%
   bind_rows()
 
 
-df_mod_Weight_ind <- df_sim_full |> 
-  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+df_mod_Weight_ind <- df_sim_full |>
+  left_join(dObs_ind, suffix = c("_obs", "_pred"))
 
-df_mod_CiEPX_ind <- df_sim_full|> 
-  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
+df_mod_CiEPX_ind <- df_sim_full |>
+  left_join(dObs_ind, suffix = c("_obs", "_pred"))
 
-df_mod_CeEPX_ind <- df_sim_full|> 
-  left_join(dObs_ind, suffix = c("_obs", "_pred")) 
-
+df_mod_CeEPX_ind <- df_sim_full |>
+  left_join(dObs_ind, suffix = c("_obs", "_pred"))
 ```
 
 ```{r EPXpredcurvesdata, message=F, warning=F}
-#| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
 #| fig-label: fig-EPXdatapredfull
 #| fig-width: 8
 #| fig-height: 10
 
-library(ggforce)
+col_ratio <- nord(palette = "frost", n = 5)
 
-col_ratio <- nord(palette = "frost", n=5)
-
-
-dObs_ind_plot <- dObs_ind |> 
-  mutate(across(everything(), ~replace(.x, .x == -1, NA))) |> 
-  drop_na() 
+dObs_ind_plot <- dObs_ind |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) 
 
 alpha_point <- 0.5
 col_exposure <- c(Nord_aurora[2], Nord_aurora[3], Nord_aurora[4])
 
-p_CiEPX_traj <- ggplot()+
-
-
+p_CiEPX_traj <- ggplot() +
   geom_line(
-    data=df_mod_CiEPX_ind,
+    data = df_mod_CiEPX_ind,
     aes(
-      x=Time,
-      y= CiEPX,
+      x = Time,
+      y = CiEPX,
       group = ID
-      ),
-      color = col_EPX,
-      fill = col_EPX,
-    lwd=1
-    )+
+    ),
+    color = col_EPX,
+    fill = col_EPX,
+    lwd = 1
+  ) +
   geom_point(
     data = dObs_ind_plot,
     aes(
@@ -823,76 +972,86 @@ p_CiEPX_traj <- ggplot()+
     size = 2,
     alpha = 0.7,
     color = col_red
-  )+
-  scale_color_manual(values = col_ratio)+
-  scale_fill_manual(values = col_ratio)+
-  
+  ) +
+  scale_color_manual(values = col_ratio) +
+  scale_fill_manual(values = col_ratio) +
   scale_x_continuous(
-    breaks = seq(0, max(df_mod_CiEPX_ind$Time), by = 28),       # gros ticks
-    minor_breaks = seq(0, max(df_mod_CiEPX_ind$Time), by = 14)  # petits ticks
-    )+
-  
+    breaks = seq(0, max(df_mod_CiEPX_ind$Time), by = 28), # gros ticks
+    minor_breaks = seq(0, max(df_mod_CiEPX_ind$Time), by = 14) # petits ticks
+  ) +
   facet_wrap(
-    ~Ratio_plot+ID,
+    ~ Ratio_plot + ID,
     ncol = 4,
     scales = "free_x"
-    )+
+  ) +
   labs(
     x = "Time (days)",
     y = "Concentration of EPX\nin earthworms (ng/g)"
-  )+
+  ) +
   theme_minimal()
-
 ```
 
 ## Summary
 
 ```{r, message=F, warning=F}
-#| fig-cap: Results of the model fits on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line. 
+#| fig-cap: Results of the model fits on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line.
 #| label: fig-MIXpredobs
-#| fig-height: 10
-#| fig-width: 10
+#| fig-height: 8
+#| fig-width: 8
 
-p_predobs_full <- p_WEPX + p_CiEPX_predobs + p_WIMD + p_CiIMD_predobs + plot_layout(ncol=2)
+p_predobs_full <- p_WEPX + p_CiEPX_predobs + p_WIMD + p_CiIMD_predobs + plot_layout(ncol = 2)
 p_predobs_full
 ```
 
 ```{r, include = F}
 ggsave(
-  filename="TK_MIX_predobs.png", 
-  plot=p_predobs_full, 
-  width=8, height = 8, 
-  path=path_fig
-  )
+  filename = "TK_MIX_predobs.png",
+  plot = p_predobs_full,
+  width = 8, height = 8,
+  path = path_fig
+)
 ggsave(
-  filename="TK_MIX_preobs.svg", 
-  plot=p_predobs_full, 
-  width=8, height = 8, 
-  path=path_fig
-  )
+  filename = "TK_MIX_preobs.svg",
+  plot = p_predobs_full,
+  width = 8, height = 8,
+  path = path_fig
+)
 ```
 
 ```{r, message=F, warning=F}
-#| fig-cap: Estimated toxicokinetic of the EPX & IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
+#| fig-cap: Estimated toxicokinetic of the EPX & IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
 #| fig-label: fig-MIXdatapredfull
 #| fig-width: 8
-#| fig-height: 16
+#| fig-height: 30
 
-p_traj_full <- p_CiEPX_traj + p_CiIMD_traj + plot_layout(ncol=1)
+p_traj_full <- p_CiEPX_traj + p_CiIMD_traj + plot_layout(ncol = 1)
 p_traj_full
 ```
 
 ```{r, include = F}
 ggsave(
-  filename="TK_MIX_traj.png", 
-  plot=p_traj_full, 
-  width=12, height = 8, 
-  path=path_fig
-  )
+  filename = "TK_MIX_traj_EPX.png",
+  plot = p_CiEPX_traj,
+  width = 12, height = 8,
+  path = path_fig
+)
 ggsave(
-  filename="TK_MIX_traj.svg", 
-  plot=p_traj_full, 
-  width=12, height = 8, 
-  path=path_fig
-  )
+  filename = "TK_MIX_traj_EPX.svg",
+  plot = p_CiEPX_traj,
+  width = 12, height = 8,
+  path = path_fig
+)
+
+ggsave(
+  filename = "TK_MIX_traj_IMD.png",
+  plot = p_CiIMD_traj,
+  width = 12, height = 8,
+  path = path_fig
+)
+ggsave(
+  filename = "TK_MIX_traj_IMD.svg",
+  plot = p_CiIMD_traj,
+  width = 12, height = 8,
+  path = path_fig
+)
 ```

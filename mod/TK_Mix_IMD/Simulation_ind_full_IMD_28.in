@@ -1,0 +1,25 @@
+#### Toxicokinetics of Imidacloprid in A. caliginosa (Mixture edition)
+#===============================================
+
+# IMD 1 comp 0%
+kuIMD = 1.58669;
+keIMD = 0.048173;
+# a_growth = 0.00351619;
+# Vr_a_growth = 0.00124984;
+Sigma_W = 0.0393328;
+Sigma_CiIMD = 1.45184;
+
+
+########## Individuals ################################################
+Simulation { # TK Mix IMD - i =  61
+    a_growth=0.00677801759380169;
+    Winit=0.308913;
+    Ci0IMD=2.57633333333333;
+    Ce0IMD=9.6;
+    CclxIMD=0.016;
+    expo=NDoses(3,1,2,2,0,28,29.1);
+    PrintStep(Weight,0, 35, 0.25);
+    PrintStep(CiIMD,0, 35, 0.25);
+    PrintStep(C_exposure,0, 35, 0.25);
+}
+End.

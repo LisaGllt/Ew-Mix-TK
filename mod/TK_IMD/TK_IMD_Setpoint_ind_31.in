@@ -9,7 +9,7 @@ SetPoints("Setpoints_ind_31.out", "tab_setpoint_ind_31.out", 0,kuIMD, keIMD, a_g
 ########## Individuals ################################################
 Simulation { # TK IMD - i =  63
     Winit=0.5201312;
-    Ci0IMD=4.9295181473998;
+    Ci0IMD=6.2;
     Ce0IMD=89;
     CclxIMD=0.016;
     expo=NDoses(3,1,2,2,0,20.8284722222222,22.10625);

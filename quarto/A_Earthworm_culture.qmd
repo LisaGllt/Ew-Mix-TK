@@ -10,7 +10,7 @@ f_load_libraries_colors()
 
 ### Earthworm model - *Aporrectodea caliginosa*
 
-*Aporrectodea caliginosa* (@fig-cali), an endogeic earthworm species, was the chosen biological model for it is considered highly representative of agricultural soil [@bart_2018] and is part of the most sensitive agricultural species to pesticides [@pelosi_2013]. It is also a species we are able to cultivate under laboratory conditions (@sec-ewcultivation).
+*Aporrectodea caliginosa* (@fig-cali), an endogeic earthworm species, was the chosen biological model for it is considered highly representative of agricultural soil [@bart_2018] and is part of the most sensitive agricultural species to pesticides [@pelosi_2013]. It is also a species we are able to cultivate under laboratory conditions (@sec-earthwormsbreeding).
 
 ![Adult *A. caliginosa* individual.](../photos/vdt_cali.png){#fig-cali width="50%"}
 
@@ -506,19 +506,3 @@ df_rescape <- read.csv(here::here("data/Data_Rescape_long.csv")) |>
 
 df_litt_soils <- read_excel(here::here("data/Data_litt_EPX_IMD.xlsx"), sheet=2)
 ```
-
-<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-
-<b> Session Information </b>
-
-</button>
-
-:::: {#collapseOne .accordion-collapse .collapse}
-<div>
-
-```{r}
-sessionInfo()
-```
-
-</div>
-::::

@@ -1,0 +1,72 @@
+# Kinetic model
+#----------------------------------------------------------------------
+Inputs = {expo, Winit, event_Ce}
+States = {L, CeEPX, Ci_EPX1, Ci_EPX2, CeEPX_real};
+Outputs = {Weight, CiEPX, C_exposure}; # Only Weights needs to be in Outputs
+
+# PARAMETERS -----------------------------------------------------
+
+# !!! Weight of earthworms are without their gut content !!!
+
+Winit;      # Initial weight (without gut content) (g)
+Ci0EPX;     # EPX Initial concentration in earthworms (ng/g)
+Ce0EPX;     # Initial EPX concentration in the contaminated soil (ng/g soil)
+CclxEPX;    # EPX concentration in the uncontaminated soil (ng/g soil)
+
+# Error parameters 
+Sigma_W;  # Error on Weight measurements without gut content
+Sigma_CiEPX; # Error on CiEPX measurements
+
+# Kinetics in soil 
+DT50EPX = 353.5;   # EPX Half-life in soil (days)
+DT50gut = 0.182; # In days ! (= 4,37 h)
+
+# Second compartment
+kperiph;
+
+# Growth parameters 
+a_growth;   # Growth rate of earthworms in soil (g^(1/3)/d)
+Vr_a_growth;
+
+# Kinetics in Earthworms
+kuEPX;    # EPX Absorption rate
+keEPX;    # EPX Elimination rate
+
+# Exposition status 
+expo; # 0 if in soil and not exposed ; 1 if in soil and exposed ; 2 if fasting
+
+# MODEL ---------------------------------------------------------
+
+Initialize {
+    # Starting points
+    L = pow(Winit, 1.0/3.0);
+    CeEPX = Ce0EPX + CclxEPX;
+    Ci_EPX1 = Ci0EPX * kperiph/(kperiph + kperiph);
+    Ci_EPX2 = Ci0EPX - Ci_EPX1;
+}
+
+# Differentials
+Dynamics {
+    # Growth
+    dt(L) = (expo == 2 ? 0 : a_growth);
+    
+    # Concentration in soil
+    #dt(CeEPX) = (expo == 2 ? -log(2)/DT50gut * CeEPX : -log(2)/DT50EPX * CeEPX);
+    
+    dt(CeEPX) = -log(2)/DT50EPX * CeEPX;
+    
+    # Concentration in earthworms
+    a_real = (expo == 2 ? 0 : a_growth);
+    CeEPX_real = (expo == 2 ? 0 : CeEPX);
+    
+    dt(Ci_EPX2) = 1/(L)*(kperiph*Ci_EPX1 - kperiph*Ci_EPX2) - 3*a_real/(L)*Ci_EPX2;
+    dt(Ci_EPX1) = 1/(L)*(kuEPX*CeEPX_real - keEPX*Ci_EPX1 + kperiph*Ci_EPX2 - kperiph*Ci_EPX1) - 3*a_real/(L)*Ci_EPX1;
+}
+
+CalcOutputs {
+    Weight = pow(L,3);
+    CiEPX = ((Ci_EPX1+Ci_EPX2) > 1e-12 ? (Ci_EPX1+Ci_EPX2) : 1e-12);
+    C_exposure = CeEPX;
+}
+
+End.

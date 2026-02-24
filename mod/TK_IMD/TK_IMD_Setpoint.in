@@ -9,7 +9,7 @@ SetPoints("Setpoints.out", "tab_setpoint.out", 0,kuIMD, keIMD, a_growth, Vr_a_gr
 	Simulation {
 
   # Events
-    Winit=0.5637489390625;
+    Winit=0.536510035616438;
     Ci0IMD=3.92587673494744;
     Ce0IMD=80.5;
     CclxIMD=0.016;

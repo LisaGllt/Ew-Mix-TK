@@ -1,0 +1,21 @@
+#### Toxicokinetics of Epoxiconazole in A. caliginosa
+#===============================================
+
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Setpoints_ind_14.out", "tab_setpoint_ind_14.out", 0,kuEPX, keEPX, phi, a_growth);
+
+########## Individuals ################################################
+Simulation { # TK EPX - i =  26
+    Winit=0.6917779;
+    Ci0EPX=5.84;
+    Ce0EPX=1070;
+    CclxEPX=0.09;
+    expo=NDoses(3,1,2,2,0,6.85069444444444,8.19097222222222);
+
+    Print(Weight,0,6.85069444444444,8.19097222222222);
+    Print(CiEPX,0,6.85069444444444,8.19097222222222);
+    Print(C_exposure,0,6.85069444444444,8.19097222222222);
+}
+End.
