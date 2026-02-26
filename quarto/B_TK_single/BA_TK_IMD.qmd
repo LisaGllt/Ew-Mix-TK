@@ -3676,8 +3676,9 @@ df_line <- data.frame(
   y_2 = seq_line/fact_2
   )
 
-lim_plot <- 3000
-col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[2])
+lim_plot <- 3000 
+col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
+
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
 
 p_CiIMD_predobs <- ggplot(
@@ -3759,7 +3760,7 @@ ggsave(
   plot = p_predobs,
   width = 8, height = 4,
   path = path_fig_C1
-)
+) 
 ggsave(
   filename = "TK_IMD_predobs.svg",
   plot = p_predobs,
@@ -3906,8 +3907,9 @@ df_line <- data.frame(
   y_2 = seq_line/fact_2
   )
 
-lim_plot <- 3000
-col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[2])
+lim_plot <- 3000 
+col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
+
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
 
 p_CiIMD_predobs <- ggplot(
@@ -3989,7 +3991,7 @@ ggsave(
   plot = p_predobs,
   width = 8, height = 4,
   path = path_fig_C1P
-)
+) 
 ggsave(
   filename = "TK_IMD_predobs.svg",
   plot = p_predobs,
@@ -4047,7 +4049,7 @@ col_line0 <- Nord_polar[1]
 col_line1 <- Nord_polar[4]
 col_line2 <- Nord_snow[1]
 
-col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
+col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[5])
 
 seq_line <- seq(0.5, 1.5, 0.001)
 
@@ -4136,8 +4138,9 @@ df_line <- data.frame(
   y_2 = seq_line/fact_2
   )
 
-lim_plot <- 3000
-col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[2])
+lim_plot <- 3000 
+col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
+
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
 
 p_CiIMD_predobs <- ggplot(
@@ -4219,7 +4222,7 @@ ggsave(
   plot = p_predobs,
   width = 8, height = 4,
   path = path_fig_C1N
-)
+) 
 ggsave(
   filename = "TK_IMD_predobs.svg",
   plot = p_predobs,
@@ -4366,8 +4369,9 @@ df_line <- data.frame(
   y_2 = seq_line/fact_2
   )
 
-lim_plot <- 3000
-col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[2])
+lim_plot <- 3000 
+col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
+
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
 
 p_CiIMD_predobs <- ggplot(
@@ -4449,7 +4453,7 @@ ggsave(
   plot = p_predobs,
   width = 8, height = 4,
   path = path_fig_C2
-)
+) 
 ggsave(
   filename = "TK_IMD_predobs.svg",
   plot = p_predobs,
@@ -4596,8 +4600,8 @@ df_line <- data.frame(
   y_2 = seq_line/fact_2
   )
 
-lim_plot <- 3000
-col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[2])
+lim_plot <- 3000 
+col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
 
 p_CiIMD_predobs <- ggplot(
@@ -4679,7 +4683,8 @@ ggsave(
   plot = p_predobs,
   width = 8, height = 4,
   path = path_fig_C2P
-)
+) 
+
 ggsave(
   filename = "TK_IMD_predobs.svg",
   plot = p_predobs,
@@ -4827,7 +4832,7 @@ df_line <- data.frame(
   )
 
 lim_plot <- 3000
-col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[2])
+col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
 
 p_CiIMD_predobs <- ggplot(
@@ -4910,6 +4915,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2N
 )
+
 ggsave(
   filename = "TK_IMD_predobs.svg",
   plot = p_predobs,
@@ -4969,7 +4975,7 @@ df_residuals_CiIMD_C1 <- df_predobs_CiIMD_ind_C1 |>
     ) |> 
   mutate(
     Time_point = as.numeric(as.character(Time_point_f)),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5009,6 +5015,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1
 )
+
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5032,7 +5039,7 @@ df_residuals_CiIMD_C1P <- df_predobs_CiIMD_ind_C1P |>
     ) |> 
   mutate(
     Time_point = as.numeric(as.character(Time_point_f)),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5072,6 +5079,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1P
 )
+
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5095,7 +5103,7 @@ df_residuals_CiIMD_C1N <- df_predobs_CiIMD_ind_C1N |>
     ) |> 
   mutate(
     Time_point = as.numeric(as.character(Time_point_f)),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5135,6 +5143,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1N
 )
+
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5158,7 +5167,7 @@ df_residuals_CiIMD_C2 <- df_predobs_CiIMD_ind_C2 |>
     ) |> 
   mutate(
     Time_point = as.numeric(as.character(Time_point_f)),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5198,6 +5207,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2
 )
+
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5221,7 +5231,7 @@ df_residuals_CiIMD_C2P <- df_predobs_CiIMD_ind_C2P |>
     ) |> 
   mutate(
     Time_point = as.numeric(as.character(Time_point_f)),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5261,6 +5271,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2P
 )
+
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5284,7 +5295,7 @@ df_residuals_CiIMD_C2N <- df_predobs_CiIMD_ind_C2N |>
     ) |> 
   mutate(
     Time_point = as.numeric(as.character(Time_point_f)),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5324,6 +5335,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2N
 )
+
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,

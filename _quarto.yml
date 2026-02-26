@@ -25,6 +25,7 @@ book:
       chapters: 
          - quarto/C_TK_mix/CA_TK_mix_protocole.qmd
          - quarto/C_TK_mix/CB_TK_mix_predictions.qmd
+    - quarto/D_Conclusion.qmd
     - quarto/references.qmd
   navbar:
     right:

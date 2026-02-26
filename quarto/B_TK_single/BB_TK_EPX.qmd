@@ -3237,7 +3237,6 @@ col_line2 <- Nord_snow[1]
 
 col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
-# "#BF616A" "#A3BE8C" "#B48EAD"
 
 lim_min <-  min(df_predobs_Weight_ind_C2P$predict.endpoint, df_predobs_Weight_ind_C2P$Weight)
 lim_max <- max(df_predobs_Weight_ind_C2P$predict.endpoint, df_predobs_Weight_ind_C2P$Weight)
@@ -3410,6 +3409,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2P
 )
+
 ggsave(
   filename = "TK_EPX_predobs.svg",
   plot = p_predobs,
@@ -3469,7 +3469,7 @@ df_residuals_CiEPX_C1 <- df_predobs_CiEPX_ind_C1 |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3509,6 +3509,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1
 )
+
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -3532,7 +3533,7 @@ df_residuals_CiEPX_C1P <- df_predobs_CiEPX_ind_C1P |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3572,6 +3573,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1P
 )
+
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -3595,7 +3597,7 @@ df_residuals_CiEPX_C2 <- df_predobs_CiEPX_ind_C2 |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3635,6 +3637,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2
 )
+
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -3658,7 +3661,7 @@ df_residuals_CiEPX_C2P <- df_predobs_CiEPX_ind_C2P |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "TK_BIS")),
+    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3698,6 +3701,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2P
 )
+
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -6419,6 +6423,12 @@ p
     filename="TK_EPX_predcurves.svg", 
     plot=p, 
     width=8, height = 4, 
+    path=path_fig_C2P
+    )
+    ggsave(
+    filename="TK_EPX_predcurves_2.png", 
+    plot=p, 
+    width=5, height = 4, 
     path=path_fig_C2P
     )
 ```
