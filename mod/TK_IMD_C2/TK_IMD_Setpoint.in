@@ -1,0 +1,24 @@
+#### Toxicokinetics of Imidacloprid in A. caliginosa
+#===============================================
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Setpoints.out", "tab_setpoint.out", 0,kuIMD, keIMD, kperiph, a_growth, Vr_a_growth, Sigma_W, Sigma_CiIMD);
+
+
+	Simulation {
+
+  # Events
+    Winit=0.536704425;
+    Ci0IMD=3.92587673494744;
+    Ce0IMD=80.5;
+    CclxIMD=0.016;
+    expo=NDoses(2, 1, 0, 0, 21);
+    event_Ce=Events(CeIMD,1,20.9951388888889, Replace,0.09);
+# Data
+
+		PrintStep (Weight,0, 42, 0.25);
+		PrintStep (CiIMD,0, 42, 0.25);
+		PrintStep (C_exposure,0, 42, 0.25);
+	}
+End.

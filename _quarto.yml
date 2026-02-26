@@ -20,13 +20,7 @@ book:
       chapters:
         - quarto/B_TK_single/B0_TK_MM.qmd
         - quarto/B_TK_single/BA_TK_IMD.qmd
-        - quarto/B_TK_single/BA_TK_EPX_1comp.qmd
-        - quarto/B_TK_single/BA_TK_EPX_1compPhi.qmd
-       # - quarto/B_TK_single/BA_TK_EPX_1comp15.qmd
-        - quarto/B_TK_single/BB_TK_EPX_2comp.qmd
-        #- quarto/B_TK_single/BC_TK_EPX_2comp15.qmd
-        #- quarto/B_TK_single/BD_TK_EPX_2comp30.qmd
-        - quarto/B_TK_single/BE_TK_EPX_2compPhi.qmd
+        - quarto/B_TK_single/BB_TK_EPX.qmd
     - part: quarto/C_TK_mix/C_TK_mix.qmd
       chapters: 
          - quarto/C_TK_mix/CA_TK_mix_protocole.qmd

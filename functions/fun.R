@@ -554,34 +554,33 @@ f_In_experiments <- function(Molecule) {
   return(char_final)
 }
 
-f_In_experiments_3Uptake_1 <- function(Molecule) {
+f_In_experiments_OECD <- function(Molecule) {
   
-  df_TK_f <- f_read_data_TK(Molecule) |> 
-    mutate(ID = as.numeric(ID))
+  df_TK_f_tmp <- f_read_data_TK(Molecule) |> 
+    filter(Experiment != "TKBIS")
   
   C_clx_IMD <- 16 / 1000 # ng/g
   C_clx_EPX <- 90 / 1000 # ng/g
   
-  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD[1]
-  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX[1]
+  C_worm_t0_IMD <-  df_TK_f_tmp[df_TK_f_tmp$t == 0, ]$C_worm_IMD[1]
+  C_worm_t0_EPX <-  df_TK_f_tmp[df_TK_f_tmp$t == 0, ]$C_worm_EPX[1]
   
-  sigma <- 1e-3
+  df_TK_f_UE <- df_TK_f_tmp |> 
+    filter(Phase %in% c("Uptake", "Elimination"))
+  df_TK_f_F <- df_TK_f_tmp |> 
+    filter(Phase %in% c("Frozen"))
+  # 
+  # tmp1 <- df_TK_f_UE[df_TK_f_UE$t !=0,]
+  # tmp2 <- df_TK_f_UE[df_TK_f_UE$t !=0 & df_TK_f_UE$expo !=0,]
+  # 
+  # setdiff(tmp1, tmp2)
+  # 
+  # setdiff(df_TK_f_F$ID, tmp2$ID)
   
-  df_TK_3x_2 <- subset(df_TK_f, Time_point < 22) |> 
-    mutate(
-      ID = ID + 1000,
-      C_worm_EPX = ifelse(C_worm_EPX == -1, -1, C_worm_EPX + rnorm(n(),0,sigma)),
-      Weight_nog = ifelse(w == -1, -1, Weight_nog + rnorm(n(),0,sigma))
-      )
+  df_TK_f_UE[df_TK_f_UE$t !=0 & df_TK_f_UE$expo !=0,]$C_worm_EPX <- df_TK_f_F$C_worm_EPX
+  df_TK_f_UE[df_TK_f_UE$t !=0 & df_TK_f_UE$expo !=0,]$C_worm_IMD <- df_TK_f_F$C_worm_IMD
   
-  df_TK_3x_3 <- subset(df_TK_f, Time_point < 22) |> 
-    mutate(
-      ID = ID + 2000,
-      C_worm_EPX = ifelse(C_worm_EPX == -1, -1, C_worm_EPX + rnorm(n(),0,sigma)),
-      Weight_nog = ifelse(w == -1, -1, Weight_nog + rnorm(n(),0,sigma))
-      )
-  
-  df_TK_f <- rbind(df_TK_f, df_TK_3x_2, df_TK_3x_3)
+  df_TK_f <- df_TK_f_UE
   
   if (Molecule == "IMD") {
     char_final <- ""
@@ -599,7 +598,7 @@ f_In_experiments_3Uptake_1 <- function(Molecule) {
       length_expo <- length(df_TK_i$expo)
       char_texpo <- char_tw
       
-      if (i%%1000 <= 64){
+      if (i <= 64|i>128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -645,7 +644,7 @@ f_In_experiments_3Uptake_1 <- function(Molecule) {
       length_expo <- length(df_TK_i$expo)
       char_texpo <- char_tw
       
-      if (i%%1000 <= 64){
+      if (i <= 64|i>128){
         char_Event <- ""
       } else {
         telim <- subset(df_TK_i, expo==0)$t[1]
@@ -679,130 +678,6 @@ f_In_experiments_3Uptake_1 <- function(Molecule) {
   return(char_final)
 }
 
-f_In_experiments_3Uptake <- function(Molecule) {
-  
-  df_TK_f <- f_read_data_TK(Molecule) |> 
-    mutate(
-      ID = as.numeric(ID),
-      t = as.numeric(t)
-      )
-  
-  C_clx_IMD <- 16 / 1000 # ng/g
-  C_clx_EPX <- 90 / 1000 # ng/g
-  
-  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD[1]
-  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX[1]
-  
-  epsilon <- 1e-6
-  
-  df_TK_3x_p <- subset(df_TK_f, Time_point < 22) |> 
-    mutate(
-      t = abs(t + epsilon)
-    )
-  df_TK_3x_m <- subset(df_TK_f, Time_point < 22) |> 
-    mutate(
-      t = ifelse(t==0, t+1/2*epsilon, t - epsilon)
-    )
-  
-  df_TK_f <- rbind(df_TK_f, df_TK_3x_p, df_TK_3x_m) |> 
-    arrange(ID, t)
-  
-  
-  if (Molecule == "IMD") {
-    char_final <- ""
-    for (i in as.numeric(unique(df_TK_f$ID))) {
-      
-      df_TK_i <- subset(df_TK_f, ID == i) 
-      
-      char_tw <- paste(df_TK_i$t, collapse = ",")
-      char_Ww_nopopo <- paste(df_TK_i$Weight_nog, collapse = ",")
-      
-      char_tCi <- paste(df_TK_i$t, collapse = ",")
-      char_CiIMD <- paste(df_TK_i$C_worm_IMD, collapse = ",")
-      
-      char_expo <- paste(df_TK_i$expo, collapse = ",")
-      length_expo <- length(df_TK_i$expo)
-      char_texpo <- char_tw
-      
-      if (i <= 64){
-        char_Event <- ""
-      } else {
-        telim <- subset(df_TK_i, expo==0)$t[1]
-        char_Event <- paste("    event_Ce=Events(CeIMD,1,", telim, ", Replace,", C_clx_IMD,");", sep="")
-      }
-      
-      char_i <- paste(
-        paste("Experiment { #", "TK IMD - i = ", i),
-        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
-        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
-        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$C_soil_IMD, ";", sep = ""),
-        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
-        char_Event,
-        paste("    Print(Weight,", char_tw, ");", sep = ""),
-        paste("    Data(Weight,", char_Ww_nopopo, ");", sep = ""),
-        paste("    Print(CiIMD,", char_tCi, ");", sep = ""),
-        paste("    Data(CiIMD,", char_CiIMD, ");", sep = ""),
-        paste("    expo=NDoses(", length_expo, ",\n               ",
-              char_expo, ",\n               ", char_texpo, ");",
-              sep = ""
-        ),
-        paste("}"),
-        sep = "\n"
-      )
-      char_final <- paste(char_final, char_i, sep = "\n")
-    } 
-  } # End IMD
-  
-  else if (Molecule == "EPX") {
-    char_final <- ""
-    
-    for (i in as.numeric(unique(df_TK_f$ID))) {
-      
-      df_TK_i <- subset(df_TK_f, ID == i) 
-      
-      char_tw <- paste(df_TK_i$t, collapse = ",")
-      char_Ww_nopopo <- paste(df_TK_i$Weight_nog, collapse = ",")
-      
-      char_tCi <- paste(df_TK_i$t, collapse = ",")
-      char_CiEPX <- paste(df_TK_i$C_worm_EPX, collapse = ",")
-      
-      char_expo <- paste(df_TK_i$expo, collapse = ",")
-      length_expo <- length(df_TK_i$expo)
-      char_texpo <- char_tw
-      
-      if (i <= 64){
-        char_Event <- ""
-      } else {
-        telim <- subset(df_TK_i, expo==0)$t[1]
-        char_Event <- paste("    event_Ce=Events(CeEPX,1,", telim, ", Replace,", C_clx_EPX,");", sep="")
-      }
-      
-      char_i <- paste(
-        paste("Experiment { #", "TK EPX - i = ", i),
-        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
-        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
-        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$C_soil_EPX, ";", sep = ""),
-        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
-        char_Event,
-        paste("    Print(Weight,", char_tw, ");", sep = ""),
-        paste("    Data(Weight,", char_Ww_nopopo, ");", sep = ""),
-        paste("    Print(CiEPX,", char_tCi, ");", sep = ""),
-        paste("    Data(CiEPX,", char_CiEPX, ");", sep = ""),
-        paste("    expo=NDoses(", length_expo, ",\n               ",
-              char_expo, ",\n               ", char_texpo, ");",
-              sep = ""
-        ),
-        paste("}"),
-        sep = "\n"
-      )
-      
-      char_final <- paste(char_final, char_i, sep = "\n")
-    } # End EPX
-  } else {
-    stop("Uncorrect specification of Molecule")
-  }
-  return(char_final)
-}
 
 f_create_mcmc_block <- function(name, seed, Nb_Iter) {
   
@@ -869,7 +744,8 @@ End."
   }
 }
 
-f_In_tot_3Uptake <- function(Molecule, text_priors, text_likelihood, text_param_ind = "", Nb_Iter = 10000, seeds = c(C1 = 3333, C2 = 6666, C3 = 1212)) {
+
+f_In_tot_OECD <- function(File_path, Molecule, text_priors, text_likelihood, text_param_ind = "", Nb_Iter = 10000, seeds = c(C1 = 3333, C2 = 6666, C3 = 1212)) {
   
   text_Level_global <-
     "Level{ # Global
@@ -883,7 +759,7 @@ Level{
   ############## Individuals ###################
   "
   
-  text_experiment <- paste0(banner_exp, f_In_experiments_3Uptake(Molecule), sep = "\n")
+  text_experiment <- paste0(banner_exp, f_In_experiments_OECD(Molecule), sep = "\n")
   
   text_end <- "
 } # End
@@ -908,8 +784,6 @@ End."
       text_end,
       sep = "\n"
     )[1]
-    
-    File_path <- paste0("mod/TK_", Molecule)
     
     file.remove(here::here(File_path, paste0("TK_", Molecule, "_", id, ".in")))
     
@@ -1005,6 +879,111 @@ SetPoints("Setpoints.out", "tab_setpoint.out", 0,' ,l_param_name_tot,');
     sep = "\n"
   )
 
+  writeLines(
+    text_full,
+    here::here(File_path, paste0("TK_", Molecule, "_Setpoint.in"))
+  )
+}
+
+f_Setpoint_OECD <- function(File_path, Molecule, PrintStep, l_param_name_tot) {
+  
+  df_TK_f_tmp <- f_read_data_TK(Molecule) |> 
+    filter(Experiment != "TKBIS")
+  
+  C_worm_t0_IMD <-  df_TK_f_tmp[df_TK_f_tmp$t == 0, ]$C_worm_IMD[1]
+  C_worm_t0_EPX <-  df_TK_f_tmp[df_TK_f_tmp$t == 0, ]$C_worm_EPX[1]
+  
+  df_TK_f_UE <- df_TK_f_tmp |> 
+    filter(Phase %in% c("Uptake", "Elimination"))
+  df_TK_f_F <- df_TK_f_tmp |> 
+    filter(Phase %in% c("Frozen"))
+  
+  df_TK_f_UE[df_TK_f_UE$t !=0 & df_TK_f_UE$expo !=0,]$C_worm_EPX <- df_TK_f_F$C_worm_EPX
+  df_TK_f_UE[df_TK_f_UE$t !=0 & df_TK_f_UE$expo !=0,]$C_worm_IMD <- df_TK_f_F$C_worm_IMD
+  
+  df_TK_f <- df_TK_f_UE
+  
+  Winit <- mean(subset(df_TK_f, t == 0)$Weight_nog)
+  
+  if (Molecule == "IMD") {
+    Ci0 <- 3.92587673494744
+    Ce0 <- 80.5
+    Cclx <- 16 / 1000 # ng/g
+    
+    text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa
+#===============================================
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Setpoints.out", "tab_setpoint.out", 0,', l_param_name_tot,');
+')
+    text_simulation <- paste0("
+	Simulation {
+
+  # Events
+    Winit=", Winit, ";
+    Ci0IMD=", Ci0, ";
+    Ce0IMD=", Ce0, ";
+    CclxIMD=", Cclx, ";
+    expo=NDoses(2, 1, 0, 0, 21);
+    event_Ce=Events(CeIMD,1,20.9951388888889, Replace,0.09);")
+  } else if (Molecule == "EPX") {
+    Ci0 <- 0.747549
+    Ce0 <- 1000
+    Cclx <- 90 / 1000 # ng/g
+    
+    text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa
+#===============================================
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Setpoints.out", "tab_setpoint.out", 0,' ,l_param_name_tot,');
+')
+    text_simulation <- paste0("
+	Simulation {
+
+  # Events
+    Winit=", Winit, ";
+    Ci0EPX=", Ci0, ";
+    Ce0EPX=", Ce0, ";
+    CclxEPX=", Cclx, ";
+    expo=NDoses(2, 1, 0, 0, 21);
+    event_Ce=Events(CeEPX,1,20.9951388888889, Replace,0.09);")
+  }
+  
+  if (Molecule == "EPX"){
+    text_print <- paste0("# Data
+
+		PrintStep (Weight,"
+                         , PrintStep, ");
+		PrintStep (CiEPX,"
+                         , PrintStep, ");
+		PrintStep (C_exposure,"
+                         , PrintStep, ");
+	}")
+  }else if (Molecule == "IMD"){
+    text_print <- paste0("# Data
+
+		PrintStep (Weight,"
+                         , PrintStep, ");
+		PrintStep (CiIMD,"
+                         , PrintStep, ");
+		PrintStep (C_exposure,"
+                         , PrintStep, ");
+	}")
+  }
+  
+  
+  text_end <- "End."
+  
+  text_full <- paste(
+    text_start,
+    text_simulation,
+    text_print,
+    text_end,
+    sep = "\n"
+  )
+  
   writeLines(
     text_full,
     here::here(File_path, paste0("TK_", Molecule, "_Setpoint.in"))
@@ -1153,6 +1132,156 @@ f_Setpoint_ind_full <- function(File_path, Molecule, print_times, l_param_name) 
   text_end <- "End."
   
   df_TK_f <- f_read_data_TK(Molecule)
+  
+  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD[1]
+  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX[1]
+  C_clx_IMD <- 16 / 1000 # ng/g
+  C_clx_EPX <- 90 / 1000 # ng/g
+  
+  compteur_exp <- 0
+  
+  for (i in as.numeric(unique(df_TK_f$ID))){
+    
+    compteur_exp <- compteur_exp + 1
+    
+    if (Molecule == "IMD"){
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight_nog, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiIMD <- paste(df_TK_i$C_worm_IMD, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      char_ta <- paste(df_TK_i$t[1:2], collapse = ",")
+      
+      if (i <= 64 | i > 128){
+        char_Event <- ""
+      } else {
+        telim <- subset(df_TK_i, expo==0)$t[1]
+        char_Event <- paste("    event_Ce=Events(CeIMD,1,", telim, ", Replace,", C_clx_IMD,");", sep="")
+      }
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK IMD - i = ", i),
+        
+        # paste("    a_growth=NDoses(2, a_growth_ind_", compteur_exp," , a_fasting_ind_", compteur_exp," , ", char_ta,");", sep=""),
+        
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
+        paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
+        paste("    Ce0IMD=", subset(df_TK_i, t == 0)$C_soil_IMD, ";", sep = ""),
+        paste("    CclxIMD=", C_clx_IMD, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        char_Event,
+        paste("    PrintStep(Weight,", print_times, ");", sep = ""),
+        paste("    PrintStep(CiIMD,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa
+#===============================================
+
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0,' , l_param_name, ');
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("TK_", Molecule, "_Setpoint_ind_full_", compteur_exp, ".in"))
+      )
+      
+      
+    } else if (Molecule == "EPX"){
+      df_TK_i <- subset(df_TK_f, ID == i)
+      
+      char_tw <- paste(df_TK_i$t, collapse = ",")
+      char_Ww <- paste(df_TK_i$Weight_nog, collapse = ",")
+      
+      char_tCi <- paste(df_TK_i$t, collapse = ",")
+      char_CiEPX <- paste(df_TK_i$C_worm_EPX, collapse = ",")
+      char_expo <- paste(df_TK_i$expo, collapse = ",")
+      
+      if (i <= 64 | i > 128){
+        char_Event <- ""
+      } else {
+        telim <- subset(df_TK_i, expo==0)$t[1]
+        char_Event <- paste("    event_Ce=Events(CeEPX,1,", telim, ", Replace,", C_clx_EPX,");", sep="")
+      }
+      
+      char_i <- paste(
+        paste("Simulation { #", "TK EPX - i = ", i),
+        paste("    Winit=", subset(df_TK_i, t == 0)$Weight_nog, ";", sep = ""),
+        paste("    Ci0EPX=", C_worm_t0_EPX, ";", sep = ""),
+        paste("    Ce0EPX=", subset(df_TK_i, t == 0)$C_soil_EPX, ";", sep = ""),
+        paste("    CclxEPX=", C_clx_EPX, ";", sep = ""),
+        paste("    expo=NDoses(", length(df_TK_i$expo), ",", char_expo, ",", char_tw, ");", sep = ""),
+        char_Event,
+        paste("    PrintStep(Weight,", print_times, ");", sep = ""),
+        paste("    PrintStep(CiEPX,", print_times, ");", sep = ""),
+        paste("    PrintStep(C_exposure,", print_times, ");", sep = ""),
+        paste("}"),
+        sep = "\n"
+      )
+      
+      text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa
+#===============================================
+
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Setpoints_ind_full_',compteur_exp,'.out", "tab_setpoint_ind_',compteur_exp,'.out", 0,', l_param_name,');
+
+########## Individuals ################################################')
+      
+      text_full <- paste(
+        text_start,
+        char_i,
+        text_end,
+        sep = "\n"
+      )
+      
+      writeLines(
+        text_full,
+        here::here(File_path, paste0("TK_", Molecule, "_Setpoint_ind_full_", compteur_exp, ".in"))
+      )
+    } else {
+      stop("Incorrect specification of Molecule")
+    }
+  }
+}
+
+f_Setpoint_ind_full_OECD <- function(File_path, Molecule, print_times, l_param_name) {
+  
+  text_end <- "End."
+  
+  df_TK_f_tmp <- f_read_data_TK(Molecule) |> 
+    filter(Experiment != "TKBIS")
+  
+  C_worm_t0_IMD <-  df_TK_f_tmp[df_TK_f_tmp$t == 0, ]$C_worm_IMD[1]
+  C_worm_t0_EPX <-  df_TK_f_tmp[df_TK_f_tmp$t == 0, ]$C_worm_EPX[1]
+  
+  df_TK_f_UE <- df_TK_f_tmp |> 
+    filter(Phase %in% c("Uptake", "Elimination"))
+  df_TK_f_F <- df_TK_f_tmp |> 
+    filter(Phase %in% c("Frozen"))
+  
+  df_TK_f_UE[df_TK_f_UE$t !=0 & df_TK_f_UE$expo !=0,]$C_worm_EPX <- df_TK_f_F$C_worm_EPX
+  df_TK_f_UE[df_TK_f_UE$t !=0 & df_TK_f_UE$expo !=0,]$C_worm_IMD <- df_TK_f_F$C_worm_IMD
+  
+  df_TK_f <- df_TK_f_UE
   
   C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_IMD[1]
   C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$C_worm_EPX[1]
@@ -1679,12 +1808,13 @@ f_Simulation_mix_ind <- function(File_path, Molecule) {
 #===============================================
 
 # IMD 1 comp 0%
-kuIMD = 1.58669;
-keIMD = 0.048173;
+kuIMD = 1.93461;
+keIMD = 0.115067;
+kperiph = 0.0334602;
 # a_growth = 0.00351619;
 # Vr_a_growth = 0.00124984;
-Sigma_W = 0.0393328;
-Sigma_CiIMD = 1.45184;
+Sigma_W = 0.0475934;
+Sigma_CiIMD = 1.36282;
 
 
 ########## Individuals ################################################')
@@ -1820,12 +1950,13 @@ f_Simulation_mix_ind_full <- function(File_path, Molecule, print_times) {
 #===============================================
 
 # IMD 1 comp 0%
-kuIMD = 1.58669;
-keIMD = 0.048173;
+kuIMD = 1.93461;
+keIMD = 0.115067;
+kperiph = 0.0334602;
 # a_growth = 0.00351619;
 # Vr_a_growth = 0.00124984;
-Sigma_W = 0.0393328;
-Sigma_CiIMD = 1.45184;
+Sigma_W = 0.0475934;
+Sigma_CiIMD = 1.36282;
 
 
 ########## Individuals ################################################')
@@ -2352,1418 +2483,3 @@ f_MCSim_ind <- function(path_mod) {
 
   return(MCMC_out)
 }
-
-# Mixture - Jonker interaction models ----
-
-# Fonction calculating the surface dose - response knowing the dose - response curves
-
-CA_complete2 <- function(C_mat, Max, Slopes, Ec50s, a = 0, b = 0, interact = "none", multicore = FALSE, mc.cores = 4) {
-  param <- data.frame(Slopes, Ec50s)
-  # try(cat(Slopes))
-  # try(cat(Ec50s))
-
-  # 1. CA model ----
-  if (interact == "none") {
-    a <- 0
-    b <- 0
-    f <- function(Y, x = x, Max = Max, param = param, a = a, b = b) {
-      ecs <- param$Ec50s * ((Max - Y) / Y)^(1 / param$Slopes) # C1 corresponding to Y
-      G <- (sum(x / ecs)) - 1
-      return(abs(G))
-    }
-  }
-  # 2. SA model ----
-  else if (interact == "SA") {
-    b <- 0
-    f <- function(Y, x = x, Max = Max, param = param, a = a, b = b) {
-      ecs <- param$Ec50s * ((Max - Y) / Y)^(1 / param$Slopes) # C1 corresponding to Y
-      G <- (sum(x / ecs)) - exp(a * prod(x / param$Ec50s / (sum(x / param$Ec50s))))
-      return(abs(G))
-    }
-  }
-  # 3. DR model ----
-  else if (interact == "DR") {
-    if (length(b) != (dim(C_mat)[2] - 1)) {
-      stop("length of b should be equal to the number of chemicals -1.")
-    }
-    f <- function(Y, x = x, Max = Max, param = param, a = a, b = b) {
-      ecs <- param$Ec50s * ((Max - Y) / Y)^(1 / param$Slopes) # Cs corresponding to Y
-      G <- (sum(x / ecs)) - exp((a + b %*% ((x / param$Ec50s / (sum(x / param$Ec50s))))[1:(dim(C_mat)[2] - 1)]) * prod(x / param$Ec50s / (sum(x / param$Ec50s))))
-      return(abs(G))
-    }
-  }
-  # 4. DR2 model ----
-  else if (interact == "DR2") {
-    if (length(b) != (dim(C_mat)[2] - 1)) {
-      stop("length of b should be equal to the number of chemicals -1.")
-    }
-    f <- function(Y, x = x, Max = Max, param = param, a = a, b = b) {
-      ecs <- param$Ec50s * ((Max - Y) / Y)^(1 / param$Slopes) # Cs corresponding to Y
-      G <- (sum(x / ecs)) - exp((a + b %*% sin((x / param$Ec50s / (sum(x / param$Ec50s))) * 2 * pi)[1:(dim(C_mat)[2] - 1)]) * prod(x / param$Ec50s / (sum(x / param$Ec50s))))
-      return(abs(G))
-    }
-  }
-  # 5. DL model ----
-  else if (interact == "DL") {
-    f <- function(Y, x = x, Max = Max, param = param, a = a, b = b) {
-      if (length(b) != (dim(C_mat)[2] - 1)) {
-        stop("length of b should be equal to the number of chemicals -1.")
-      }
-      ecs <- param$Ec50s * ((Max - Y) / Y)^(1 / param$Slopes) # C1 corresponding to Y
-      G <- (sum(x / ecs)) - exp(a * (1 - b * (sum(x / param$Ec50s))) * prod(x / param$Ec50s / (sum(x / param$Ec50s))))
-      return(abs(G))
-    }
-  } else {
-    stop("please specify interaction model")
-  }
-
-  Y_f <- function(x, Max = Max, param = param, a = a, b = b) {
-    if (all(x == 0)) { # no chemical
-      if (all(param$Slopes > 0)) {
-        return(Max)
-      }
-      if (all(param$Slopes < 0)) {
-        return(0)
-      }
-    }
-    # Y<-optimize(f=function(Y) f(Y=Y, x=x, Max=Max, param=param, a=a, b=b), interval=c(0,Max*1.2))$minimum
-    Y <- optimize(f = function(Y) f(Y = Y, x = x, Max = Max, param = param, a = a, b = b), interval = c(0, Max))$minimum
-
-    return(Y)
-  }
-  if (multicore) {
-    C_mat_list <- split(
-      unique(C_mat), 
-      cut(1:(dim(unique(C_mat))[1]), 
-          breaks = dim(unique(C_mat))[1])
-      )
-    res_CA_unique <- unlist(
-      mclapply(
-        C_mat_list, 
-        function(x) Y_f(x, Max = Max, param = param, a = a, b = b), 
-        mc.cores = mc.cores
-        )
-      )
-    res_CA <- rep(NA, dim(unique(C_mat))[1])
-    for (i in 1:(dim(unique(C_mat))[1])) {
-      res_CA[which((C_mat[, 1] == unique(C_mat)[i, 1]) & (C_mat[, 2] == unique(C_mat)[i, 2]))] <- res_CA_unique[i]
-    }
-  } else {
-    res_CA_unique <- apply(
-      unique(C_mat), 
-      1, 
-      function(x) Y_f(x, Max = Max, param = param, a = a, b = b)
-      )
-    res_CA <- rep(NA, dim(unique(C_mat))[1])
-    for (i in 1:(dim(unique(C_mat))[1])) {
-      res_CA[which((C_mat[, 1] == unique(C_mat)[i, 1]) & (C_mat[, 2] == unique(C_mat)[i, 2]))] <- res_CA_unique[i]
-    }
-  }
-  if (any(is.na(res_CA))) {
-    cat(param, a, b)
-  }
-  return(res_CA)
-}
-
-CA_complete2_fit_speed <- function(C_mat, Response, param = NULL, upper = NULL, lower = NULL, start = NULL, interact = "none", identical_slopes = FALSE, error_type = "Normal", iter = 500, multicore = FALSE, mc.cores = 4) {
-  # 1. If dose-response curves known ----
-  if (!is.null(param)) {
-    if ((is.null(param$Max)) | (is.null(param$Slopes)) | (is.null(param$Ec50s))) {
-      stop("param misspecification")
-    }
-    if (interact == "none") {
-      stop("please specify interaction")
-    }
-
-    ## 1.1. SA model ----
-    if (interact == "SA") {
-      if (missing(upper)) {
-        upper <- 20
-      } # the intervals for a and b must be larger because they can compensate each other
-      if (missing(lower)) {
-        lower <- -20
-      }
-
-      # fit
-      if (error_type == "Normal") {
-        res_CA_optim <- optimize(
-          f = function(x) {
-            CA_complete2_RSS(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x,
-              interact  = interact,
-              multicore = multicore,
-              mc.cores = mc.cores
-            )
-          },
-          upper = upper,
-          lower = lower
-        )
-
-        Res <- list(
-          a = res_CA_optim$minimum,
-          Error = res_CA_optim$objective
-        )
-        return(Res)
-      } else if (error_type == "Poisson") {
-        res_CA_optim <- optimize(
-          f = function(x) {
-            CA_complete2_Poisson(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x,
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          },
-          upper = upper,
-          lower = lower
-        )
-
-        Res <- list(
-          a     = res_CA_optim$minimum,
-          Error = res_CA_optim$objective
-        )
-
-        return(Res)
-      } else {
-        stop("Misspecification of the error model")
-      }
-    } # End SA model
-  } # End dose-response curves known
-
-  # 2. If dose-response curves known ----
-  if (is.null(param)) {
-    require(dfoptim)
-
-    if (any(C_mat == 0)) {
-      mean_C_mat <- exp(apply(log(C_mat[-which(C_mat == 0, arr.ind = TRUE)[, 1], ]), 2, mean))
-    } else {
-      mean_C_mat <- exp(apply(log(C_mat), 2, mean))
-    }
-
-    ## 2.1. Different slopes ----
-    if (!identical_slopes) {
-      ### 2.1.1. CA model ----
-      if (interact == "none") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, 0, mean_C_mat * 10)
-        }
-
-        if (missing(lower)) {
-          lower <- c(0, -100, -100, 0, 0)
-        }
-
-        if (missing(start)) {
-          start <- c(max(Response), -1, -1, mean_C_mat)
-        }
-
-        # fit
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]),
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper = upper,
-            lower = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]),
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]),
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper = upper,
-            lower = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]),
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End CA model
-
-      ### 2.1.2. SA model ----
-      if (interact == "SA") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, 0, mean_C_mat * 10, 20)
-        } # the intervals for a and b must be larger beacuse they can compensate each other
-
-        if (missing(lower)) {
-          lower <- c(0, -100, -100, 0, 0, -20)
-        }
-
-        if (missing(start)) {
-          start <- c(max(Response), -1, -1, mean_C_mat, 0)
-        }
-
-        # fit
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]),
-                a         = x[6],
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper = upper,
-            lower = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]),
-            a      = res_CA_nmk$par[6],
-            Error  = res_CA_nmk$value
-          )
-
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]),
-                a         = x[6],
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper = upper,
-            lower = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]),
-            a      = res_CA_nmk$par[6],
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End SA model
-    } # End common slopes
-
-    ## 2.2. Common slopes ----
-    else {
-      ### 2.2.1. CA model ----
-      if (interact == "none") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 100, mean_C_mat * 10)
-        }
-
-        if (missing(lower)) {
-          lower <- c(0, 0, 0, 0)
-        }
-
-        if (missing(start)) {
-          start <- c(max(Response), 1, mean_C_mat)
-        }
-
-        # fit
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[2]),
-                Ec50s     = c(x[3], x[4]),
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper   = upper,
-            lower   = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]),
-            Ec50s  = c(res_CA_nmk$par[3:4]),
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[2]),
-                Ec50s     = c(x[3], x[4]),
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper   = upper,
-            lower   = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]),
-            Ec50s  = c(res_CA_nmk$par[3:4]),
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End CA model
-
-      ### 2.2.2. SA model ----
-      if (interact == "SA") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 100, mean_C_mat * 10, 20)
-        } # the intervals for a and b must be larger beacuse they can compensate each other
-
-        if (missing(lower)) {
-          lower <- c(0, 0, 0, 0, -20)
-        }
-
-        if (missing(start)) {
-          start <- c(max(Response), 1, mean_C_mat, 0)
-        }
-
-        # fit
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[2]),
-                Ec50s     = c(x[3], x[4]),
-                a         = x[5],
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper   = upper,
-            lower   = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]),
-            Ec50s  = c(res_CA_nmk$par[3:4]),
-            a      = res_CA_nmk$par[5],
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[2]),
-                Ec50s     = c(x[3], x[4]),
-                a         = x[5],
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper   = upper,
-            lower   = lower,
-            control = list(tol = 10^-6)
-          )
-
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]),
-            Ec50s  = c(res_CA_nmk$par[3:4]),
-            a      = res_CA_nmk$par[5],
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End SA model
-    } # End different slopes
-  } # End dose-response curves not known
-} # End.
-
-CA_complete2_RSS <- function(C_mat, Response, Max, Slopes, Ec50s, a = 0, b = 0, interact = "none", multicore = FALSE, mc.cores = 4) {
-  
-  if (length(Response) != (dim(C_mat)[1])) {
-    stop("Should be as many responses as there are conditions")
-  }
-
-  res_CA <- CA_complete2(
-    C_mat     = C_mat,
-    Max       = Max,
-    Slopes    = Slopes,
-    Ec50s     = Ec50s,
-    a         = a,
-    b         = b,
-    interact  = interact,
-    multicore = multicore,
-    mc.cores  = mc.cores
-  )
-  res_CA_RSS <- sum((res_CA - Response)^2)
-
-  return(res_CA_RSS)
-}
-
-
-CA_complete2_Poisson <- function(C_mat, Response, Max, Slopes, Ec50s, a = 0, b = 0, interact = "none", multicore = FALSE, mc.cores = 4) {
-  
-  if (length(Response) != (dim(C_mat)[1])) {
-    stop("Should be as many responses as there are conditions")
-  }
-
-  res_CA <- CA_complete2(
-    C_mat     = C_mat,
-    Max       = Max,
-    Slopes    = Slopes,
-    Ec50s     = Ec50s,
-    a         = a,
-    b         = b,
-    interact  = interact,
-    multicore = multicore,
-    mc.cores  = mc.cores
-  )
-
-  # Pour stabilité numérique, éviter log(0)
-  if (any(res_CA <= 0)) {
-    return(-Inf)
-  }
-  res_CA_Poisson <- -sum(Response * log(res_CA) - res_CA - lfactorial(Response)) # - Loglikelihood
-
-  return(res_CA_Poisson)
-}
-
-CA_complete_fit_speed <- function(C_mat, Response, param = NULL, upper = NULL, lower = NULL, start = NULL, interact = "none", identical_slopes = FALSE, error_type = "Normal", iter = 500, multicore = FALSE, mc.cores = 4) {
-  # 1. Dose-response curves known ----
-  if (!is.null(param)) {
-    if ((is.null(param$Max)) | (is.null(param$Slopes)) | (is.null(param$Ec50s))) {
-      stop("param misspecification")
-    }
-    if (interact == "none") {
-      stop("please specify interaction")
-    }
-
-    ## 1.1. SA model ----
-    if (interact == "SA") {
-      if (missing(upper)) {
-        upper <- 20
-      } # the intervals for a and b must be larger because they can compensate each other
-      if (missing(lower)) {
-        lower <- -20
-      }
-
-      if (error_type == "Normal") {
-        res_CA_optim <- optimize(
-          f = function(x) {
-            CA_complete2_RSS(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x,
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          },
-          upper = upper,
-          lower = lower
-        )
-        Res <- list(
-          a     = res_CA_optim$minimum,
-          Error = res_CA_optim$objective
-        )
-        return(Res)
-      } else if (error_type == "Poisson") {
-        res_CA_optim <- optimize(
-          f = function(x) {
-            CA_complete2_Poisson(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x,
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          },
-          upper = upper,
-          lower = lower
-        )
-        Res <- list(
-          a     = res_CA_optim$minimum,
-          Error = res_CA_optim$objective
-        )
-        return(Res)
-      } else {
-        stop("Misspecification of the error model")
-      }
-    } # End SA
-
-    ## 1.2. DR model ----
-    if (interact == "DR") {
-      if (error_type == "Normal") {
-        res_CA_optim <- optim(
-          par = rep(0, dim(C_mat)[2]),
-          fn = function(x) {
-            CA_complete2_RSS(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x[1],
-              b         = x[2:length(x)],
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          }
-        )
-        cat(res_CA_optim$convergence)
-        Res <- list(
-          a     = res_CA_optim$par[1],
-          b     = res_CA_optim$par[2:(2 + (dim(C_mat)[2] - 1) - 1)],
-          Error = res_CA_optim$value
-        )
-        return(Res)
-      } else if (error_type == "Poisson") {
-        res_CA_optim <- optim(
-          par = rep(0, dim(C_mat)[2]),
-          fn = function(x) {
-            CA_complete2_Poisson(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x[1],
-              b         = x[2:length(x)],
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          }
-        )
-        cat(res_CA_optim$convergence)
-
-        Res <- list(
-          a     = res_CA_optim$par[1],
-          b     = res_CA_optim$par[2:(2 + (dim(C_mat)[2] - 1) - 1)],
-          Error = res_CA_optim$value
-        )
-        return(Res)
-      } else {
-        stop("Misspecification of the error model")
-      }
-    } # End DR
-
-    ## 1.3. DR2 model ----
-    if (interact == "DR2") {
-      if (error_type == "Normal") {
-        res_CA_optim <- optim(
-          par = rep(0, dim(C_mat)[2]),
-          fn = function(x) {
-            CA_complete2_RSS(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x[1],
-              b         = x[2:length(x)],
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          }
-        )
-        cat(res_CA_optim$convergence)
-
-        Res <- list(
-          a     = res_CA_optim$par[1],
-          b     = res_CA_optim$par[2:(2 + (dim(C_mat)[2] - 1) - 1)],
-          Error = res_CA_optim$value
-        )
-        return(Res)
-      } else if (error_type == "Poisson") {
-        res_CA_optim <- optim(
-          par = rep(0, dim(C_mat)[2]),
-          fn = function(x) {
-            CA_complete2_Poisson(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x[1],
-              b         = x[2:length(x)],
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          }
-        )
-        cat(res_CA_optim$convergence)
-        Res <- list(
-          a     = res_CA_optim$par[1],
-          b     = res_CA_optim$par[2:(2 + (dim(C_mat)[2] - 1) - 1)],
-          Error = res_CA_optim$value
-        )
-        return(Res)
-      } else {
-        stop("Misspecification of the error model")
-      }
-    } # End DR2
-
-    ## 1.4. DL model ----
-    if (interact == "DL") {
-      if (error_type == "Normal") {
-        res_CA_optim <- optim(
-          par = c(0, 0),
-          fn = function(x) {
-            CA_complete2_RSS(
-              C_mat = C_mat,
-              Response = Response,
-              Max = param$Max,
-              Slopes = param$Slopes,
-              Ec50s = param$Ec50s,
-              a = x[1], b = x[2],
-              interact = interact,
-              multicore = multicore,
-              mc.cores = mc.cores
-            )
-          }
-        )
-        cat(res_CA_optim$convergence)
-        Res <- list(
-          a     = res_CA_optim$par[1],
-          b     = res_CA_optim$par[2],
-          Error = res_CA_optim$value
-        )
-        return(Res)
-      } else if (error_type == "Poisson") {
-        res_CA_optim <- optim(
-          par = c(0, 0),
-          fn = function(x) {
-            CA_complete2_Poisson(
-              C_mat     = C_mat,
-              Response  = Response,
-              Max       = param$Max,
-              Slopes    = param$Slopes,
-              Ec50s     = param$Ec50s,
-              a         = x[1],
-              b         = x[2],
-              interact  = interact,
-              multicore = multicore,
-              mc.cores  = mc.cores
-            )
-          }
-        )
-        cat(res_CA_optim$convergence)
-        Res <- list(
-          a     = res_CA_optim$par[1],
-          b     = res_CA_optim$par[2],
-          Error = res_CA_optim$value
-        )
-        return(Res)
-      } else {
-        stop("Misspecification of the error model")
-      }
-    } # End DL
-  } # End dose-response curves known
-
-  # 2. Dose-response curves not known ----
-  if (is.null(param)) {
-    # require(DEoptim)
-    require(dfoptim)
-    if (any(C_mat == 0)) {
-      mean_C_mat <- exp(apply(log(C_mat[-which(C_mat == 0, arr.ind = TRUE)[, 1], ]), 2, mean))
-    } else {
-      mean_C_mat <- exp(apply(log(C_mat), 2, mean))
-    }
-
-    ## 2.1. Different slopes ----
-    if (!identical_slopes) {
-      ### 2.1.1. CA model ----
-      if (interact == "none") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, 0, mean_C_mat * 10)
-        }
-        if (missing(lower)) {
-          lower <- c(0, -100, -100, 0, 0)
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, -1, mean_C_mat)
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]),
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper = upper,
-            lower = lower,
-            control = list(tol = 10^-6)
-          )
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]),
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]),
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper = upper,
-            lower = lower,
-            control = list(tol = 10^-6)
-          )
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]),
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      }
-
-      ### 2.1.2. SA model ----
-      if (interact == "SA") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, 0, mean_C_mat * 10, 20) # the intervals for a and b must be larger beacuse they can compensate each other
-        }
-        if (missing(lower)) {
-          lower <- c(0, -100, -100, 0, 0, -20)
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, -1, mean_C_mat, 0)
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat,
-                Response  = Response,
-                Max       = x[1],
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]),
-                a         = x[6],
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-              )
-            },
-            upper = upper,
-            lower = lower,
-            control = list(tol = 10^-6)
-          )
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]),
-            a      = res_CA_nmk$par[6],
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-          
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start,
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat, 
-                Response  = Response,
-                Max       = x[1], 
-                Slopes    = c(x[2], x[3]), 
-                Ec50s     = c(x[4], x[5]), 
-                a         = x[6], 
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-              )
-            },
-            upper   = upper,
-            lower   = lower,
-            control = list(tol = 10^-6)
-          )
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2:3]), 
-            Ec50s  = c(res_CA_nmk$par[4:5]), 
-            a      = res_CA_nmk$par[6], 
-            Error  = res_CA_nmk$value
-          )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End SA 
-      
-      ### 2.1.3. DR model ----
-      if (interact == "DR") {
-        
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, 0, mean_C_mat * 10, 20, rep(30, (dim(C_mat)[2] - 1)))
-        } # the intervals for a and b must be larger beacuse they can compensate each other
-        if (missing(lower)) {
-          lower <- c(0, -100, -100, 0, 0, -20, rep(-30, (dim(C_mat)[2] - 1)))
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, -1, mean_C_mat, 0, rep(0, (dim(C_mat)[2] - 1)))
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat, 
-                Response  = Response, 
-                Max       = x[1], 
-                Slopes    = c(x[2], x[3]), 
-                Ec50s     = c(x[4], x[5]), 
-                a         = x[6], 
-                b         = x[7:length(x)], 
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper   = upper, 
-            lower   = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2:3]),
-            Ec50s  = c(res_CA_nmk$par[4:5]), 
-            a      = res_CA_nmk$par[6], 
-            b      = res_CA_nmk$par[7:(7 + (dim(C_mat)[2] - 1) - 1)], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat, 
-                Response  = Response, 
-                Max       = x[1], 
-                Slopes    = c(x[2], x[3]),
-                Ec50s     = c(x[4], x[5]), 
-                a         = x[6],
-                b         = x[7:length(x)], 
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              },
-            upper   = upper, 
-            lower   = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2:3]), 
-            Ec50s  = c(res_CA_nmk$par[4:5]), 
-            a      = res_CA_nmk$par[6], 
-            b      = res_CA_nmk$par[7:(7 + (dim(C_mat)[2] - 1) - 1)], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End DR 
-      
-      ### 2.1.4. DL model ----
-      if (interact == "DL") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, 0, mean_C_mat * 10, 20, 30)
-        }
-        if (missing(lower)) {
-          lower <- c(0, -100, -100, 0, 0, -20, -30)
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, -1, mean_C_mat, 0, 0)
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat, 
-                Response  = Response,
-                Max       = x[1], 
-                Slopes    = c(x[2], x[3]), 
-                Ec50s     = c(x[4], x[5]), 
-                a         = x[6], b = x[7], 
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper   = upper, 
-            lower   = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2:3]), 
-            Ec50s  = c(res_CA_nmk$par[4:5]), 
-            a      = res_CA_nmk$par[6], 
-            b      = res_CA_nmk$par[7], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-          
-        } else if (error_type == "Poisson") {
-          
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat, 
-                Response  = Response, 
-                Max       = x[1], 
-                Slopes    = c(x[2], x[3]), 
-                Ec50s     = c(x[4], x[5]), 
-                a         = x[6], b = x[7],
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              }, 
-              upper   = upper, 
-              lower   = lower, 
-              control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2:3]), 
-            Ec50s  = c(res_CA_nmk$par[4:5]), 
-            a      = res_CA_nmk$par[6], 
-            b      = res_CA_nmk$par[7], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End DL
-    } 
-    ## 2.2. Common slopes ----
-    else {
-      
-      ### 2.2.1. CA model ----
-      if (interact == "none") {
-        
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, mean_C_mat * 10)
-        }
-        if (missing(lower)) {
-          lower <- c(0, -100, 0, 0)
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, mean_C_mat)
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat, 
-                Response  = Response, 
-                Max       = x[1], 
-                Slopes    = c(x[2], x[2]), 
-                Ec50s     = c(x[3], x[4]), 
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper = upper, 
-            lower = lower,
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]), 
-            Ec50s  = c(res_CA_nmk$par[3:4]), 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat, 
-                Response  = Response, 
-                Max       = x[1], 
-                Slopes    = c(x[2], x[2]), 
-                Ec50s     = c(x[3], x[4]), 
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper = upper, 
-            lower = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]), 
-            Ec50s  = c(res_CA_nmk$par[3:4]), 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End CA
-      
-      ### 2.2.2. SA model ----
-      if (interact == "SA") {
-        
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, mean_C_mat * 10, 20)
-        } # the intervals for a and b must be larger beacuse they can compensate each other
-        if (missing(lower)) {
-          lower <- c(0, -100, 0, 0, -20)
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, mean_C_mat, 0)
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat, 
-                Response  = Response, 
-                Max       = x[1], Slopes = c(x[2], x[2]), 
-                Ec50s     = c(x[3], x[4]), a = x[5], 
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper = upper, 
-            lower = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]),
-            Ec50s  = c(res_CA_nmk$par[3:4]), 
-            a      = res_CA_nmk$par[5], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat = C_mat, 
-                Response = Response, 
-                Max = x[1], 
-                Slopes = c(x[2], x[2]), 
-                Ec50s = c(x[3], x[4]), 
-                a = x[5], 
-                interact = interact,
-                multicore = multicore,
-                mc.cores = mc.cores
-                )
-              }, 
-            upper = upper, 
-            lower = lower,
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]), 
-            Ec50s = c(res_CA_nmk$par[3:4]), 
-            a = res_CA_nmk$par[5],
-            Error = res_CA_nmk$value
-            )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End SA
-      
-      ### 2.2.3. DR model ----
-      if (interact == "DR") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, mean_C_mat * 10, 20, rep(30, (dim(C_mat)[2] - 1)))
-        } # the intervals for a and b must be larger beacuse they can compensate each other
-        if (missing(lower)) {
-          lower <- c(0, -100, 0, 0, -20, rep(-30, (dim(C_mat)[2] - 1)))
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, mean_C_mat, 0, 0)
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat, 
-                Response  = Response,
-                Max       = x[1], 
-                Slopes    = c(x[2], x[2]),
-                Ec50s     = c(x[3:4]), 
-                a         = x[5], 
-                b         = x[6:length(x)],
-                interact  = interact,
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper = upper,
-            lower = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1],
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]), 
-            Ec50s  = c(res_CA_nmk$par[3:4]), 
-            a      = res_CA_nmk$par[5],
-            b      = res_CA_nmk$par[6:(6 + (dim(C_mat)[2] - 1) - 1)], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat, 
-                Response  = Response, 
-                Max       = x[1], 
-                Slopes    = c(x[2], x[2]), 
-                Ec50s     = c(x[3:4]), 
-                a         = x[5], 
-                b         = x[6:length(x)], 
-                interact  = interact, 
-                multicore = multicore,
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper = upper, 
-            lower = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]), 
-            Ec50s  = c(res_CA_nmk$par[3:4]), 
-            a      = res_CA_nmk$par[5],
-            b      = res_CA_nmk$par[6:(6 + (dim(C_mat)[2] - 1) - 1)], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      }
-      
-      ### 2.2.4. DL model ----
-      if (interact == "DL") {
-        if (missing(upper)) {
-          upper <- c(max(Response) * 5, 0, mean_C_mat * 10, 20, 30)
-        }
-        if (missing(lower)) {
-          lower <- c(0, -100, 0, 0, -20, -30)
-        }
-        if (missing(start)) {
-          start <- c(max(Response), -1, mean_C_mat, 0, 0)
-        }
-
-        if (error_type == "Normal") {
-          res_CA_nmk <- nmkb(
-            par = start, fn = function(x) {
-              CA_complete2_RSS(
-                C_mat     = C_mat, 
-                Response  = Response,
-                Max       = x[1], 
-                Slopes    = c(x[2], x[2]), 
-                Ec50s     = c(x[3:4]),
-                a         = x[5], 
-                b         = x[6], 
-                interact  = interact,
-                multicore = multicore,
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper = upper, 
-            lower = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]),
-            Ec50s  = c(res_CA_nmk$par[3:4]), 
-            a      = res_CA_nmk$par[5], 
-            b      = res_CA_nmk$par[6],
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else if (error_type == "Poisson") {
-          res_CA_nmk <- nmkb(
-            par = start, 
-            fn = function(x) {
-              CA_complete2_Poisson(
-                C_mat     = C_mat, 
-                Response  = Response,
-                Max       = x[1], 
-                Slopes    = c(x[2], x[2]), 
-                Ec50s     = c(x[3:4]), 
-                a         = x[5], 
-                b         = x[6], 
-                interact  = interact, 
-                multicore = multicore, 
-                mc.cores  = mc.cores
-                )
-              }, 
-            upper = upper, 
-            lower = lower, 
-            control = list(tol = 10^-6)
-            )
-          Res <- list(
-            Max    = res_CA_nmk$par[1], 
-            Slopes = c(res_CA_nmk$par[2], res_CA_nmk$par[2]), 
-            Ec50s  = c(res_CA_nmk$par[3:4]), 
-            a      = res_CA_nmk$par[5],
-            b      = res_CA_nmk$par[6], 
-            Error  = res_CA_nmk$value
-            )
-          return(Res)
-        } else {
-          stop("Misspecification of the error model")
-        }
-      } # End DL
-    } # End common slopes
-  } # End Dose-response curves not known
-} # End.

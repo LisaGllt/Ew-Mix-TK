@@ -1,0 +1,932 @@
+MCMC( "TK_IMD_C1.out",  # output file
+      "",                # name of restart file
+      "",                # name of data file
+      100000, 0,             # iterations, print prediction flag
+      1, 10000,          # printing frequency, iters to print
+      33333);               # random seed
+
+Integrate (Lsodes,  1e-5, 1e-7, 0); # Integrate(Solver, RTOL, ATOL, ITOL);
+    
+Level{ # Global
+    
+Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max 
+Distrib(keIMD,    LogUniform,   0.00001, 100000); # min, max
+
+Distrib(a_growth,  TruncNormal,   0.005,   0.0010,    -0.5,    1); # mean, sd, min, max
+Distrib (Vr_a_growth,  TruncNormal, 0.0015, 0.01, 0, 1);
+
+Distrib(Sigma_W,     TruncNormal,  0.03, 0.01, 0.0001, 1);
+Distrib(Sigma_CiIMD, TruncNormal,  3.0, 3.0,    1, 1000);
+
+
+Likelihood(CiIMD,  LogNormal, Prediction(CiIMD),  Sigma_CiIMD);  # Calcul des vraisemblances (geometric mean, geometric standard deviation)
+Likelihood(Weight, Normal,    Prediction(Weight), Sigma_W);      # Calcul des vraisemblances
+
+Level{
+  
+Distrib(a_growth,  TruncNormal, a_growth,  Vr_a_growth, -1.0, 1);
+
+  ############## Individuals ###################
+  
+Experiment { # TK IMD - i =  5
+    Winit=0.597402;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,0.868055555555556);
+    Data(Weight,0.597402,0.5658299);
+    Print(CiIMD,0,0.868055555555556);
+    Data(CiIMD,6.2,285.46970398841);
+    expo=NDoses(2,
+               1,2,
+               0,0.868055555555556);
+}
+Experiment { # TK IMD - i =  6
+    Winit=0.482517;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,0.868055555555556);
+    Data(Weight,0.482517,0.4965585);
+    Print(CiIMD,0,0.868055555555556);
+    Data(CiIMD,6.2,209.976311384028);
+    expo=NDoses(2,
+               1,2,
+               0,0.868055555555556);
+}
+Experiment { # TK IMD - i =  7
+    Winit=0.5896579;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,0.868055555555556);
+    Data(Weight,0.5896579,0.5316197);
+    Print(CiIMD,0,0.868055555555556);
+    Data(CiIMD,6.2,302.281529286475);
+    expo=NDoses(2,
+               1,2,
+               0,0.868055555555556);
+}
+Experiment { # TK IMD - i =  8
+    Winit=0.4368183;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,0.868055555555556);
+    Data(Weight,0.4368183,0.3626111);
+    Print(CiIMD,0,0.868055555555556);
+    Data(CiIMD,6.2,320.747879953007);
+    expo=NDoses(2,
+               1,2,
+               0,0.868055555555556);
+}
+Experiment { # TK IMD - i =  13
+    Winit=0.7167973;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,1.86388888888889);
+    Data(Weight,0.7167973,0.6474408);
+    Print(CiIMD,0,1.86388888888889);
+    Data(CiIMD,6.2,300.734982620972);
+    expo=NDoses(2,
+               1,2,
+               0,1.86388888888889);
+}
+Experiment { # TK IMD - i =  14
+    Winit=0.6577379;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,1.86388888888889);
+    Data(Weight,0.6577379,0.5984232);
+    Print(CiIMD,0,1.86388888888889);
+    Data(CiIMD,6.2,273.998936915658);
+    expo=NDoses(2,
+               1,2,
+               0,1.86388888888889);
+}
+Experiment { # TK IMD - i =  15
+    Winit=0.4744325;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,1.86388888888889);
+    Data(Weight,0.4744325,0.4631993);
+    Print(CiIMD,0,1.86388888888889);
+    Data(CiIMD,6.2,454.830052015605);
+    expo=NDoses(2,
+               1,2,
+               0,1.86388888888889);
+}
+Experiment { # TK IMD - i =  16
+    Winit=0.81696;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,1.86388888888889);
+    Data(Weight,0.81696,0.7593473);
+    Print(CiIMD,0,1.86388888888889);
+    Data(CiIMD,6.2,534.230202917626);
+    expo=NDoses(2,
+               1,2,
+               0,1.86388888888889);
+}
+Experiment { # TK IMD - i =  21
+    Winit=0.709734;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,2.85763888888889);
+    Data(Weight,0.709734,0.6447176);
+    Print(CiIMD,0,2.85763888888889);
+    Data(CiIMD,6.2,352.163141053054);
+    expo=NDoses(2,
+               1,2,
+               0,2.85763888888889);
+}
+Experiment { # TK IMD - i =  22
+    Winit=0.7535605;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,2.85763888888889);
+    Data(Weight,0.7535605,0.6491428);
+    Print(CiIMD,0,2.85763888888889);
+    Data(CiIMD,6.2,444.755029459265);
+    expo=NDoses(2,
+               1,2,
+               0,2.85763888888889);
+}
+Experiment { # TK IMD - i =  23
+    Winit=0.8115987;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,2.85763888888889);
+    Data(Weight,0.8115987,0.6322079);
+    Print(CiIMD,0,2.85763888888889);
+    Data(CiIMD,6.2,671.517261474422);
+    expo=NDoses(2,
+               1,2,
+               0,2.85763888888889);
+}
+Experiment { # TK IMD - i =  24
+    Winit=0.6733963;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,2.85763888888889);
+    Data(Weight,0.6733963,0.7653894);
+    Print(CiIMD,0,2.85763888888889);
+    Data(CiIMD,6.2,605.292126619928);
+    expo=NDoses(2,
+               1,2,
+               0,2.85763888888889);
+}
+Experiment { # TK IMD - i =  29
+    Winit=0.642505;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,6.85347222222222);
+    Data(Weight,0.642505,0.7270093);
+    Print(CiIMD,0,6.85347222222222);
+    Data(CiIMD,6.2,633.980805949767);
+    expo=NDoses(2,
+               1,2,
+               0,6.85347222222222);
+}
+Experiment { # TK IMD - i =  30
+    Winit=0.8456387;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,6.85347222222222);
+    Data(Weight,0.8456387,0.917378);
+    Print(CiIMD,0,6.85347222222222);
+    Data(CiIMD,6.2,658.196810923907);
+    expo=NDoses(2,
+               1,2,
+               0,6.85347222222222);
+}
+Experiment { # TK IMD - i =  31
+    Winit=0.475709;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,6.85347222222222);
+    Data(Weight,0.475709,0.4634546);
+    Print(CiIMD,0,6.85347222222222);
+    Data(CiIMD,6.2,1057.05805869074);
+    expo=NDoses(2,
+               1,2,
+               0,6.85347222222222);
+}
+Experiment { # TK IMD - i =  32
+    Winit=0.7799415;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+
+    Print(Weight,0,6.85347222222222);
+    Data(Weight,0.7799415,0.7500714);
+    Print(CiIMD,0,6.85347222222222);
+    Data(CiIMD,6.2,1136.91094164456);
+    expo=NDoses(2,
+               1,2,
+               0,6.85347222222222);
+}
+Experiment { # TK IMD - i =  37
+    Winit=0.6878633;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,9.84861111111111);
+    Data(Weight,0.6878633,0.6950968);
+    Print(CiIMD,0,9.84861111111111);
+    Data(CiIMD,6.2,912.927331042383);
+    expo=NDoses(2,
+               1,2,
+               0,9.84861111111111);
+}
+Experiment { # TK IMD - i =  38
+    Winit=0.5873602;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,9.84861111111111);
+    Data(Weight,0.5873602,0.567617);
+    Print(CiIMD,0,9.84861111111111);
+    Data(CiIMD,6.2,512.1164453125);
+    expo=NDoses(2,
+               1,2,
+               0,9.84861111111111);
+}
+Experiment { # TK IMD - i =  39
+    Winit=0.5425976;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,9.84861111111111);
+    Data(Weight,0.5425976,0.5768929);
+    Print(CiIMD,0,9.84861111111111);
+    Data(CiIMD,6.2,1225.24027522936);
+    expo=NDoses(2,
+               1,2,
+               0,9.84861111111111);
+}
+Experiment { # TK IMD - i =  40
+    Winit=0.790579;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,9.84861111111111);
+    Data(Weight,0.790579,0.7898131);
+    Print(CiIMD,0,9.84861111111111);
+    Data(CiIMD,6.2,1177.30379254457);
+    expo=NDoses(2,
+               1,2,
+               0,9.84861111111111);
+}
+Experiment { # TK IMD - i =  45
+    Winit=0.5825946;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,13.8409722222222);
+    Data(Weight,0.5825946,0.6531425);
+    Print(CiIMD,0,13.8409722222222);
+    Data(CiIMD,6.2,975.173160468554);
+    expo=NDoses(2,
+               1,2,
+               0,13.8409722222222);
+}
+Experiment { # TK IMD - i =  46
+    Winit=0.478262;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,13.8409722222222);
+    Data(Weight,0.478262,0.5568093);
+    Print(CiIMD,0,13.8409722222222);
+    Data(CiIMD,6.2,717.422252813285);
+    expo=NDoses(2,
+               1,2,
+               0,13.8409722222222);
+}
+Experiment { # TK IMD - i =  47
+    Winit=0.5688935;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,13.8409722222222);
+    Data(Weight,0.5688935,0.6315271);
+    Print(CiIMD,0,13.8409722222222);
+    Data(CiIMD,6.2,1151.81963302752);
+    expo=NDoses(2,
+               1,2,
+               0,13.8409722222222);
+}
+Experiment { # TK IMD - i =  48
+    Winit=0.4428604;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,13.8409722222222);
+    Data(Weight,0.4428604,0.438265);
+    Print(CiIMD,0,13.8409722222222);
+    Data(CiIMD,6.2,1147.86407056517);
+    expo=NDoses(2,
+               1,2,
+               0,13.8409722222222);
+}
+Experiment { # TK IMD - i =  53
+    Winit=0.526769;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,16.8347222222222);
+    Data(Weight,0.526769,0.5595325);
+    Print(CiIMD,0,16.8347222222222);
+    Data(CiIMD,6.2,744.195237458194);
+    expo=NDoses(2,
+               1,2,
+               0,16.8347222222222);
+}
+Experiment { # TK IMD - i =  54
+    Winit=0.522514;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,16.8347222222222);
+    Data(Weight,0.522514,0.6691413);
+    Print(CiIMD,0,16.8347222222222);
+    Data(CiIMD,6.2,214.751537645811);
+    expo=NDoses(2,
+               1,2,
+               0,16.8347222222222);
+}
+Experiment { # TK IMD - i =  55
+    Winit=0.5133232;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,16.8347222222222);
+    Data(Weight,0.5133232,0.624634);
+    Print(CiIMD,0,16.8347222222222);
+    Data(CiIMD,6.2,1460.39826337997);
+    expo=NDoses(2,
+               1,2,
+               0,16.8347222222222);
+}
+Experiment { # TK IMD - i =  56
+    Winit=0.4958777;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,16.8347222222222);
+    Data(Weight,0.4958777,0.5596176);
+    Print(CiIMD,0,16.8347222222222);
+    Data(CiIMD,6.2,1204.65899825022);
+    expo=NDoses(2,
+               1,2,
+               0,16.8347222222222);
+}
+Experiment { # TK IMD - i =  61
+    Winit=0.5420019;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,20.8284722222222);
+    Data(Weight,0.5420019,0.6843742);
+    Print(CiIMD,0,20.8284722222222);
+    Data(CiIMD,6.2,893.174159021407);
+    expo=NDoses(2,
+               1,2,
+               0,20.8284722222222);
+}
+Experiment { # TK IMD - i =  62
+    Winit=0.5782545;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,20.8284722222222);
+    Data(Weight,0.5782545,0.656972);
+    Print(CiIMD,0,20.8284722222222);
+    Data(CiIMD,6.2,1401.39008934708);
+    expo=NDoses(2,
+               1,2,
+               0,20.8284722222222);
+}
+Experiment { # TK IMD - i =  63
+    Winit=0.5201312;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,20.8284722222222);
+    Data(Weight,0.5201312,0.6211449);
+    Print(CiIMD,0,20.8284722222222);
+    Data(CiIMD,6.2,1012.22468217054);
+    expo=NDoses(2,
+               1,2,
+               0,20.8284722222222);
+}
+Experiment { # TK IMD - i =  64
+    Winit=0.5073662;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+
+    Print(Weight,0,20.8284722222222);
+    Data(Weight,0.5073662,0.6318675);
+    Print(CiIMD,0,20.8284722222222);
+    Data(CiIMD,6.2,1407.89377586016);
+    expo=NDoses(2,
+               1,2,
+               0,20.8284722222222);
+}
+Experiment { # TK IMD - i =  69
+    Winit=0.5178335;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0326388888889, Replace,0.016);
+    Print(Weight,0,21.0326388888889,21.8243055555556);
+    Data(Weight,0.5178335,-1,0.6728006);
+    Print(CiIMD,0,21.0326388888889,21.8243055555556);
+    Data(CiIMD,6.2,-1,1071.24891930053);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0326388888889,21.8243055555556);
+}
+Experiment { # TK IMD - i =  70
+    Winit=0.478262;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0326388888889, Replace,0.016);
+    Print(Weight,0,21.0326388888889,21.8243055555556);
+    Data(Weight,0.478262,-1,0.6630141);
+    Print(CiIMD,0,21.0326388888889,21.8243055555556);
+    Data(CiIMD,6.2,-1,1113.19858485351);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0326388888889,21.8243055555556);
+}
+Experiment { # TK IMD - i =  71
+    Winit=0.6762897;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0326388888889, Replace,0.016);
+    Print(Weight,0,21.0326388888889,21.8243055555556);
+    Data(Weight,0.6762897,-1,0.7670914);
+    Print(CiIMD,0,21.0326388888889,21.8243055555556);
+    Data(CiIMD,6.2,-1,1226.60390178271);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0326388888889,21.8243055555556);
+}
+Experiment { # TK IMD - i =  72
+    Winit=0.4449879;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0326388888889, Replace,0.016);
+    Print(Weight,0,21.0326388888889,21.8243055555556);
+    Data(Weight,0.4449879,-1,0.5782545);
+    Print(CiIMD,0,21.0326388888889,21.8243055555556);
+    Data(CiIMD,6.2,-1,998.301422861711);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0326388888889,21.8243055555556);
+}
+Experiment { # TK IMD - i =  77
+    Winit=0.6046355;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0277777777778, Replace,0.016);
+    Print(Weight,0,21.0277777777778,22.8194444444444);
+    Data(Weight,0.6046355,-1,0.8869122);
+    Print(CiIMD,0,21.0277777777778,22.8194444444444);
+    Data(CiIMD,6.2,-1,1377.81332021858);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0277777777778,22.8194444444444);
+}
+Experiment { # TK IMD - i =  78
+    Winit=0.4751984;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0277777777778, Replace,0.016);
+    Print(Weight,0,21.0277777777778,22.8194444444444);
+    Data(Weight,0.4751984,-1,0.6396116);
+    Print(CiIMD,0,21.0277777777778,22.8194444444444);
+    Data(CiIMD,6.2,-1,857.253281300813);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0277777777778,22.8194444444444);
+}
+Experiment { # TK IMD - i =  79
+    Winit=0.7370511;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0277777777778, Replace,0.016);
+    Print(Weight,0,21.0277777777778,22.8194444444444);
+    Data(Weight,0.7370511,-1,1.0037545);
+    Print(CiIMD,0,21.0277777777778,22.8194444444444);
+    Data(CiIMD,6.2,-1,715.538211823217);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0277777777778,22.8194444444444);
+}
+Experiment { # TK IMD - i =  80
+    Winit=0.5005582;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0277777777778, Replace,0.016);
+    Print(Weight,0,21.0277777777778,22.8194444444444);
+    Data(Weight,0.5005582,-1,0.7051386);
+    Print(CiIMD,0,21.0277777777778,22.8194444444444);
+    Data(CiIMD,6.2,-1,771.919555555556);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0277777777778,22.8194444444444);
+}
+Experiment { # TK IMD - i =  85
+    Winit=0.5454059;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0236111111111, Replace,0.016);
+    Print(Weight,0,21.0236111111111,23.8152777777778);
+    Data(Weight,0.5454059,-1,0.8079394);
+    Print(CiIMD,0,21.0236111111111,23.8152777777778);
+    Data(CiIMD,6.2,-1,702.073297848747);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0236111111111,23.8152777777778);
+}
+Experiment { # TK IMD - i =  86
+    Winit=0.4321378;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0236111111111, Replace,0.016);
+    Print(Weight,0,21.0236111111111,23.8152777777778);
+    Data(Weight,0.4321378,-1,0.6519511);
+    Print(CiIMD,0,21.0236111111111,23.8152777777778);
+    Data(CiIMD,6.2,-1,991.097044673539);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0236111111111,23.8152777777778);
+}
+Experiment { # TK IMD - i =  87
+    Winit=0.4324782;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0236111111111, Replace,0.016);
+    Print(Weight,0,21.0236111111111,23.8152777777778);
+    Data(Weight,0.4324782,-1,0.6806298);
+    Print(CiIMD,0,21.0236111111111,23.8152777777778);
+    Data(CiIMD,6.2,-1,852.686214958575);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0236111111111,23.8152777777778);
+}
+Experiment { # TK IMD - i =  88
+    Winit=0.4895803;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0236111111111, Replace,0.016);
+    Print(Weight,0,21.0236111111111,23.8152777777778);
+    Data(Weight,0.4895803,-1,0.7966211);
+    Print(CiIMD,0,21.0236111111111,23.8152777777778);
+    Data(CiIMD,6.2,-1,1028.93162719298);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0236111111111,23.8152777777778);
+}
+Experiment { # TK IMD - i =  93
+    Winit=0.5390234;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0138888888889, Replace,0.016);
+    Print(Weight,0,21.0138888888889,27.8055555555556);
+    Data(Weight,0.5390234,-1,0.8624034);
+    Print(CiIMD,0,21.0138888888889,27.8055555555556);
+    Data(CiIMD,6.2,-1,905.013680329646);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0138888888889,27.8055555555556);
+}
+Experiment { # TK IMD - i =  94
+    Winit=0.6072736;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0138888888889, Replace,0.016);
+    Print(Weight,0,21.0138888888889,27.8055555555556);
+    Data(Weight,0.6072736,-1,0.7077767);
+    Print(CiIMD,0,21.0138888888889,27.8055555555556);
+    Data(CiIMD,6.2,-1,589.911208544126);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0138888888889,27.8055555555556);
+}
+Experiment { # TK IMD - i =  95
+    Winit=0.5568093;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0138888888889, Replace,0.016);
+    Print(Weight,0,21.0138888888889,27.8055555555556);
+    Data(Weight,0.5568093,-1,0.9523541);
+    Print(CiIMD,0,21.0138888888889,27.8055555555556);
+    Data(CiIMD,6.2,-1,682.339445350734);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0138888888889,27.8055555555556);
+}
+Experiment { # TK IMD - i =  96
+    Winit=0.5283008;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0138888888889, Replace,0.016);
+    Print(Weight,0,21.0138888888889,27.8055555555556);
+    Data(Weight,0.5283008,-1,0.758241);
+    Print(CiIMD,0,21.0138888888889,27.8055555555556);
+    Data(CiIMD,6.2,-1,788.0166710013);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0138888888889,27.8055555555556);
+}
+Experiment { # TK IMD - i =  101
+    Winit=0.5291518;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0034722222222, Replace,0.016);
+    Print(Weight,0,21.0034722222222,30.7951388888889);
+    Data(Weight,0.5291518,-1,0.8388307);
+    Print(CiIMD,0,21.0034722222222,30.7951388888889);
+    Data(CiIMD,6.2,-1,1281.52804397026);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0034722222222,30.7951388888889);
+}
+Experiment { # TK IMD - i =  102
+    Winit=0.4516257;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0034722222222, Replace,0.016);
+    Print(Weight,0,21.0034722222222,30.7951388888889);
+    Data(Weight,0.4516257,-1,0.7796862);
+    Print(CiIMD,0,21.0034722222222,30.7951388888889);
+    Data(CiIMD,6.2,-1,584.097363594681);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0034722222222,30.7951388888889);
+}
+Experiment { # TK IMD - i =  103
+    Winit=0.4253298;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0034722222222, Replace,0.016);
+    Print(Weight,0,21.0034722222222,30.7951388888889);
+    Data(Weight,0.4253298,-1,0.6665032);
+    Print(CiIMD,0,21.0034722222222,30.7951388888889);
+    Data(CiIMD,6.2,-1,647.922682523951);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0034722222222,30.7951388888889);
+}
+Experiment { # TK IMD - i =  104
+    Winit=0.5966361;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,21.0034722222222, Replace,0.016);
+    Print(Weight,0,21.0034722222222,30.7951388888889);
+    Data(Weight,0.5966361,-1,0.8794234);
+    Print(CiIMD,0,21.0034722222222,30.7951388888889);
+    Data(CiIMD,6.2,-1,795.262126495726);
+    expo=NDoses(3,
+               1,0,2,
+               0,21.0034722222222,30.7951388888889);
+}
+Experiment { # TK IMD - i =  109
+    Winit=0.5815734;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9972222222222, Replace,0.016);
+    Print(Weight,0,20.9972222222222,34.7888888888889);
+    Data(Weight,0.5815734,-1,0.9609492);
+    Print(CiIMD,0,20.9972222222222,34.7888888888889);
+    Data(CiIMD,6.2,-1,473.373310618966);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9972222222222,34.7888888888889);
+}
+Experiment { # TK IMD - i =  110
+    Winit=0.5021751;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9972222222222, Replace,0.016);
+    Print(Weight,0,20.9972222222222,34.7888888888889);
+    Data(Weight,0.5021751,-1,0.7942383);
+    Print(CiIMD,0,20.9972222222222,34.7888888888889);
+    Data(CiIMD,6.2,-1,636.405182291667);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9972222222222,34.7888888888889);
+}
+Experiment { # TK IMD - i =  111
+    Winit=0.44252;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9972222222222, Replace,0.016);
+    Print(Weight,0,20.9972222222222,34.7888888888889);
+    Data(Weight,0.44252,-1,0.8607865);
+    Print(CiIMD,0,20.9972222222222,34.7888888888889);
+    Data(CiIMD,6.2,-1,562.107648020935);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9972222222222,34.7888888888889);
+}
+Experiment { # TK IMD - i =  112
+    Winit=0.5690637;
+    Ci0IMD=6.2;
+    Ce0IMD=89;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9972222222222, Replace,0.016);
+    Print(Weight,0,20.9972222222222,34.7888888888889);
+    Data(Weight,0.5690637,-1,0.8758492);
+    Print(CiIMD,0,20.9972222222222,34.7888888888889);
+    Data(CiIMD,6.2,-1,439.996148148148);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9972222222222,34.7888888888889);
+}
+Experiment { # TK IMD - i =  117
+    Winit=0.4916227;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9923611111111, Replace,0.016);
+    Print(Weight,0,20.9923611111111,37.7840277777778);
+    Data(Weight,0.4916227,-1,0.7392637);
+    Print(CiIMD,0,20.9923611111111,37.7840277777778);
+    Data(CiIMD,6.2,-1,955.440952380952);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9923611111111,37.7840277777778);
+}
+Experiment { # TK IMD - i =  118
+    Winit=0.5300028;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9923611111111, Replace,0.016);
+    Print(Weight,0,20.9923611111111,37.7840277777778);
+    Data(Weight,0.5300028,-1,0.9462269);
+    Print(CiIMD,0,20.9923611111111,37.7840277777778);
+    Data(CiIMD,6.2,-1,940.986269633508);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9923611111111,37.7840277777778);
+}
+Experiment { # TK IMD - i =  119
+    Winit=0.6738218;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9923611111111, Replace,0.016);
+    Print(Weight,0,20.9923611111111,37.7840277777778);
+    Data(Weight,0.6738218,-1,1.0597503);
+    Print(CiIMD,0,20.9923611111111,37.7840277777778);
+    Data(CiIMD,6.2,-1,669.081044504995);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9923611111111,37.7840277777778);
+}
+Experiment { # TK IMD - i =  120
+    Winit=0.5570646;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9923611111111, Replace,0.016);
+    Print(Weight,0,20.9923611111111,37.7840277777778);
+    Data(Weight,0.5570646,-1,0.8228319);
+    Print(CiIMD,0,20.9923611111111,37.7840277777778);
+    Data(CiIMD,6.2,-1,679.662528281164);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9923611111111,37.7840277777778);
+}
+Experiment { # TK IMD - i =  125
+    Winit=0.4079694;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9895833333333, Replace,0.016);
+    Print(Weight,0,20.9895833333333,41.78125);
+    Data(Weight,0.4079694,-1,0.8723601);
+    Print(CiIMD,0,20.9895833333333,41.78125);
+    Data(CiIMD,6.2,-1,677.671882716049);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9895833333333,41.78125);
+}
+Experiment { # TK IMD - i =  126
+    Winit=0.403374;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9895833333333, Replace,0.016);
+    Print(Weight,0,20.9895833333333,41.78125);
+    Data(Weight,0.403374,-1,0.6256552);
+    Print(CiIMD,0,20.9895833333333,41.78125);
+    Data(CiIMD,6.2,-1,547.79963975984);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9895833333333,41.78125);
+}
+Experiment { # TK IMD - i =  127
+    Winit=0.5889771;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9895833333333, Replace,0.016);
+    Print(Weight,0,20.9895833333333,41.78125);
+    Data(Weight,0.5889771,-1,0.9677572);
+    Print(CiIMD,0,20.9895833333333,41.78125);
+    Data(CiIMD,6.2,-1,612.906874054871);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9895833333333,41.78125);
+}
+Experiment { # TK IMD - i =  128
+    Winit=0.4115436;
+    Ci0IMD=6.2;
+    Ce0IMD=72;
+    CclxIMD=0.016;
+    event_Ce=Events(CeIMD,1,20.9895833333333, Replace,0.016);
+    Print(Weight,0,20.9895833333333,41.78125);
+    Data(Weight,0.4115436,-1,0.775261);
+    Print(CiIMD,0,20.9895833333333,41.78125);
+    Data(CiIMD,6.2,-1,642.048134417344);
+    expo=NDoses(3,
+               1,0,2,
+               0,20.9895833333333,41.78125);
+}
+
+
+} # End
+} # End global
+
+End.

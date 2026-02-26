@@ -5,7 +5,7 @@ f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 ```
 
-# Toxicokinetics of Epoxiconazole - One compartment & No exposure in Petri dishes
+# Toxicokinetics of Epoxiconazole
 
 ## Results of the experiment
 
@@ -71,10 +71,15 @@ df_TK_EPX_mean <- df_TK_EPX |>
 
 ### Initial state
 
+```{r D0}
+summary(subset(df_TK_EPX, Time==0 & Experiment == "TK"))
+summary(subset(df_TK_EPX, Time==0 & Experiment == "TKBIS"))
+```
+
 ```{r, warning=F, message=F}
 #| fig-cap: Initial weights (with gut content) of earthworms. 
 #| label: fig-init
-#| fig-width: 6
+#| fig-width: 8
 #| fig-height: 4
 
 # Weights at t=0
@@ -97,8 +102,8 @@ plot_D0 <- ggplot(
     )+
   facet_wrap(~Molecule+Experiment, ncol=2, scales="free_x")+
   
-  scale_color_manual(values=col_Molecule)+
-  scale_fill_manual(values=col_Molecule)+
+  scale_color_manual(values=rev(col_Molecule))+
+  scale_fill_manual(values=rev(col_Molecule))+
 
   labs(x="Dose (mg/kg)", y="Weight (mg)")+
   
@@ -114,7 +119,7 @@ plot_D0 <- ggplot(
     axis.title.x = element_blank(),
     axis.title.y = element_text(size=sizetitle,face="plain"),
     
-    axis.text.x = element_blank(),
+    axis.text.x = element_text(size=sizetitle-4),
     axis.line.x=element_blank(),
     axis.ticks.x=element_blank(),
     
@@ -134,7 +139,7 @@ plot_D0
 ggsave(
   filename="TK_EPX_initial_weights.png", 
   plot=plot_D0, 
-  width=6, 
+  width=8, 
   height = 4, 
   path=here::here("fig/TK_single")
   )
@@ -308,9 +313,9 @@ p
 Names of models :
 
 -   C1 : One compartement only.
--   C1P : One compartment and exposure through Petri dishes via gut content.
+-   C1P : One compartment and exposure in Petri dishes via gut content.
 -   C2 : Two compartements.
--   C2P : Two compartments and exposure through Petri dishes via gut content.
+-   C2P : Two compartments and exposure in Petri dishes via gut content.
 
 ### In files creation for MCMC
 
@@ -321,8 +326,8 @@ Molecule <- "EPX"
 
 ########## C1 ################################################################
 
-path_mod_EPX_C1 <- here::here("mod/TK_EPX_1comp_bis")
-path_fig_C1 <- here::here("fig/TK_single/EPX_1comp/")
+path_mod_EPX_C1 <- here::here("mod/TK_EPX_C1")
+path_fig_C1 <- here::here("fig/TK_single/EPX_C1/")
 
 Nb_Iter <- 100000
 seeds <- c(C1 = 3333, C2 = 6656, C3 = 111222)
@@ -345,8 +350,8 @@ f_In_tot(path_mod_EPX_C1, Molecule, text_priors, text_likelihood, text_param_ind
 
 ########## C1P ################################################################
 
-path_mod_EPX_C1P <- here::here("mod/TK_EPX_1compPhi_bis")
-path_fig_C1P <- here::here("fig/TK_single/EPX_1compPhi_bis/")
+path_mod_EPX_C1P <- here::here("mod/TK_EPX_C1P")
+path_fig_C1P <- here::here("fig/TK_single/EPX_C1P/")
 
 Nb_Iter <- 300000
 seeds <- c(C1 = 333266, C2 = 660660, C3 = 110110) # Done on CEA servers (CCRT)
@@ -372,8 +377,8 @@ f_In_tot(path_mod_EPX_C1P, Molecule, text_priors, text_likelihood, text_param_in
 ########## C2 ################################################################
 
 Molecule <- "EPX"
-path_mod_EPX_C2 <- here::here("mod/TK_EPX_2comp_bis")
-path_fig_C2 <- here::here("fig/TK_single/EPX_2comp_bis/")
+path_mod_EPX_C2 <- here::here("mod/TK_EPX_C2")
+path_fig_C2 <- here::here("fig/TK_single/EPX_C2/")
 
 Nb_Iter <- 100000
 seeds <- c(C1 = 33033, C2 = 6666, C3 = 1201)
@@ -398,8 +403,8 @@ f_In_tot(path_mod_EPX_C2, Molecule, text_priors, text_likelihood, text_param_ind
 
 ########## C2P ################################################################
 
-path_mod_EPX_C2P <- here::here("mod/TK_EPX_2compPhi_bis")
-path_fig_C2P <- here::here("fig/TK_single/EPX_2compPhi_bis/")
+path_mod_EPX_C2P <- here::here("mod/TK_EPX_C2P")
+path_fig_C2P <- here::here("fig/TK_single/EPX_C2P/")
 
 Nb_Iter <- 300000
 seeds <- c(C1 = 333266, C2 = 660660, C3 = 110110) # Done on CEA servers (CCRT)
@@ -500,11 +505,18 @@ L_parameters_C2P <- unique(MCMC_out_EPX_C2P$Priors$Nom)
 
 We can retrieve different information from the models :
 
--   The number of chains used : `r NC`
--   The number of parameters : `r Nb_param`
--   The number of experiments : `r Nb_experiment`
--   The number of last iterations used to describe the posterior distribution : `r Nb_iter_kept`
--   The number of last iterations used to create the `tab_setpoint.out` file : `r N_iter_setpoint`
+-   C1
+    -   The number of chains used : `r NC_C1`
+    -   The number of parameters : `r Nb_param_C1`
+    -   The number of experiments : `r Nb_experiment_C1`
+    -   The number of last iterations used to describe the posterior distribution : `r Nb_iter_kept_C1`
+    -   The number of last iterations used to create the `tab_setpoint.out` file : `r N_iter_setpoint_C1`
+-   C1P
+    -   The number of parameters : `r Nb_param_C1P`
+-   C2
+    -   The number of parameters : `r Nb_param_C2`
+-   C2P
+    -   The number of parameters : `r Nb_param_C2P`
 
 ### Priors used for the model
 
@@ -557,7 +569,7 @@ p_priors <- ggplot() +
   facet_wrap(~Nom, scales = "free")+
   
   stat_halfeye(
-    data = df_priors_dist, 
+    data = df_priors_dist_C1, 
     aes(
        x = samples
        ),
@@ -641,7 +653,7 @@ p_priors <- ggplot() +
   facet_wrap(~Nom, scales = "free")+
   
   stat_halfeye(
-    data = df_priors_dist, 
+    data = df_priors_dist_C1P, 
     aes(
        x = samples
        ),
@@ -725,7 +737,7 @@ p_priors <- ggplot() +
   facet_wrap(~Nom, scales = "free")+
   
   stat_halfeye(
-    data = df_priors_dist, 
+    data = df_priors_dist_C2, 
     aes(
        x = samples
        ),
@@ -809,7 +821,7 @@ p_priors <- ggplot() +
   facet_wrap(~Nom, scales = "free")+
   
   stat_halfeye(
-    data = df_priors_dist, 
+    data = df_priors_dist_C2P, 
     aes(
        x = samples
        ),
@@ -859,7 +871,7 @@ ggsave(
 
 p_chains <-  
   ggplot(
-    data = MCMC_out_EPX_C1$Chains, 
+    data = MCMC_out_EPX_C1$Chains |> filter(Iteration > 1), 
     aes(
       x = Iteration, 
       y = value, 
@@ -910,7 +922,7 @@ ggsave(
 
 p_chains <-  
   ggplot(
-    data = MCMC_out_EPX_C1P$Chains, 
+    data = MCMC_out_EPX_C1P$Chains|> filter(Iteration > 1), 
     aes(
       x = Iteration, 
       y = value, 
@@ -961,7 +973,7 @@ ggsave(
 
 p_chains <-  
   ggplot(
-    data = MCMC_out_EPX_C2$Chains, 
+    data = MCMC_out_EPX_C2$Chains|> filter(Iteration > 1), 
     aes(
       x = Iteration, 
       y = value, 
@@ -1012,7 +1024,7 @@ ggsave(
 
 p_chains <-  
   ggplot(
-    data = MCMC_out_EPX_C2P$Chains, 
+    data = MCMC_out_EPX_C2P$Chains|> filter(Iteration > 1), 
     aes(
       x = Iteration, 
       y = value, 
@@ -1082,7 +1094,7 @@ p1 <- ggplot(
   theme_minimal()
 
 p2 <- ggplot(
-  MCMC_out_EPX_C1$df_LnPost, 
+  MCMC_out_EPX_C1$df_LnPost |> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = LnPosterior, 
@@ -1098,7 +1110,7 @@ p2 <- ggplot(
   theme_minimal()
 
 p3 <- ggplot(
-  MCMC_out_EPX_C1$df_Devc, 
+  MCMC_out_EPX_C1$df_Devc|> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = RatioDeviance, 
@@ -1159,7 +1171,7 @@ p1 <- ggplot(
   theme_minimal()
 
 p2 <- ggplot(
-  MCMC_out_EPX_C1P$df_LnPost, 
+  MCMC_out_EPX_C1P$df_LnPost |> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = LnPosterior, 
@@ -1175,7 +1187,7 @@ p2 <- ggplot(
   theme_minimal()
 
 p3 <- ggplot(
-  MCMC_out_EPX_C1P$df_Devc, 
+  MCMC_out_EPX_C1P$df_Devc |> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = RatioDeviance, 
@@ -1236,7 +1248,7 @@ p1 <- ggplot(
   theme_minimal()
 
 p2 <- ggplot(
-  MCMC_out_EPX_C2$df_LnPost, 
+  MCMC_out_EPX_C2$df_LnPost |> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = LnPosterior, 
@@ -1252,7 +1264,7 @@ p2 <- ggplot(
   theme_minimal()
 
 p3 <- ggplot(
-  MCMC_out_EPX_C2$df_Devc, 
+  MCMC_out_EPX_C2$df_Devc |> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = RatioDeviance, 
@@ -1313,7 +1325,7 @@ p1 <- ggplot(
   theme_minimal()
 
 p2 <- ggplot(
-  MCMC_out_EPX_C2P$df_LnPost, 
+  MCMC_out_EPX_C2P$df_LnPost |> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = LnPosterior, 
@@ -1329,7 +1341,7 @@ p2 <- ggplot(
   theme_minimal()
 
 p3 <- ggplot(
-  MCMC_out_EPX_C2P$df_Devc, 
+  MCMC_out_EPX_C2P$df_Devc |> filter(iteration > 1), 
   aes(
     x = iteration, 
     y = RatioDeviance, 
@@ -2020,7 +2032,7 @@ Summary_res_EPX_f_C1 |> datatable(
   class="hover"
   )
 
-Summary_res_EPX_f_C1
+#Summary_res_EPX_f_C1
 ```
 
 ```{r bicC1}
@@ -2028,7 +2040,7 @@ Summary_res_EPX_f_C1
 
 LL <- f_get_mode(MCMC_out_EPX_C1$df_LnData$LnData)
 n <- length(na.omit(df_TK_EPX$Weight)) + length(na.omit(df_TK_EPX$CiEPX))
-k <- Nb_param -2
+k <- Nb_param_C1 -2
 
 BIC <- -2*LL + k*log(n)
 
@@ -2058,7 +2070,7 @@ Summary_res_EPX_f_C1P |> datatable(
   class="hover"
   )
 
-Summary_res_EPX_f_C1P
+#Summary_res_EPX_f_C1P
 ```
 
 ```{r bicC1P}
@@ -2066,7 +2078,7 @@ Summary_res_EPX_f_C1P
 
 LL <- f_get_mode(MCMC_out_EPX_C1P$df_LnData$LnData)
 n <- length(na.omit(df_TK_EPX$Weight)) + length(na.omit(df_TK_EPX$CiEPX))
-k <- Nb_param -2
+k <- Nb_param_C1P -2
 
 BIC <- -2*LL + k*log(n)
 
@@ -2096,7 +2108,7 @@ Summary_res_EPX_f_C2 |> datatable(
   class="hover"
   )
 
-Summary_res_EPX_f_C2
+#Summary_res_EPX_f_C2
 ```
 
 ```{r bicC2}
@@ -2104,7 +2116,7 @@ Summary_res_EPX_f_C2
 
 LL <- f_get_mode(MCMC_out_EPX_C2$df_LnData$LnData)
 n <- length(na.omit(df_TK_EPX$Weight)) + length(na.omit(df_TK_EPX$CiEPX))
-k <- Nb_param -2
+k <- Nb_param_C2 -2
 
 BIC <- -2*LL + k*log(n)
 
@@ -2134,7 +2146,7 @@ Summary_res_EPX_f_C2P |> datatable(
   class="hover"
   )
 
-Summary_res_EPX_f_C2P
+#Summary_res_EPX_f_C2P
 ```
 
 ```{r bicC2P}
@@ -2142,7 +2154,7 @@ Summary_res_EPX_f_C2P
 
 LL <- f_get_mode(MCMC_out_EPX_C2P$df_LnData$LnData)
 n <- length(na.omit(df_TK_EPX$Weight)) + length(na.omit(df_TK_EPX$CiEPX))
-k <- Nb_param -2
+k <- Nb_param_C2P -2
 
 BIC <- -2*LL + k*log(n)
 
@@ -2153,7 +2165,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ### Comparison of observed vs. predicted data
 
-```{r setpointindin, message=F, warning=F, eval=F}
+```{r setpointindin, message=F, warning=F, eval=T}
 
 ######### C1 #################################################
 l_param_name_C1 <- "kuEPX, keEPX, a_growth"
@@ -2171,21 +2183,6 @@ f_Setpoint_ind(path_mod_EPX_C2, Molecule, l_param_name_C2)
 l_param_name_C2P <- "kuEPX, keEPX, kperiph, phi, a_growth"
 f_Setpoint_ind(path_mod_EPX_C2P, Molecule, l_param_name_C2P)
 
-
-######### Observed data ######################################################
-dObs_ind <- df_TK_EPX |> 
-  mutate(
-    ID = as.numeric(ID),
-    Group_tmp = case_when(
-      ID < 65 ~ "Uptake",
-      (ID > 64 & ID <= 128) ~ "Elimination",
-      ID > 128 ~ "Uptake bis"),
-    Group = fct_relevel(Group_tmp, c("Uptake", "Elimination", "Uptake bis"))
-    )
-
-colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
-colnames(dObs_ind)[colnames(dObs_ind) == "CiEPX"] <- "CiEPX_obs"
-colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
 ```
 
 An example of how to run the simulations for the predicted-observed data is given in the bash code block below. You need to be in the right folder to launch a given model.
@@ -2203,6 +2200,24 @@ done
 ```
 
 ```{r EPXdatapred, message=F, warning=F}
+
+Nb_experiment <- Nb_experiment_C1
+
+######### Observed data ######################################################
+dObs_ind <- df_TK_EPX |> 
+  mutate(
+    ID = as.numeric(ID),
+    Group_tmp = case_when(
+      ID < 65 ~ "Uptake",
+      (ID > 64 & ID <= 128) ~ "Elimination",
+      ID > 128 ~ "Uptake bis"),
+    Group = fct_relevel(Group_tmp, c("Uptake", "Elimination", "Uptake bis"))
+    )
+
+colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "CiEPX"] <- "CiEPX_obs"
+colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Times"
+
 
 ############ C1 ##############################################################
 
@@ -4239,6 +4254,188 @@ p_CiEPX_traj
 
 ```
 
+```{r, include=F}
+
+Time_point_1 <- as.character(seq(22, 42, 1))
+
+df_phases_plot_1 <- df_phases_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+df_mod_CiEPX_ind_t_plot_C1_1 <- df_mod_CiEPX_ind_t_plot_C1 |> 
+  filter(!(Time_point_f %in% Time_point_1))
+dObs_ind_plot_1 <- dObs_ind_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+
+df_phases_plot_2 <- df_phases_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+df_mod_CiEPX_ind_t_plot_C1_2 <- df_mod_CiEPX_ind_t_plot_C1 |> 
+  filter(Time_point_f %in% Time_point_1)
+dObs_ind_plot_2 <- dObs_ind_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+
+p_CiEPX_traj_1 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_1,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1_1,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1_1,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1_1,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C1_1,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_1,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+
+p_CiEPX_traj_2 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_2,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1_2,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1_2,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1_2,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C1_2,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_2,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+  
+```
+
 ## Internal concentrations - Log-scale
 
 ```{r, message=F, warning=F}
@@ -4371,6 +4568,22 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C1
   )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_1.png", 
+  plot=p_CiEPX_traj_1, 
+  width=8, height = 10, 
+  path=path_fig_C1
+  )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_2.png", 
+  plot=p_CiEPX_traj_2 , 
+  width=8, height = 10, 
+  path=path_fig_C1
+  )
+
+
 ```
 :::
 
@@ -4495,6 +4708,188 @@ p_CiEPX_traj <- ggplot()+
 
 p_CiEPX_traj 
 
+```
+
+```{r, include=F}
+
+Time_point_1 <- as.character(seq(22, 42, 1))
+
+df_phases_plot_1 <- df_phases_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+df_mod_CiEPX_ind_t_plot_C1P_1 <- df_mod_CiEPX_ind_t_plot_C1P |> 
+  filter(!(Time_point_f %in% Time_point_1))
+dObs_ind_plot_1 <- dObs_ind_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+
+df_phases_plot_2 <- df_phases_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+df_mod_CiEPX_ind_t_plot_C1P_2 <- df_mod_CiEPX_ind_t_plot_C1P |> 
+  filter(Time_point_f %in% Time_point_1)
+dObs_ind_plot_2 <- dObs_ind_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+
+p_CiEPX_traj_1 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_1,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1P_1,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1P_1,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1P_1,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C1P_1,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_1,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+
+p_CiEPX_traj_2 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_2,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1P_2,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1P_2,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C1P_2,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C1P_2,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_2,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+  
 ```
 
 ## Internal concentrations - Log-scale
@@ -4629,6 +5024,20 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C1P
   )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_1.png", 
+  plot=p_CiEPX_traj_1, 
+  width=8, height = 10, 
+  path=path_fig_C1P
+  )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_2.png", 
+  plot=p_CiEPX_traj_2 , 
+  width=8, height = 10, 
+  path=path_fig_C1P
+  )
 ```
 :::
 
@@ -4753,6 +5162,188 @@ p_CiEPX_traj <- ggplot()+
 
 p_CiEPX_traj 
 
+```
+
+```{r, include=F}
+
+Time_point_1 <- as.character(seq(22, 42, 1))
+
+df_phases_plot_1 <- df_phases_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+df_mod_CiEPX_ind_t_plot_C2_1 <- df_mod_CiEPX_ind_t_plot_C2 |> 
+  filter(!(Time_point_f %in% Time_point_1))
+dObs_ind_plot_1 <- dObs_ind_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+
+df_phases_plot_2 <- df_phases_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+df_mod_CiEPX_ind_t_plot_C2_2 <- df_mod_CiEPX_ind_t_plot_C2 |> 
+  filter(Time_point_f %in% Time_point_1)
+dObs_ind_plot_2 <- dObs_ind_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+
+p_CiEPX_traj_1 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_1,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2_1,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2_1,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2_1,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C2_1,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_1,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+
+p_CiEPX_traj_2 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_2,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2_2,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2_2,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2_2,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C2_2,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_2,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+  
 ```
 
 ## Internal concentrations - Log-scale
@@ -4887,6 +5478,20 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C2
   )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_1.png", 
+  plot=p_CiEPX_traj_1, 
+  width=8, height = 10, 
+  path=path_fig_C2
+  )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_2.png", 
+  plot=p_CiEPX_traj_2 , 
+  width=8, height = 10, 
+  path=path_fig_C2
+  )
 ```
 :::
 
@@ -5011,6 +5616,188 @@ p_CiEPX_traj <- ggplot()+
 
 p_CiEPX_traj 
 
+```
+
+```{r, include=F}
+
+Time_point_1 <- as.character(seq(22, 42, 1))
+
+df_phases_plot_1 <- df_phases_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+df_mod_CiEPX_ind_t_plot_C2P_1 <- df_mod_CiEPX_ind_t_plot_C2P |> 
+  filter(!(Time_point_f %in% Time_point_1))
+dObs_ind_plot_1 <- dObs_ind_plot |> 
+  filter(!(Time_point_f %in% Time_point_1))
+
+df_phases_plot_2 <- df_phases_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+df_mod_CiEPX_ind_t_plot_C2P_2 <- df_mod_CiEPX_ind_t_plot_C2P |> 
+  filter(Time_point_f %in% Time_point_1)
+dObs_ind_plot_2 <- dObs_ind_plot |> 
+  filter(Time_point_f %in% Time_point_1)
+
+p_CiEPX_traj_1 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_1,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2P_1,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2P_1,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2P_1,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C2P_1,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_1,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+
+p_CiEPX_traj_2 <- ggplot()+
+  
+  geom_segment(
+    data = df_phases_plot_2,
+    aes(
+      x = t_start,
+      xend = t_end,
+      y = y,
+      yend = y,
+      group = ID,
+      color = factor(Phase)
+    ),
+    linewidth = 2,
+    alpha = 0.7
+  ) +
+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2P_2,
+    aes(
+      x=Time,
+      y= low,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2P_2,
+    aes(
+      x=Time,
+      y= up,
+      group = ID
+      ),
+    linetype="dotted",
+    color = col_EPX
+    )+
+  geom_line(
+    data=df_mod_CiEPX_ind_t_plot_C2P_2,
+    aes(
+      x=Time,
+      y= predict.endpoint,
+      group = ID
+      ),
+    color = col_EPX,
+    lwd=1
+    )+
+  geom_ribbon(
+    data=df_mod_CiEPX_ind_t_plot_C2P_2,
+    aes(
+      x=Time,
+      ymax= up,
+      ymin= low,
+      group = ID
+      ),
+    fill = col_EPX,
+    alpha=0.1
+    )+
+  geom_point(
+    data = dObs_ind_plot_2,
+    aes(
+      x = Time,
+      y = CiEPX_obs
+    ),
+    size = 2,
+    alpha = 0.7,
+    color = col_red
+  )+
+  facet_grid(
+    vars(Time_point_days), vars(No_rep)#,
+    )+
+  scale_color_manual(
+    values = col_exposure,
+    label = c("Uptake", "Elimination", "Depuration"),
+    name = "Phase"
+    )+
+  labs(
+    x = "Time (days)",
+    y = "CiEPX (ng/g)"
+  )+
+  theme_minimal()
+  
 ```
 
 ## Internal concentrations - Log-scale
@@ -5145,6 +5932,20 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C2P
   )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_1.png", 
+  plot=p_CiEPX_traj_1, 
+  width=8, height = 10, 
+  path=path_fig_C2P
+  )
+
+ggsave(
+  filename="TK_EPX_comptrajpred_2.png", 
+  plot=p_CiEPX_traj_2 , 
+  width=8, height = 10, 
+  path=path_fig_C2P
+  )
 ```
 :::
 :::::::
@@ -5222,7 +6023,7 @@ Sim.Res_C1 <- as.data.frame(fread(here::here(path_mod_EPX_C1, "Setpoints.out"),s
     )
   
 df_mod_Weight_C1 <- subset(df_mod_C1, Endpt == "Weight_1")
-df_mod_CiEPX <- subset(df_mod_C1, Endpt == "CiEPX_1") 
+df_mod_CiEPX_C1 <- subset(df_mod_C1, Endpt == "CiEPX_1") 
 
 ############ C1P ###########################################
 Sim.Res_C1P <- as.data.frame(fread(here::here(path_mod_EPX_C1P, "Setpoints.out"),sep="\t"))
@@ -5255,7 +6056,7 @@ Sim.Res_C1P <- as.data.frame(fread(here::here(path_mod_EPX_C1P, "Setpoints.out")
     )
   
 df_mod_Weight_C1P <- subset(df_mod_C1P, Endpt == "Weight_1")
-df_mod_CiEPX <- subset(df_mod_C1P, Endpt == "CiEPX_1")
+df_mod_CiEPX_C1P <- subset(df_mod_C1P, Endpt == "CiEPX_1")
 
 ############ C2 ###########################################
 Sim.Res_C2 <- as.data.frame(fread(here::here(path_mod_EPX_C2, "Setpoints.out"),sep="\t"))
@@ -5288,7 +6089,7 @@ Sim.Res_C2 <- as.data.frame(fread(here::here(path_mod_EPX_C2, "Setpoints.out"),s
     )
   
 df_mod_Weight_C2 <- subset(df_mod_C2, Endpt == "Weight_1")
-df_mod_CiEPX <- subset(df_mod_C2, Endpt == "CiEPX_1") 
+df_mod_CiEPX_C2 <- subset(df_mod_C2, Endpt == "CiEPX_1") 
 
 ############ C2P ###########################################
 Sim.Res_C2P <- as.data.frame(fread(here::here(path_mod_EPX_C2P, "Setpoints.out"),sep="\t"))
@@ -5321,7 +6122,7 @@ Sim.Res_C2P <- as.data.frame(fread(here::here(path_mod_EPX_C2P, "Setpoints.out")
     )
   
 df_mod_Weight_C2P <- subset(df_mod_C2P, Endpt == "Weight_1")
-df_mod_CiEPX <- subset(df_mod_C2P, Endpt == "CiEPX_1")
+df_mod_CiEPX_C2P <- subset(df_mod_C2P, Endpt == "CiEPX_1")
   
 ```
 

@@ -1,13 +1,6 @@
 ---
 title: "Behind the toxic cocktail: Toxicokinetic mechanisms of pesticide mixture interactions in earthworms"
 subtitle: "Supplemntary information"
-author: 
-  - name: Lisa Gollot
-  - name: Ghislaine Delarue
-  - name: Sylvie Nélieu
-  - name: Juliette Faburé
-  - name: Rémy Beaudouin
-  - name: Raphaël Royauté
 lang: eng
 format:
   pdf:
@@ -63,6 +56,145 @@ csl: apa.csl
 ## DNA barcoding
 
 ![Results of the DNA barcoding of 10 individuals from the culture (highlighted in yellow)](../../photos/DNA_barcoding.png)
+
+# Experiments
+
+## Single substances experiments
+
+### Toxicokinetic experiments (TK & TK BIS experiments)
+
+![Design of the initial toxicokinetic experiments](../../fig/TK_single/TK_design.png)
+
+![Initial weights (with gut content) of earthworms for the IMD experiment.](../../fig/TK_single/TK_IMD_initial_weights.png)
+
+![Initial weights (with gut content) of earthworms for the EPX experiment.](../../fig/TK_single/TK_EPX_initial_weights.png)
+
+| Molecule     | Min   | 1st Q | Mean  | Median | 3rd Q | Max   | $n$ |
+|--------------|-------|-------|-------|--------|-------|-------|-----|
+| IMD (TK)     | 474.0 | 565.7 | 662.5 | 635.1  | 711.3 | 993.7 | 64  |
+| IMD (TK BIS) | 350.0 | 373.2 | 402.8 | 408.8  | 416.5 | 490.8 | 9   |
+| EPX (TK)     | 409.3 | 544.7 | 622.8 | 605.8  | 672.6 | 997.7 | 62  |
+| EPX (TK BIS) | 386.7 | 408.0 | 462.9 | 414.4  | 467.4 | 736.7 | 9   |
+
+: Initial weight of earthworms (with gut content, mg) in the toxicokinetic experiments. {#tbl-D0TK}
+
+### Link between weight with and without gut content {#sec-gutcontent}
+
+Since experimental data include weights with and without gut content, we established a quantitative relationship between them to allow conversion and ensure consistency across datasets. The relationship is made with the data from the first toxicokinetic experiments with the weight of the earthworm before and after the 24h in Petri dishes (and massage if needed). We make the assumption that the variation in body weight without gut content is negligeable during the 24 hours. The results are shown @fig-depukin.
+
+![Relationship between weight with and without gut content.](../../fig/TK_single/TK_Wnopopo_Wpopo.png){#fig-depukin}
+
+### Depuration kinetic in Pétri dishes (GUT experiment)
+
+Depuration of the earthworm gut content was modeled as a first-order decay (@eq-GUT), informed by a small supporting experiment: ten earthworms were kept individually in 200 g of Closeaux soil with 3 g of horse dung for one week, then transferred to Petri dishes lined with moist filter paper and weighed at regular intervals. After 32 hours, the worms were gently massaged to void the remaining gut contents and weighed again, providing data to estimate the gut-clearance rate.
+
+$$\frac{dP_{Weight}}{dt}=-\frac{\ln 2}{DT_{50,\text{gut}}}\ (P_{Weight}-P^{\infty}_{Weight})$$ {#eq-GUT}
+
+$$P_{Weight}=P^{\infty}_{Weight}+(100-P^{\infty}_{Weight})\ \exp\left(- \frac{\ln 2}{DT_{50,\text{gut}}}\times t\right)$$
+
+With :
+
+-   $t$ : Time (h)
+-   $P_{Weight}$ : Percentage of initial weight (%, 0-100)
+-   $P^{\infty}_{Weight}$ : Percentage of initial weight when gut is fully emptied (%)
+-   $DT_{50,\text{gut}}$ : Half-life of the gut content (h)
+
+For the model, we consider that weights measured after massage are weights measured after a significant amount of time has passed. Therefore, the corresponding percentages of initial weight inform $P^{\infty}_{Weight}$.
+
+The results of the GUT experiment are shown @fig-GUT.
+
+![Evolution of earthworm weight and the corresponding percentage of initial weight throughout time in Petri dishes. Weight after being massaged are described with squared points.](../../fig/TK_single/TK_depuration_raw.png){#fig-GUT fig-scap="Evolution of earthworm weight and the corresponding percentage of initial weight throughout time in Petri dishes."}
+
+The estimated value for $DT_{50,\text{gut}}$ and $P^{\infty}_{Weight}$ are 4.37 \[3.11 ; 7.32\] hours and 86.2 \[84.6 ; 87.9\] %, respectively.
+
+$P^{\infty}_{Weight}$ estimated here is consistent with the one estimated in @sec-gutcontent.
+
+![Modeling of the evolution of earthworm percentage of initial weight throughout time in Petri dishes. The grey line correspond to the prediction of the model.](../../fig/TK_single/TK_depuration_mod.png){#fig-GUTmod fig-scap="Modeling of the evolution of earthworm percentage of initial weight throughout time in Petri dishes."}
+
+## Mixture experiment
+
+![Experimental design of the mixture experiment (MIX). Blue lines represent the ratio if TU tested and the red lines correspond to effect isoboles under concentration addition hypothesis.](../../photos/Mixture_design_exp.png){#fig-design fig-scap="Experimental design of the mixture experiment (MIX)."}
+
+Ratio are labeled with letters :
+
+-   E : 1:0 (EPX only)
+-   F : 3:1
+-   G : 1:1
+-   H : 1:3
+-   I : 0:1 (IMD only)
+
+![Results of the chemical analysis of internal concentrations in IMD of earthworms exposed to the mixture.](../../fig/TK_mix/TK_MIX_IMD_raw.png)
+
+![Results of the chemical analysis of internal concentrations in EPX of earthworms exposed to the mixture.](../../fig/TK_mix/TK_MIX_EPX_raw.png)
+
+# Toxicokinetics modeling
+
+## Single substances
+
+### Imidacloprid
+
+### Epoxiconazole
+
+#### Model C1
+
+![MCMC chains of the model.](../../fig/TK_single/EPX_C1/TK_EPX_chains.png)
+
+![Likelihood of chains.](../../fig/TK_single/EPX_C1/TK_EPX_likedevratio.png)
+
+![Posteriors.](../../fig/TK_single/EPX_C1/TK_EPX_post.png)
+
+| Statistic | $k_u$ | $k_e$ | $a_{\mu}$ | $a_{\sigma}$ | $W_{\sigma}$ | $C_{i,\sigma}$ | BAF  |
+|-----------|-------|-------|-----------|--------------|--------------|----------------|------|
+| Mode      | 0.088 | 0.3   | 0.0017    | 0.0074       | 0.031        | 79             | 0.18 |
+| Q2.5%     | 0.018 | 0.16  |           |              |              |                |      |
+
+![Predicted versus observed values of weight without gut content and internal concentrations. Points are colored by exposure scenario: red indicates earthworms exposed only to contaminated soil (uptake phase), green indicates earthworms transferred from contaminated to clean soil (elimination phase) and orange indicates earthworms from the TK BIS experiment. Grey and light-grey lines represent the 2-folds and 5-fold changes, respectively. The bold black line represents the identity line.](../../fig/TK_single/EPX_C1/TK_EPX_predobs.png){fig-scap="Predicted versus observed values of internal concentrations."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C1/TK_EPX_comptrajpred_1.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C1/TK_EPX_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
+
+#### Model C1P
+
+![MCMC chains of the model.](../../fig/TK_single/EPX_C1P/TK_EPX_chains.png)
+
+![Likelihood of chains.](../../fig/TK_single/EPX_C1P/TK_EPX_likedevratio.png)
+
+![Posteriors.](../../fig/TK_single/EPX_C1P/TK_EPX_post.png)
+
+![Predicted versus observed values of weight without gut content and internal concentrations. Points are colored by exposure scenario: red indicates earthworms exposed only to contaminated soil (uptake phase), green indicates earthworms transferred from contaminated to clean soil (elimination phase) and orange indicates earthworms from the TK BIS experiment. Grey and light-grey lines represent the 2-folds and 5-fold changes, respectively. The bold black line represents the identity line.](../../fig/TK_single/EPX_C1P/TK_EPX_predobs.png){fig-scap="Predicted versus observed values of internal concentrations."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C1P/TK_EPX_comptrajpred_1.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C1P/TK_EPX_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
+
+#### Model C2
+
+![MCMC chains of the model.](../../fig/TK_single/EPX_C2/TK_EPX_chains.png)
+
+![Likelihood of chains.](../../fig/TK_single/EPX_C2/TK_EPX_likedevratio.png)
+
+![Posteriors.](../../fig/TK_single/EPX_C2/TK_EPX_post.png)
+
+![Predicted versus observed values of weight without gut content and internal concentrations. Points are colored by exposure scenario: red indicates earthworms exposed only to contaminated soil (uptake phase), green indicates earthworms transferred from contaminated to clean soil (elimination phase) and orange indicates earthworms from the TK BIS experiment. Grey and light-grey lines represent the 2-folds and 5-fold changes, respectively. The bold black line represents the identity line.](../../fig/TK_single/EPX_C2/TK_EPX_predobs.png){fig-scap="Predicted versus observed values of internal concentrations."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C2/TK_EPX_comptrajpred_1.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C2/TK_EPX_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
+
+#### Model C2P
+
+![MCMC chains of the model.](../../fig/TK_single/EPX_C2P/TK_EPX_chains.png)
+
+![Likelihood of chains.](../../fig/TK_single/EPX_C2P/TK_EPX_likedevratio.png)
+
+![Posteriors.](../../fig/TK_single/EPX_C2P/TK_EPX_post.png)
+
+![Predicted versus observed values of weight without gut content and internal concentrations. Points are colored by exposure scenario: red indicates earthworms exposed only to contaminated soil (uptake phase), green indicates earthworms transferred from contaminated to clean soil (elimination phase) and orange indicates earthworms from the TK BIS experiment. Grey and light-grey lines represent the 2-folds and 5-fold changes, respectively. The bold black line represents the identity line.](../../fig/TK_single/EPX_C2P/TK_EPX_predobs.png){fig-scap="Predicted versus observed values of internal concentrations."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C2P/TK_EPX_comptrajpred_1.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
+
+![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C2P/TK_EPX_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
 
 # References {.unnumbered}
 

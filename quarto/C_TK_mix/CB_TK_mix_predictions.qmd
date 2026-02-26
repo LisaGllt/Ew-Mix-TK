@@ -7,7 +7,7 @@ source(file = here::here("functions/fun.R"))
 f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 path_fig <- here::here("fig/TK_mix")
-# pal_Ratio <- c(Nord_frost[4], Nord_aurora[5], Nord_aurora[1:4])
+#pal_Ratio <- c(Nord_frost[4], Nord_aurora[5], Nord_aurora[1:4])
 pal_Ratio <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
 ```
 
@@ -67,7 +67,7 @@ df_TK_mix_mean <- subset(df_TK_mix, t > 28) |>
 #| fig-width: 8
 
 pIMD <- ggplot(
-  data = subset(df_TK_mix, t > 0),
+  data = subset(df_TK_mix, t > 0 & Line %in% c(2,5)),
   aes(
     x = Ratio,
     y = CiIMD
@@ -89,7 +89,7 @@ pIMD <- ggplot(
   theme_minimal()
 
 pEPX <- ggplot(
-  data = subset(df_TK_mix, t > 0),
+  data = subset(df_TK_mix, t > 0 & Line %in% c(2,5)),
   aes(
     x = Ratio,
     y = CiEPX
@@ -111,7 +111,7 @@ pEPX <- ggplot(
   theme_minimal()
 
 pIMDe <- ggplot(
-  data = subset(df_TK_mix_mean, (No_vdt == 1 & Nb_rep == 1)),
+  data = subset(df_TK_mix_mean, (No_vdt == 1 & Nb_rep == 1 & Line %in% c(2,5))),
   aes(
     x = Ratio,
     y = CeIMD
@@ -139,7 +139,7 @@ pIMDe <- ggplot(
   theme_minimal()
 
 pEPXe <- ggplot(
-  data = subset(df_TK_mix_mean, (No_vdt == 1 & Nb_rep == 1)),
+  data = subset(df_TK_mix_mean, (No_vdt == 1 & Nb_rep == 1 & Line %in% c(2,5))),
   aes(
     x = Ratio,
     y = CeEPX
@@ -168,6 +168,24 @@ pEPXe <- ggplot(
 
 p <- (pIMD + pEPX) / (pIMDe + pEPXe)
 p
+
+p_IMD_tot <- pIMD/pIMDe
+p_EPX_tot <- pEPX/pEPXe
+```
+
+```{r, include = F}
+ggsave(
+  filename="TK_MIX_IMD_raw.png", 
+  plot=p_IMD_tot, 
+  width=8, height = 5, 
+  path=path_fig
+  )
+ggsave(
+  filename="TK_MIX_EPX_raw.png", 
+  plot=p_EPX_tot, 
+  width=8, height = 5, 
+  path=path_fig
+  )
 ```
 
 ```{r}
