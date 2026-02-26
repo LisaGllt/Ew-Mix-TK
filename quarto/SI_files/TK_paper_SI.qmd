@@ -134,13 +134,29 @@ Ratio are labeled with letters :
 
 ![Results of the chemical analysis of internal concentrations in EPX of earthworms exposed to the mixture.](../../fig/TK_mix/TK_MIX_EPX_raw.png)
 
-# Toxicokinetics modeling
+# Toxicokinetics modeling - Single substances
 
-## Single substances
+## Priors used
 
-### Imidacloprid
+Priors are the same between models :
 
-#### Model C1
+-   Distrib(kuIMD, LogUniform, 0.0001, 100000); \# min, max
+-   Distrib(keIMD, LogUniform, 0.0001, 100000); \# min, max
+-   Distrib(kperiph, LogUniform, 0.00001, 100000); \# min, max
+-   Distrib(phi, Uniform, 0.0, 1); \# min, max
+-   Distrib(a_growth, TruncNormal, 0.005, 0.0010, -0.5, 1); \# mean, sd, min, max
+-   Distrib (Vr_a_growth, TruncNormal, 0.0015, 0.01, 0, 1); \# mean, sd, min, max
+
+Distrib(Sigma_W, TruncNormal, 0.03, 0.01, 0.0001, 1); \# mean, sd, min, max Distrib(Sigma_CiIMD, TruncNormal, 3.0, 3.0, 1, 1000); \# mean, sd, min, max
+
+Log-Likelihood calculations :
+
+-   Likelihood(CiIMD, LogNormal, Prediction(CiIMD), Sigma_CiIMD);\
+-   Likelihood(Weight, Normal, Prediction(Weight), Sigma_W);
+
+## Imidacloprid
+
+### Model C1
 
 ![MCMC chains of the model.](../../fig/TK_single/IMD_C1/TK_IMD_chains.png)
 
@@ -162,7 +178,7 @@ Ratio are labeled with letters :
 
 ![Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/IMD_C1/TK_IMD_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD."}
 
-#### Model C1N
+### Model C1N
 
 ![MCMC chains of the model.](../../fig/TK_single/IMD_C1N/TK_IMD_chains.png)
 
@@ -184,7 +200,7 @@ Ratio are labeled with letters :
 
 ![Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/IMD_C1N/TK_IMD_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD."}
 
-#### Model C2
+### Model C2
 
 ![MCMC chains of the model.](../../fig/TK_single/IMD_C2/TK_IMD_chains.png)
 
@@ -206,7 +222,7 @@ Ratio are labeled with letters :
 
 ![Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/IMD_C2/TK_IMD_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD."}
 
-#### Model C2N
+### Model C2N
 
 ![MCMC chains of the model.](../../fig/TK_single/IMD_C2N/TK_IMD_chains.png)
 
@@ -228,9 +244,9 @@ Ratio are labeled with letters :
 
 ![Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/IMD_C2N/TK_IMD_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the IMD concentration in earthworms exposed to 1000 ng/g of IMD."}
 
-### Epoxiconazole
+## Epoxiconazole
 
-#### Model C1
+### Model C1
 
 ![MCMC chains of the model.](../../fig/TK_single/EPX_C1/TK_EPX_chains.png)
 
@@ -252,7 +268,7 @@ Ratio are labeled with letters :
 
 ![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C1/TK_EPX_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
 
-#### Model C1P
+### Model C1P
 
 ![MCMC chains of the model.](../../fig/TK_single/EPX_C1P/TK_EPX_chains.png)
 
@@ -274,7 +290,7 @@ Ratio are labeled with letters :
 
 ![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C1P/TK_EPX_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
 
-#### Model C2
+### Model C2
 
 ![MCMC chains of the model.](../../fig/TK_single/EPX_C2/TK_EPX_chains.png)
 
@@ -296,7 +312,7 @@ Ratio are labeled with letters :
 
 ![Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.](../../fig/TK_single/EPX_C2/TK_EPX_comptrajpred_2.png){fig-scap="Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX."}
 
-#### Model C2P
+### Model C2P
 
 ![MCMC chains of the model.](../../fig/TK_single/EPX_C2P/TK_EPX_chains.png)
 
