@@ -1,43 +1,26 @@
-name: Publish Quarto Book
-
 on:
-  push:
-    branches: [ master ]
   workflow_dispatch:
+  push:
+    branches: master
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+name: Quarto Publish
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install Quarto
+      - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render book
-        run: quarto render
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Render and Publish
+        uses: quarto-dev/quarto-actions/publish@v2
         with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          target: gh-pages
+          execute: false  # Désactive l'exécution du code R, utilise les fichiers figés
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
