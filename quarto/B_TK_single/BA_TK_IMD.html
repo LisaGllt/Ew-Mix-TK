@@ -5634,11 +5634,11 @@ For internal concentrations :
 <span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb142-5"><a href="#cb142-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb142-6"><a href="#cb142-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb142-7"><a href="#cb142-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb142-7"><a href="#cb142-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb142-8"><a href="#cb142-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb142-9"><a href="#cb142-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb142-10"><a href="#cb142-10" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
-<span id="cb142-11"><a href="#cb142-11" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"TK_BIS"</span> <span class="sc">~</span> Time_point,</span>
+<span id="cb142-11"><a href="#cb142-11" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake bis"</span> <span class="sc">~</span> Time_point,</span>
 <span id="cb142-12"><a href="#cb142-12" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Elimination"</span> <span class="sc">~</span> Time_point <span class="sc">-</span> <span class="dv">21</span></span>
 <span id="cb142-13"><a href="#cb142-13" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb142-14"><a href="#cb142-14" aria-hidden="true" tabindex="-1"></a>    )</span>
@@ -5657,7 +5657,7 @@ For internal concentrations :
 <span id="cb142-27"><a href="#cb142-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb142-28"><a href="#cb142-28" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb142-29"><a href="#cb142-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb142-30"><a href="#cb142-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb142-30"><a href="#cb142-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb142-31"><a href="#cb142-31" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb142-32"><a href="#cb142-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb142-33"><a href="#cb142-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C1<span class="sc">$</span>Time_point)</span>
@@ -5691,7 +5691,7 @@ Figure&nbsp;4.45: Residuals
 <span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb143-5"><a href="#cb143-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb143-6"><a href="#cb143-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb143-7"><a href="#cb143-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb143-7"><a href="#cb143-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb143-8"><a href="#cb143-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb143-9"><a href="#cb143-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb143-10"><a href="#cb143-10" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -5714,7 +5714,7 @@ Figure&nbsp;4.45: Residuals
 <span id="cb143-27"><a href="#cb143-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb143-28"><a href="#cb143-28" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb143-29"><a href="#cb143-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb143-30"><a href="#cb143-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb143-30"><a href="#cb143-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb143-31"><a href="#cb143-31" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb143-32"><a href="#cb143-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb143-33"><a href="#cb143-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C1P<span class="sc">$</span>Time_point)</span>
@@ -5748,7 +5748,7 @@ Figure&nbsp;4.46: Residuals
 <span id="cb144-4"><a href="#cb144-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb144-5"><a href="#cb144-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb144-6"><a href="#cb144-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb144-7"><a href="#cb144-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb144-7"><a href="#cb144-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb144-8"><a href="#cb144-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb144-9"><a href="#cb144-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb144-10"><a href="#cb144-10" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -5771,7 +5771,7 @@ Figure&nbsp;4.46: Residuals
 <span id="cb144-27"><a href="#cb144-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb144-28"><a href="#cb144-28" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb144-29"><a href="#cb144-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb144-30"><a href="#cb144-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb144-30"><a href="#cb144-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb144-31"><a href="#cb144-31" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb144-32"><a href="#cb144-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb144-33"><a href="#cb144-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C1N<span class="sc">$</span>Time_point)</span>
@@ -5805,7 +5805,7 @@ Figure&nbsp;4.47: Residuals
 <span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb145-8"><a href="#cb145-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb145-9"><a href="#cb145-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb145-10"><a href="#cb145-10" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -5828,7 +5828,7 @@ Figure&nbsp;4.47: Residuals
 <span id="cb145-27"><a href="#cb145-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb145-28"><a href="#cb145-28" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb145-29"><a href="#cb145-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb145-30"><a href="#cb145-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb145-30"><a href="#cb145-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb145-31"><a href="#cb145-31" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb145-32"><a href="#cb145-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb145-33"><a href="#cb145-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C2<span class="sc">$</span>Time_point)</span>
@@ -5862,7 +5862,7 @@ Figure&nbsp;4.48: Residuals
 <span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb146-8"><a href="#cb146-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb146-9"><a href="#cb146-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb146-10"><a href="#cb146-10" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -5885,7 +5885,7 @@ Figure&nbsp;4.48: Residuals
 <span id="cb146-27"><a href="#cb146-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb146-28"><a href="#cb146-28" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb146-29"><a href="#cb146-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb146-30"><a href="#cb146-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb146-30"><a href="#cb146-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb146-31"><a href="#cb146-31" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb146-32"><a href="#cb146-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb146-33"><a href="#cb146-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C2P<span class="sc">$</span>Time_point)</span>
@@ -5919,7 +5919,7 @@ Figure&nbsp;4.49: Residuals
 <span id="cb147-4"><a href="#cb147-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb147-5"><a href="#cb147-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb147-6"><a href="#cb147-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb147-7"><a href="#cb147-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb147-7"><a href="#cb147-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb147-8"><a href="#cb147-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb147-9"><a href="#cb147-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb147-10"><a href="#cb147-10" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -5942,7 +5942,7 @@ Figure&nbsp;4.49: Residuals
 <span id="cb147-27"><a href="#cb147-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb147-28"><a href="#cb147-28" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb147-29"><a href="#cb147-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb147-30"><a href="#cb147-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb147-30"><a href="#cb147-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb147-31"><a href="#cb147-31" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb147-32"><a href="#cb147-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb147-33"><a href="#cb147-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C2N<span class="sc">$</span>Time_point)</span>
@@ -14052,11 +14052,11 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-4986"><a href="#cb178-4986" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb178-4987"><a href="#cb178-4987" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb178-4988"><a href="#cb178-4988" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb178-4989"><a href="#cb178-4989" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb178-4989"><a href="#cb178-4989" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb178-4990"><a href="#cb178-4990" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb178-4991"><a href="#cb178-4991" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb178-4992"><a href="#cb178-4992" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
-<span id="cb178-4993"><a href="#cb178-4993" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"TK_BIS"</span> <span class="sc">~</span> Time_point,</span>
+<span id="cb178-4993"><a href="#cb178-4993" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake bis"</span> <span class="sc">~</span> Time_point,</span>
 <span id="cb178-4994"><a href="#cb178-4994" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Elimination"</span> <span class="sc">~</span> Time_point <span class="sc">-</span> <span class="dv">21</span></span>
 <span id="cb178-4995"><a href="#cb178-4995" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb178-4996"><a href="#cb178-4996" aria-hidden="true" tabindex="-1"></a>    )</span>
@@ -14075,7 +14075,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5009"><a href="#cb178-5009" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb178-5010"><a href="#cb178-5010" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb178-5011"><a href="#cb178-5011" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb178-5012"><a href="#cb178-5012" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb178-5012"><a href="#cb178-5012" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb178-5013"><a href="#cb178-5013" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb178-5014"><a href="#cb178-5014" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb178-5015"><a href="#cb178-5015" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C1<span class="sc">$</span>Time_point)</span>
@@ -14116,7 +14116,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5050"><a href="#cb178-5050" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb178-5051"><a href="#cb178-5051" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb178-5052"><a href="#cb178-5052" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb178-5053"><a href="#cb178-5053" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb178-5053"><a href="#cb178-5053" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb178-5054"><a href="#cb178-5054" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb178-5055"><a href="#cb178-5055" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb178-5056"><a href="#cb178-5056" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -14139,7 +14139,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5073"><a href="#cb178-5073" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb178-5074"><a href="#cb178-5074" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb178-5075"><a href="#cb178-5075" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb178-5076"><a href="#cb178-5076" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb178-5076"><a href="#cb178-5076" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb178-5077"><a href="#cb178-5077" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb178-5078"><a href="#cb178-5078" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb178-5079"><a href="#cb178-5079" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C1P<span class="sc">$</span>Time_point)</span>
@@ -14180,7 +14180,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5114"><a href="#cb178-5114" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb178-5115"><a href="#cb178-5115" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb178-5116"><a href="#cb178-5116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb178-5117"><a href="#cb178-5117" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb178-5117"><a href="#cb178-5117" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb178-5118"><a href="#cb178-5118" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb178-5119"><a href="#cb178-5119" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb178-5120"><a href="#cb178-5120" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -14203,7 +14203,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5137"><a href="#cb178-5137" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb178-5138"><a href="#cb178-5138" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb178-5139"><a href="#cb178-5139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb178-5140"><a href="#cb178-5140" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb178-5140"><a href="#cb178-5140" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb178-5141"><a href="#cb178-5141" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb178-5142"><a href="#cb178-5142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb178-5143"><a href="#cb178-5143" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C1N<span class="sc">$</span>Time_point)</span>
@@ -14244,7 +14244,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5178"><a href="#cb178-5178" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb178-5179"><a href="#cb178-5179" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb178-5180"><a href="#cb178-5180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb178-5181"><a href="#cb178-5181" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb178-5181"><a href="#cb178-5181" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb178-5182"><a href="#cb178-5182" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb178-5183"><a href="#cb178-5183" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb178-5184"><a href="#cb178-5184" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -14267,7 +14267,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5201"><a href="#cb178-5201" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb178-5202"><a href="#cb178-5202" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb178-5203"><a href="#cb178-5203" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb178-5204"><a href="#cb178-5204" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb178-5204"><a href="#cb178-5204" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb178-5205"><a href="#cb178-5205" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb178-5206"><a href="#cb178-5206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb178-5207"><a href="#cb178-5207" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C2<span class="sc">$</span>Time_point)</span>
@@ -14308,7 +14308,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5242"><a href="#cb178-5242" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb178-5243"><a href="#cb178-5243" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb178-5244"><a href="#cb178-5244" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb178-5245"><a href="#cb178-5245" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb178-5245"><a href="#cb178-5245" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb178-5246"><a href="#cb178-5246" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb178-5247"><a href="#cb178-5247" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb178-5248"><a href="#cb178-5248" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -14331,7 +14331,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5265"><a href="#cb178-5265" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb178-5266"><a href="#cb178-5266" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb178-5267"><a href="#cb178-5267" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb178-5268"><a href="#cb178-5268" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb178-5268"><a href="#cb178-5268" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb178-5269"><a href="#cb178-5269" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb178-5270"><a href="#cb178-5270" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb178-5271"><a href="#cb178-5271" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C2P<span class="sc">$</span>Time_point)</span>
@@ -14372,7 +14372,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5306"><a href="#cb178-5306" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ratio_Residual =</span> predict.endpoint<span class="sc">/</span>CiIMD_obs</span>
 <span id="cb178-5307"><a href="#cb178-5307" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
 <span id="cb178-5308"><a href="#cb178-5308" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb178-5309"><a href="#cb178-5309" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(Time_point_f)),</span>
+<span id="cb178-5309"><a href="#cb178-5309" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_point =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"([0-9]+).*"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span> , <span class="fu">as.character</span>(Time_point_f))),</span>
 <span id="cb178-5310"><a href="#cb178-5310" aria-hidden="true" tabindex="-1"></a>    <span class="at">Group =</span> <span class="fu">factor</span>(Group, <span class="fu">c</span>(<span class="st">"Uptake"</span>, <span class="st">"Elimination"</span>, <span class="st">"Uptake bis"</span>)),</span>
 <span id="cb178-5311"><a href="#cb178-5311" aria-hidden="true" tabindex="-1"></a>    <span class="at">Time_relative =</span> <span class="fu">case_when</span>(</span>
 <span id="cb178-5312"><a href="#cb178-5312" aria-hidden="true" tabindex="-1"></a>      Group <span class="sc">==</span> <span class="st">"Uptake"</span> <span class="sc">~</span> Time_point,</span>
@@ -14395,7 +14395,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5329"><a href="#cb178-5329" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted/observed ratio"</span></span>
 <span id="cb178-5330"><a href="#cb178-5330" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
 <span id="cb178-5331"><a href="#cb178-5331" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb178-5332"><a href="#cb178-5332" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure</span>
+<span id="cb178-5332"><a href="#cb178-5332" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> col_exposure_bis</span>
 <span id="cb178-5333"><a href="#cb178-5333" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
 <span id="cb178-5334"><a href="#cb178-5334" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
 <span id="cb178-5335"><a href="#cb178-5335" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">unique</span>(df_residuals_CiIMD_C2N<span class="sc">$</span>Time_point)</span>
