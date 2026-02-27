@@ -146,12 +146,12 @@ Priors are the same between models :
 -   Distrib(phi, Uniform, 0.0, 1); \# min, max
 -   Distrib(a_growth, TruncNormal, 0.005, 0.0010, -0.5, 1); \# mean, sd, min, max
 -   Distrib (Vr_a_growth, TruncNormal, 0.0015, 0.01, 0, 1); \# mean, sd, min, max
-
-Distrib(Sigma_W, TruncNormal, 0.03, 0.01, 0.0001, 1); \# mean, sd, min, max Distrib(Sigma_CiIMD, TruncNormal, 3.0, 3.0, 1, 1000); \# mean, sd, min, max
+-   Distrib(Sigma_W, TruncNormal, 0.03, 0.01, 0.0001, 1); \# mean, sd, min, max
+-   Distrib(Sigma_CiIMD, TruncNormal, 3.0, 3.0, 1, 1000); \# mean, sd, min, max
 
 Log-Likelihood calculations :
 
--   Likelihood(CiIMD, LogNormal, Prediction(CiIMD), Sigma_CiIMD);\
+-   Likelihood(CiIMD, LogNormal, Prediction(CiIMD), Sigma_CiIMD);
 -   Likelihood(Weight, Normal, Prediction(Weight), Sigma_W);
 
 ## Imidacloprid

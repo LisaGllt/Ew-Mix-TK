@@ -4974,11 +4974,11 @@ df_residuals_CiIMD_C1 <- df_predobs_CiIMD_ind_C1 |>
     Ratio_Residual = predict.endpoint/CiIMD_obs
     ) |> 
   mutate(
-    Time_point = as.numeric(as.character(Time_point_f)),
+    Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
     Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
-      Group == "TK_BIS" ~ Time_point,
+      Group == "Uptake bis" ~ Time_point,
       Group == "Elimination" ~ Time_point - 21
     )
     )
@@ -4997,7 +4997,7 @@ p_residus <- ggplot(df_residuals_CiIMD_C1)+
     y = "Predicted/observed ratio"
   )+
   scale_color_manual(
-    values = col_exposure
+    values = col_exposure_bis
     )+
   scale_x_continuous(
     breaks = unique(df_residuals_CiIMD_C1$Time_point)
@@ -5038,7 +5038,7 @@ df_residuals_CiIMD_C1P <- df_predobs_CiIMD_ind_C1P |>
     Ratio_Residual = predict.endpoint/CiIMD_obs
     ) |> 
   mutate(
-    Time_point = as.numeric(as.character(Time_point_f)),
+    Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
     Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
@@ -5061,7 +5061,7 @@ p_residus <- ggplot(df_residuals_CiIMD_C1P)+
     y = "Predicted/observed ratio"
   )+
   scale_color_manual(
-    values = col_exposure
+    values = col_exposure_bis
     )+
   scale_x_continuous(
     breaks = unique(df_residuals_CiIMD_C1P$Time_point)
@@ -5102,7 +5102,7 @@ df_residuals_CiIMD_C1N <- df_predobs_CiIMD_ind_C1N |>
     Ratio_Residual = predict.endpoint/CiIMD_obs
     ) |> 
   mutate(
-    Time_point = as.numeric(as.character(Time_point_f)),
+    Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
     Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
@@ -5125,7 +5125,7 @@ p_residus <- ggplot(df_residuals_CiIMD_C1N)+
     y = "Predicted/observed ratio"
   )+
   scale_color_manual(
-    values = col_exposure
+    values = col_exposure_bis
     )+
   scale_x_continuous(
     breaks = unique(df_residuals_CiIMD_C1N$Time_point)
@@ -5166,7 +5166,7 @@ df_residuals_CiIMD_C2 <- df_predobs_CiIMD_ind_C2 |>
     Ratio_Residual = predict.endpoint/CiIMD_obs
     ) |> 
   mutate(
-    Time_point = as.numeric(as.character(Time_point_f)),
+    Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
     Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
@@ -5189,7 +5189,7 @@ p_residus <- ggplot(df_residuals_CiIMD_C2)+
     y = "Predicted/observed ratio"
   )+
   scale_color_manual(
-    values = col_exposure
+    values = col_exposure_bis
     )+
   scale_x_continuous(
     breaks = unique(df_residuals_CiIMD_C2$Time_point)
@@ -5230,7 +5230,7 @@ df_residuals_CiIMD_C2P <- df_predobs_CiIMD_ind_C2P |>
     Ratio_Residual = predict.endpoint/CiIMD_obs
     ) |> 
   mutate(
-    Time_point = as.numeric(as.character(Time_point_f)),
+    Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
     Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
@@ -5253,7 +5253,7 @@ p_residus <- ggplot(df_residuals_CiIMD_C2P)+
     y = "Predicted/observed ratio"
   )+
   scale_color_manual(
-    values = col_exposure
+    values = col_exposure_bis
     )+
   scale_x_continuous(
     breaks = unique(df_residuals_CiIMD_C2P$Time_point)
@@ -5294,7 +5294,7 @@ df_residuals_CiIMD_C2N <- df_predobs_CiIMD_ind_C2N |>
     Ratio_Residual = predict.endpoint/CiIMD_obs
     ) |> 
   mutate(
-    Time_point = as.numeric(as.character(Time_point_f)),
+    Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
     Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
@@ -5317,7 +5317,7 @@ p_residus <- ggplot(df_residuals_CiIMD_C2N)+
     y = "Predicted/observed ratio"
   )+
   scale_color_manual(
-    values = col_exposure
+    values = col_exposure_bis
     )+
   scale_x_continuous(
     breaks = unique(df_residuals_CiIMD_C2N$Time_point)
