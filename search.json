@@ -70,6 +70,16 @@
     ]
   },
   {
+    "objectID": "quarto/B_TK_single/B_TK_EPX_IMD.html",
+    "href": "quarto/B_TK_single/B_TK_EPX_IMD.html",
+    "title": "Toxicokinetics of single substances",
+    "section": "",
+    "text": "This part is about the implementation of toxicokinetic models for imidacloprid and epoxiconazole informed by toxicokinetic experiments where earthworms are either exposed to imidacloprid or epoxiconazole.",
+    "crumbs": [
+      "Toxicokinetics of single substances"
+    ]
+  },
+  {
     "objectID": "quarto/B_TK_single/B0_TK_MM.html",
     "href": "quarto/B_TK_single/B0_TK_MM.html",
     "title": "3  Materiel & Methods",
