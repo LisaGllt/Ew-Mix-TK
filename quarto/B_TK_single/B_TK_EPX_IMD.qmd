@@ -1,1 +1,3 @@
 # Toxicokinetics of single substances
+
+This part is about the implementation of toxicokinetic models for imidacloprid and epoxiconazole informed by toxicokinetic experiments where earthworms are either exposed to imidacloprid or epoxiconazole.

@@ -1,1 +1,3 @@
 # Toxicokinetics of the mixture
+
+This part is about the investigation of potential toxicokinetic interactions between imidaclorpid and epoxiconazole through the comparison of mixture experimental data and simulations with the toxicokinetic models implemented for single substances.
