@@ -703,7 +703,7 @@ Figure&nbsp;4.2: Evolution of earthworms body weight before and after fasting
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>path_fig_C1 <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"fig/TK_single/IMD_C1/"</span>)</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>Nb_Iter <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2423</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2420</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>text_priors <span class="ot">&lt;-</span> <span class="st">"Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max </span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="st">Distrib(keIMD,    LogUniform,   0.0001, 100000); # min, max</span></span>
@@ -751,7 +751,7 @@ Figure&nbsp;4.2: Evolution of earthworms body weight before and after fasting
 <span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>path_fig_C1N <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"fig/TK_single/IMD_C1N/"</span>)</span>
 <span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>Nb_Iter <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2423</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2420</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
 <span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>text_priors <span class="ot">&lt;-</span> <span class="st">"Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max </span></span>
 <span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="st">Distrib(keIMD,    LogUniform,   0.0001, 100000); # min, max</span></span>
@@ -1323,8 +1323,8 @@ Figure&nbsp;4.6: Distributions of the priors.
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-d2d4b7bf96ea4257f060" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-d2d4b7bf96ea4257f060">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8"],["kuIMD","keIMD","kperiph","phi","a_growth","Vr_a_growth","Sigma_W","Sigma_CiIMD"],["LogUniform","LogUniform","LogUniform","Uniform","TruncNormal","TruncNormal","TruncNormal","TruncNormal"],[0.0001,0.0001,1e-05,0,0.005,0.0015,0.03,3],[100000,100000,100000,1,0.001,0.01,0.01,3],[null,null,null,null,-0.5,0,0.0001,1],[null,null,null,null,1,1,1,1000]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Nom<\/th>\n      <th>Distribution<\/th>\n      <th>P1<\/th>\n      <th>P2<\/th>\n      <th>P3<\/th>\n      <th>P4<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Nom","targets":1},{"name":"Distribution","targets":2},{"name":"P1","targets":3},{"name":"P2","targets":4},{"name":"P3","targets":5},{"name":"P4","targets":6}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-c9c30d45e0aa675613c7" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-c9c30d45e0aa675613c7">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8"],["kuIMD","keIMD","kperiph","phi","a_growth","Vr_a_growth","Sigma_W","Sigma_CiIMD"],["LogUniform","LogUniform","LogUniform","Uniform","TruncNormal","TruncNormal","TruncNormal","TruncNormal"],[0.0001,0.0001,1e-05,0,0.005,0.0015,0.03,3],[100000,100000,100000,1,0.001,0.01,0.01,3],[null,null,null,null,-0.5,0,0.0001,1],[null,null,null,null,1,1,1,1000]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Nom<\/th>\n      <th>Distribution<\/th>\n      <th>P1<\/th>\n      <th>P2<\/th>\n      <th>P3<\/th>\n      <th>P4<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Nom","targets":1},{"name":"Distribution","targets":2},{"name":"P1","targets":3},{"name":"P2","targets":4},{"name":"P3","targets":5},{"name":"P4","targets":6}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -1406,8 +1406,8 @@ Figure&nbsp;4.7: Distributions of the priors.
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-7f4e500238d472330f63" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-7f4e500238d472330f63">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7"],["kuIMD","keIMD","kperiph","a_growth","Vr_a_growth","Sigma_W","Sigma_CiIMD"],["LogUniform","LogUniform","LogUniform","TruncNormal","TruncNormal","TruncNormal","TruncNormal"],[0.0001,0.0001,1e-05,0.005,0.0015,0.03,3],[100000,100000,100000,0.001,0.01,0.01,3],[null,null,null,-0.5,0,0.0001,1],[null,null,null,1,1,1,1000]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Nom<\/th>\n      <th>Distribution<\/th>\n      <th>P1<\/th>\n      <th>P2<\/th>\n      <th>P3<\/th>\n      <th>P4<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Nom","targets":1},{"name":"Distribution","targets":2},{"name":"P1","targets":3},{"name":"P2","targets":4},{"name":"P3","targets":5},{"name":"P4","targets":6}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-bcaa8a34126b6a4038ec" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-bcaa8a34126b6a4038ec">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7"],["kuIMD","keIMD","kperiph","a_growth","Vr_a_growth","Sigma_W","Sigma_CiIMD"],["LogUniform","LogUniform","LogUniform","TruncNormal","TruncNormal","TruncNormal","TruncNormal"],[0.0001,0.0001,1e-05,0.005,0.0015,0.03,3],[100000,100000,100000,0.001,0.01,0.01,3],[null,null,null,-0.5,0,0.0001,1],[null,null,null,1,1,1,1000]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Nom<\/th>\n      <th>Distribution<\/th>\n      <th>P1<\/th>\n      <th>P2<\/th>\n      <th>P3<\/th>\n      <th>P4<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Nom","targets":1},{"name":"Distribution","targets":2},{"name":"P1","targets":3},{"name":"P2","targets":4},{"name":"P3","targets":5},{"name":"P4","targets":6}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2212,16 +2212,16 @@ Figure&nbsp;4.20: Evolution of likelihood and deviance ratio through the iterati
 <pre><code>Potential scale reduction factors:
 
                Point est. Upper C.I.
-a_growth.1.          1.01       1.05
+a_growth.1.          1.01       1.02
 keIMD.1.             1.00       1.01
 kuIMD.1.             1.00       1.01
 Sigma_CiIMD.1.       1.00       1.00
-Sigma_W.1.           1.03       1.07
-Vr_a_growth.1.       1.02       1.04
+Sigma_W.1.           1.04       1.14
+Vr_a_growth.1.       1.06       1.21
 
 Multivariate psrf
 
-1.02</code></pre>
+1.05</code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-IMDchainsconvergenceC1" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2275,13 +2275,13 @@ Figure&nbsp;4.21: Chains convergence.
 <pre><code>Potential scale reduction factors:
 
                Point est. Upper C.I.
-a_growth.1.          1.01       1.03
-keIMD.1.             1.01       1.02
-kuIMD.1.             1.01       1.03
-phi.1.               1.00       1.01
-Sigma_CiIMD.1.       1.00       1.01
-Sigma_W.1.           1.03       1.08
-Vr_a_growth.1.       1.02       1.05
+a_growth.1.          1.01       1.02
+keIMD.1.             1.02       1.04
+kuIMD.1.             1.10       1.14
+phi.1.               1.00       1.00
+Sigma_CiIMD.1.       1.00       1.00
+Sigma_W.1.           1.02       1.04
+Vr_a_growth.1.       1.02       1.04
 
 Multivariate psrf
 
@@ -2339,16 +2339,16 @@ Figure&nbsp;4.22: Chains convergence.
 <pre><code>Potential scale reduction factors:
 
                Point est. Upper C.I.
-a_growth.1.          1.01       1.03
-keIMD.1.             1.01       1.02
-kuIMD.1.             1.01       1.03
+a_growth.1.          1.02       1.06
+keIMD.1.             1.00       1.00
+kuIMD.1.             1.00       1.00
 Sigma_CiIMD.1.       1.00       1.00
-Sigma_W.1.           1.00       1.01
-Vr_a_growth.1.       1.00       1.02
+Sigma_W.1.           1.04       1.13
+Vr_a_growth.1.       1.05       1.15
 
 Multivariate psrf
 
-1.01</code></pre>
+1.04</code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-IMDchainsconvergenceC1N" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2402,17 +2402,17 @@ Figure&nbsp;4.23: Chains convergence.
 <pre><code>Potential scale reduction factors:
 
                Point est. Upper C.I.
-a_growth.1.          1.01       1.04
-keIMD.1.             1.01       1.02
-kperiph.1.           1.00       1.01
-kuIMD.1.             1.01       1.03
-Sigma_CiIMD.1.       1.00       1.01
-Sigma_W.1.           1.03       1.08
-Vr_a_growth.1.       1.03       1.10
+a_growth.1.          1.01       1.03
+keIMD.1.             1.02       1.07
+kperiph.1.           1.01       1.02
+kuIMD.1.             1.01       1.05
+Sigma_CiIMD.1.       1.00       1.00
+Sigma_W.1.           1.03       1.06
+Vr_a_growth.1.       1.02       1.06
 
 Multivariate psrf
 
-1.03</code></pre>
+1.02</code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-IMDchainsconvergenceC2" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2466,18 +2466,18 @@ Figure&nbsp;4.24: Chains convergence.
 <pre><code>Potential scale reduction factors:
 
                Point est. Upper C.I.
-a_growth.1.          1.00       1.00
-keIMD.1.             1.01       1.03
-kperiph.1.           1.00       1.01
-kuIMD.1.             1.01       1.02
-phi.1.               1.01       1.02
+a_growth.1.          1.00       1.01
+keIMD.1.             1.01       1.02
+kperiph.1.           1.01       1.02
+kuIMD.1.             1.00       1.01
+phi.1.               1.00       1.00
 Sigma_CiIMD.1.       1.00       1.00
 Sigma_W.1.           1.01       1.02
-Vr_a_growth.1.       1.01       1.03
+Vr_a_growth.1.       1.01       1.02
 
 Multivariate psrf
 
-1.02</code></pre>
+1.01</code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-IMDchainsconvergenceC2P" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -2531,17 +2531,17 @@ Figure&nbsp;4.25: Chains convergence.
 <pre><code>Potential scale reduction factors:
 
                Point est. Upper C.I.
-a_growth.1.          1.02       1.05
+a_growth.1.          1.01       1.03
 keIMD.1.             1.00       1.01
 kperiph.1.           1.00       1.01
 kuIMD.1.             1.00       1.01
-Sigma_CiIMD.1.       1.00       1.01
-Sigma_W.1.           1.11       1.34
-Vr_a_growth.1.       1.10       1.30
+Sigma_CiIMD.1.       1.00       1.00
+Sigma_W.1.           1.04       1.11
+Vr_a_growth.1.       1.04       1.09
 
 Multivariate psrf
 
-1.09</code></pre>
+1.02</code></pre>
 </div>
 <div class="cell-output-display">
 <div id="fig-IMDchainsconvergenceC2N" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -3326,8 +3326,8 @@ Figure&nbsp;4.38: Distributions of the priors and the posteriors.
 <span id="cb73-15"><a href="#cb73-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-c9c30d45e0aa675613c7" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-c9c30d45e0aa675613c7">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[1.6,1.3,1.7,0.0018,580,1.5,3.4],[0.045,0.036,0.053,0.029,4.3,0.045,0.026],[0.0033,0.0014,0.0033,0.00046,0.0062,0.0024,0.0005],[0.0013,0.0018,0.0057,0.0012,0.017,0.0036,0.001],[0.053,0.033,0.05,0.027,0.06,0.041,0.0043],[1.4,1.4,1.5,1,3.9,1.4,0.032],[34,31,39,0.0023,140,34,2.1]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"a_growth.1.","targets":3},{"name":"Vr_a_growth.1.","targets":4},{"name":"Sigma_W.1.","targets":5},{"name":"Sigma_CiIMD.1.","targets":6},{"name":"BCF_C1","targets":7}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-16b9b5fdd255d53defcc" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-16b9b5fdd255d53defcc">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[2,1.6,2.1,0.00065,14,1.8,0.14],[0.05,0.041,0.06,0.02,1.1,0.05,0.008800000000000001],[0.0031,0.0013,0.0032,0.00022,0.0062,0.0023,0.00049],[0.0017,0.002,0.0058,0.00011,0.0081,0.0038,0.00096],[0.045,0.033,0.049,0.029,0.057,0.04,0.0039],[1.4,1.4,1.5,1.3,3.9,1.4,0.035],[36,32,41,0.0023,48,36,2.2]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C1<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"a_growth.1.","targets":3},{"name":"Vr_a_growth.1.","targets":4},{"name":"Sigma_W.1.","targets":5},{"name":"Sigma_CiIMD.1.","targets":6},{"name":"BCF_C1","targets":7}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -3351,8 +3351,8 @@ Figure&nbsp;4.38: Distributions of the priors and the posteriors.
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of observations, n =  357 
 Number of parameters, k =  4 
-Log-likelihood, LL =  -286.6681 
-BIC =  596.8471</code></pre>
+Log-likelihood, LL =  -259.0445 
+BIC =  541.5999</code></pre>
 </div>
 </div>
 </div>
@@ -3377,8 +3377,8 @@ BIC =  596.8471</code></pre>
 <span id="cb77-15"><a href="#cb77-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-1e403dc5db71c6b13020" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-1e403dc5db71c6b13020">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[0.57,0.34,4.3,0.089,580,1.3,3.5],[0.00021,0.00012,0.11,0.0001,4.3,0.02,0.039],[0.88,0.024,0.97,9e-06,1,0.49,0.29],[0.002,0.0013,0.0032,0.00039,0.0063,0.0023,0.00049],[0.0046,0.0022,0.0057,0.0015,0.016,0.0039,0.00094],[0.036,0.033,0.048,0.025,0.057,0.04,0.0038],[81,78,85,1.1,88,81,2],[5800,16,8000,5,38000,1200,2300]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>phi.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C1P<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"phi.1.","targets":3},{"name":"a_growth.1.","targets":4},{"name":"Vr_a_growth.1.","targets":5},{"name":"Sigma_W.1.","targets":6},{"name":"Sigma_CiIMD.1.","targets":7},{"name":"BCF_C1P","targets":8}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-41bebee9b57ffd7fb40c" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-41bebee9b57ffd7fb40c">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[0.68,0.4,5.1,0.13,580,1.6,3.7],[0.00014,0.00012,0.12,0.0001,4.3,0.022,0.042],[0.0097,0.023,0.97,1.2e-05,1,0.49,0.29],[0.0023,0.0013,0.0032,-0.0001,0.0063,0.0023,0.00048],[0.0029,0.0021,0.0057,0.0013,0.016,0.0038,0.00095],[0.039,0.034,0.049,0.025,0.058,0.04,0.0039],[80,77,85,1.1,88,81,2],[3200,17,10000,5.7,47000,1400,3000]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>phi.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C1P<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"phi.1.","targets":3},{"name":"a_growth.1.","targets":4},{"name":"Vr_a_growth.1.","targets":5},{"name":"Sigma_W.1.","targets":6},{"name":"Sigma_CiIMD.1.","targets":7},{"name":"BCF_C1P","targets":8}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -3402,8 +3402,8 @@ BIC =  596.8471</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of observations, n =  357 
 Number of parameters, k =  5 
-Log-likelihood, LL =  -2192.487 
-BIC =  4414.363</code></pre>
+Log-likelihood, LL =  -2186.949 
+BIC =  4403.287</code></pre>
 </div>
 </div>
 </div>
@@ -3428,8 +3428,8 @@ BIC =  4414.363</code></pre>
 <span id="cb81-15"><a href="#cb81-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-353b2f6bd36d91ad42e7" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-353b2f6bd36d91ad42e7">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[1.5,1.3,1.6,0.0018,580,1.5,3.4],[0.047,0.037,0.054,0.03,4.3,0.046,0.026],[0.0031,0.0013,0.0033,0.00034,0.0062,0.0023,0.00049],[0.0014,0.0019,0.0059,0.0012,0.017,0.0037,0.001],[0.048,0.033,0.05,0.027,0.058,0.041,0.0043],[1.4,1.3,1.5,1,3.9,1.4,0.032],[30,29,36,0.0023,140,32,2.1]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C1N<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"a_growth.1.","targets":3},{"name":"Vr_a_growth.1.","targets":4},{"name":"Sigma_W.1.","targets":5},{"name":"Sigma_CiIMD.1.","targets":6},{"name":"BCF_C1N","targets":7}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5009d8ca80db8e0432dc" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5009d8ca80db8e0432dc">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[1.7,1.5,2,0.00065,14,1.7,0.13],[0.053,0.041,0.061,0.02,1.1,0.051,0.0089],[0.0019,0.0013,0.0032,0.00036,0.0062,0.0023,0.00049],[0.0048,0.002,0.0058,0.00011,0.0081,0.0038,0.00098],[0.032,0.033,0.049,0.028,0.057,0.04,0.0041],[1.5,1.3,1.5,1.3,3.9,1.4,0.035],[35,30,38,0.0023,47,34,2.1]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C1N<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"a_growth.1.","targets":3},{"name":"Vr_a_growth.1.","targets":4},{"name":"Sigma_W.1.","targets":5},{"name":"Sigma_CiIMD.1.","targets":6},{"name":"BCF_C1N","targets":7}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -3453,8 +3453,8 @@ BIC =  4414.363</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of observations, n =  357 
 Number of parameters, k =  4 
-Log-likelihood, LL =  -263.4407 
-BIC =  550.3923</code></pre>
+Log-likelihood, LL =  -250.899 
+BIC =  525.3089</code></pre>
 </div>
 </div>
 </div>
@@ -3479,8 +3479,8 @@ BIC =  550.3923</code></pre>
 <span id="cb85-15"><a href="#cb85-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-bbbcb02ec7d748d58854" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-bbbcb02ec7d748d58854">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[2.2,1.8,2.7,1.6,580,2.2,3.4],[0.13,0.08699999999999999,0.15,0.064,4.3,0.12,0.03],[0.044,0.021,0.054,0.0023,0.63,0.035,0.0091],[0.0031,0.0015,0.0033,0.00035,0.0063,0.0025,0.00047],[0.0014,0.0017,0.0052,0.0012,0.016,0.0032,0.0009700000000000001],[0.049,0.035,0.051,0.03,0.06,0.042,0.0045],[1.3,1.3,1.4,1.1,5.5,1.4,0.038],[20,17,22,1.4,140,19,1.5]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>kperiph.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"kperiph.1.","targets":3},{"name":"a_growth.1.","targets":4},{"name":"Vr_a_growth.1.","targets":5},{"name":"Sigma_W.1.","targets":6},{"name":"Sigma_CiIMD.1.","targets":7},{"name":"BCF_C2","targets":8}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-4239a22b6cd122b535d2" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-4239a22b6cd122b535d2">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[2.4,2.1,3.2,1.6,580,2.6,3.4],[0.12,0.096,0.17,0.07099999999999999,4.3,0.13,0.032],[0.043,0.025,0.063,0.0023,0.63,0.041,0.01],[0.0026,0.0014,0.0033,0.00031,0.0063,0.0024,0.00048],[0.003,0.0017,0.0056,0.0012,0.016,0.0035,0.001],[0.039,0.034,0.051,0.028,0.059,0.041,0.0044],[1.4,1.3,1.4,1.1,5.5,1.4,0.038],[21,18,23,1.4,140,20,1.6]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>kperiph.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"kperiph.1.","targets":3},{"name":"a_growth.1.","targets":4},{"name":"Vr_a_growth.1.","targets":5},{"name":"Sigma_W.1.","targets":6},{"name":"Sigma_CiIMD.1.","targets":7},{"name":"BCF_C2","targets":8}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -3504,8 +3504,8 @@ BIC =  550.3923</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of observations, n =  357 
 Number of parameters, k =  5 
-Log-likelihood, LL =  -264.4483 
-BIC =  558.2853</code></pre>
+Log-likelihood, LL =  -251.7395 
+BIC =  532.8677</code></pre>
 </div>
 </div>
 </div>
@@ -3530,8 +3530,8 @@ BIC =  558.2853</code></pre>
 <span id="cb89-15"><a href="#cb89-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-9de177f01739b6b2a3c8" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-9de177f01739b6b2a3c8">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[1.9,1.6,2.3,0.00069,810,2,4.6],[0.096,0.076,0.13,0.00027,4.8,0.1,0.03],[0.032,0.021,0.055,9.500000000000001e-05,0.09,0.036,0.008800000000000001],[0.99,0.62,1,0.014,1,0.9,0.1],[0.003,0.0015,0.0033,6.999999999999999e-05,0.0059,0.0025,0.00047],[0.0013,0.0016,0.0052,0.00021,0.012,0.0032,0.0009700000000000001],[0.051,0.034,0.052,0.014,0.059,0.042,0.0046],[1.3,1.3,1.4,1.3,5.4,1.3,0.036],[22,17,22,2.5,170,19,1.7]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>kperiph.1.<\/th>\n      <th>phi.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C2P<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"kperiph.1.","targets":3},{"name":"phi.1.","targets":4},{"name":"a_growth.1.","targets":5},{"name":"Vr_a_growth.1.","targets":6},{"name":"Sigma_W.1.","targets":7},{"name":"Sigma_CiIMD.1.","targets":8},{"name":"BCF_C2P","targets":9}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-00754d65e0f5ee35b60a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-00754d65e0f5ee35b60a">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[2.2,1.9,2.7,0.00069,810,2.3,4.6],[0.11,0.08699999999999999,0.14,0.00027,4.8,0.11,0.031],[0.042,0.025,0.065,9.500000000000001e-05,0.12,0.042,0.01],[0.97,0.62,1,0.033,1,0.89,0.1],[0.0024,0.0014,0.0033,2e-05,0.0059,0.0024,0.00051],[0.002,0.0016,0.0056,0.00021,0.012,0.0034,0.001],[0.045,0.034,0.052,0.014,0.061,0.042,0.0048],[1.3,1.3,1.4,1.3,5.4,1.3,0.036],[22,18,23,2.5,170,20,1.8]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>kperiph.1.<\/th>\n      <th>phi.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C2P<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"kperiph.1.","targets":3},{"name":"phi.1.","targets":4},{"name":"a_growth.1.","targets":5},{"name":"Vr_a_growth.1.","targets":6},{"name":"Sigma_W.1.","targets":7},{"name":"Sigma_CiIMD.1.","targets":8},{"name":"BCF_C2P","targets":9}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -3555,8 +3555,8 @@ BIC =  558.2853</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of observations, n =  357 
 Number of parameters, k =  6 
-Log-likelihood, LL =  -271.9327 
-BIC =  579.1318</code></pre>
+Log-likelihood, LL =  -276.4575 
+BIC =  588.1814</code></pre>
 </div>
 </div>
 </div>
@@ -3581,8 +3581,8 @@ BIC =  579.1318</code></pre>
 <span id="cb93-15"><a href="#cb93-15" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-ffa9424661a7ce5defef" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ffa9424661a7ce5defef">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[1.9,1.6,2.2,0.011,580,1.9,3.4],[0.12,0.08400000000000001,0.14,0.063,4.3,0.11,0.035],[0.033,0.024,0.064,0.014,0.45,0.041,0.011],[0.0031,0.0014,0.0032,0.00041,0.0062,0.0024,0.00048],[0.0014,0.0018,0.0056,0.0012,0.016,0.0035,0.001],[0.048,0.034,0.051,0.029,0.059,0.041,0.0044],[1.4,1.3,1.4,1.1,4.4,1.3,0.032],[20,15,20,0.024,140,17,1.5]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>kperiph.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C2N<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"kperiph.1.","targets":3},{"name":"a_growth.1.","targets":4},{"name":"Vr_a_growth.1.","targets":5},{"name":"Sigma_W.1.","targets":6},{"name":"Sigma_CiIMD.1.","targets":7},{"name":"BCF_C2N","targets":8}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-21024a0d423b8b223676" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-21024a0d423b8b223676">{"x":{"filter":"none","vertical":false,"data":[["Result_mode","2.5%","97.5%","Min","Max","Result_mean","Result_sd"],[2.2,2,2.6,0.011,580,2.3,3.4],[0.13,0.1,0.16,0.078,4.3,0.13,0.035],[0.058,0.03,0.073,0.016,0.45,0.048,0.011],[0.0033,0.0014,0.0033,0.00036,0.0062,0.0024,0.00048],[0.0018,0.0018,0.0055,0.0011,0.016,0.0036,0.00095],[0.046,0.034,0.05,0.029,0.057,0.041,0.0042],[1.3,1.3,1.4,1.1,4.4,1.3,0.032],[18,16,21,0.024,140,18,1.4]],"container":"<table class=\"hover\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>kuIMD.1.<\/th>\n      <th>keIMD.1.<\/th>\n      <th>kperiph.1.<\/th>\n      <th>a_growth.1.<\/th>\n      <th>Vr_a_growth.1.<\/th>\n      <th>Sigma_W.1.<\/th>\n      <th>Sigma_CiIMD.1.<\/th>\n      <th>BCF_C2N<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","autoWidth":true,"columnDefs":[{"className":"dt-left","targets":"_all"},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"kuIMD.1.","targets":1},{"name":"keIMD.1.","targets":2},{"name":"kperiph.1.","targets":3},{"name":"a_growth.1.","targets":4},{"name":"Vr_a_growth.1.","targets":5},{"name":"Sigma_W.1.","targets":6},{"name":"Sigma_CiIMD.1.","targets":7},{"name":"BCF_C2N","targets":8}],"order":[],"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -3606,8 +3606,8 @@ BIC =  579.1318</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of observations, n =  357 
 Number of parameters, k =  5 
-Log-likelihood, LL =  -239.0899 
-BIC =  507.5685</code></pre>
+Log-likelihood, LL =  -269.6584 
+BIC =  568.7055</code></pre>
 </div>
 </div>
 </div>
@@ -4123,7 +4123,7 @@ BIC =  507.5685</code></pre>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE(C1) = "</span>, RMSE_C1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE(C1) =  225.3018</code></pre>
+<pre><code>RMSE(C1) =  250.9419</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -4131,7 +4131,7 @@ BIC =  507.5685</code></pre>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE(C1P) = "</span>, RMSE_C1P)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE(C1P) =  178.4102</code></pre>
+<pre><code>RMSE(C1P) =  186.6848</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -4139,7 +4139,7 @@ BIC =  507.5685</code></pre>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE(C1N) = "</span>, RMSE_C1N)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE(C1N) =  209.9181</code></pre>
+<pre><code>RMSE(C1N) =  208.2711</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -4147,7 +4147,7 @@ BIC =  507.5685</code></pre>
 <span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE(C2) = "</span>, RMSE_C2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE(C2) =  188.811</code></pre>
+<pre><code>RMSE(C2) =  188.0907</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -4155,7 +4155,7 @@ BIC =  507.5685</code></pre>
 <span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE(C2P) = "</span>, RMSE_C2P)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE(C2P) =  182.1641</code></pre>
+<pre><code>RMSE(C2P) =  194.6936</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -4163,7 +4163,7 @@ BIC =  507.5685</code></pre>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE(C2N) = "</span>, RMSE_C2N)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE(C2N) =  180.5219</code></pre>
+<pre><code>RMSE(C2N) =  191.6389</code></pre>
 </div>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -4648,8 +4648,8 @@ Figure&nbsp;4.40: Results of the model fit on experimental data. Predicted value
 
 For internal concentrations : 
 
- Percentage of prediction in fold 2 =  70.8 %
- Percentage of prediction in fold 5 =  94.4 %</code></pre>
+ Percentage of prediction in fold 2 =  68.1 %
+ Percentage of prediction in fold 5 =  93.1 %</code></pre>
 </div>
 </div>
 </div>
@@ -4890,7 +4890,7 @@ Figure&nbsp;4.41: Results of the model fit on experimental data. Predicted value
 
 For internal concentrations : 
 
- Percentage of prediction in fold 2 =  86.1 %
+ Percentage of prediction in fold 2 =  81.9 %
  Percentage of prediction in fold 5 =  100 %</code></pre>
 </div>
 </div>
@@ -5132,7 +5132,7 @@ Figure&nbsp;4.42: Results of the model fit on experimental data. Predicted value
 
 For internal concentrations : 
 
- Percentage of prediction in fold 2 =  88.9 %
+ Percentage of prediction in fold 2 =  90.3 %
  Percentage of prediction in fold 5 =  100 %</code></pre>
 </div>
 </div>
@@ -5614,7 +5614,7 @@ Figure&nbsp;4.44: Results of the model fit on experimental data. Predicted value
 
 For internal concentrations : 
 
- Percentage of prediction in fold 2 =  86.1 %
+ Percentage of prediction in fold 2 =  87.5 %
  Percentage of prediction in fold 5 =  100 %</code></pre>
 </div>
 </div>
@@ -6042,7 +6042,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb149-4"><a href="#cb149-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mod/TK_IMD</span>
 <span id="cb149-5"><a href="#cb149-5" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span>
 <span id="cb149-6"><a href="#cb149-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb149-7"><a href="#cb149-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> 1 73<span class="va">)</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb149-7"><a href="#cb149-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> 1 72<span class="va">)</span><span class="kw">;</span> <span class="cf">do</span></span>
 <span id="cb149-8"><a href="#cb149-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./mcsim.m_TK_IMD</span> TK_IMD_Setpoint_ind_full_<span class="va">${j}</span>.in</span>
 <span id="cb149-9"><a href="#cb149-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -9392,7 +9392,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-314"><a href="#cb178-314" aria-hidden="true" tabindex="-1"></a>path_fig_C1 <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"fig/TK_single/IMD_C1/"</span>)</span>
 <span id="cb178-315"><a href="#cb178-315" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb178-316"><a href="#cb178-316" aria-hidden="true" tabindex="-1"></a>Nb_Iter <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb178-317"><a href="#cb178-317" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2423</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
+<span id="cb178-317"><a href="#cb178-317" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2420</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
 <span id="cb178-318"><a href="#cb178-318" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb178-319"><a href="#cb178-319" aria-hidden="true" tabindex="-1"></a>text_priors <span class="ot">&lt;-</span> <span class="st">"Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max </span></span>
 <span id="cb178-320"><a href="#cb178-320" aria-hidden="true" tabindex="-1"></a><span class="st">Distrib(keIMD,    LogUniform,   0.0001, 100000); # min, max</span></span>
@@ -9440,7 +9440,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-362"><a href="#cb178-362" aria-hidden="true" tabindex="-1"></a>path_fig_C1N <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"fig/TK_single/IMD_C1N/"</span>)</span>
 <span id="cb178-363"><a href="#cb178-363" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb178-364"><a href="#cb178-364" aria-hidden="true" tabindex="-1"></a>Nb_Iter <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb178-365"><a href="#cb178-365" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2423</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
+<span id="cb178-365"><a href="#cb178-365" aria-hidden="true" tabindex="-1"></a>seeds <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">C1 =</span> <span class="dv">3335</span>, <span class="at">C2 =</span> <span class="dv">2420</span>, <span class="at">C3 =</span> <span class="dv">1242</span>)</span>
 <span id="cb178-366"><a href="#cb178-366" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb178-367"><a href="#cb178-367" aria-hidden="true" tabindex="-1"></a>text_priors <span class="ot">&lt;-</span> <span class="st">"Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max </span></span>
 <span id="cb178-368"><a href="#cb178-368" aria-hidden="true" tabindex="-1"></a><span class="st">Distrib(keIMD,    LogUniform,   0.0001, 100000); # min, max</span></span>
@@ -14494,7 +14494,7 @@ Figure&nbsp;4.50: Residuals
 <span id="cb178-5428"><a href="#cb178-5428" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mod/TK_IMD</span>
 <span id="cb178-5429"><a href="#cb178-5429" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span>
 <span id="cb178-5430"><a href="#cb178-5430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-5431"><a href="#cb178-5431" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> 1 73<span class="va">)</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb178-5431"><a href="#cb178-5431" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="va">$(</span><span class="fu">seq</span> 1 72<span class="va">)</span><span class="kw">;</span> <span class="cf">do</span></span>
 <span id="cb178-5432"><a href="#cb178-5432" aria-hidden="true" tabindex="-1"></a><span class="ex">./mcsim.m_TK_IMD</span> TK_IMD_Setpoint_ind_full_<span class="va">${j}</span>.in</span>
 <span id="cb178-5433"><a href="#cb178-5433" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
 <span id="cb178-5434"><a href="#cb178-5434" aria-hidden="true" tabindex="-1"></a></span>
