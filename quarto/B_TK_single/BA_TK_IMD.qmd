@@ -314,7 +314,7 @@ path_mod_IMD_C1 <- here::here("mod/TK_IMD_C1")
 path_fig_C1 <- here::here("fig/TK_single/IMD_C1/")
 
 Nb_Iter <- 100000
-seeds <- c(C1 = 3335, C2 = 2423, C3 = 1242)
+seeds <- c(C1 = 3335, C2 = 2420, C3 = 1242)
 
 text_priors <- "Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max 
 Distrib(keIMD,    LogUniform,   0.0001, 100000); # min, max
@@ -362,7 +362,7 @@ path_mod_IMD_C1N <- here::here("mod/TK_IMD_C1N")
 path_fig_C1N <- here::here("fig/TK_single/IMD_C1N/")
 
 Nb_Iter <- 100000
-seeds <- c(C1 = 3335, C2 = 2423, C3 = 1242)
+seeds <- c(C1 = 3335, C2 = 2420, C3 = 1242)
 
 text_priors <- "Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max 
 Distrib(keIMD,    LogUniform,   0.0001, 100000); # min, max
@@ -5416,7 +5416,7 @@ cd ..
 cd mod/TK_IMD
 pwd
 
-for j in $(seq 1 73); do
+for j in $(seq 1 72); do
 ./mcsim.m_TK_IMD TK_IMD_Setpoint_ind_full_${j}.in
 done
 

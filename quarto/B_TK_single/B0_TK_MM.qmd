@@ -297,7 +297,7 @@ ggsave(
 
 The dynamics of internal pesticide concentrations in earthworms were first modeled using a one-compartment toxicokinetic model that explicitly accounts for growth dilution effects. In this framework, the internal concentration changes over time as a balance between uptake from soil, elimination to the external medium, and dilution by growth. This dynamic is governed by @eq-TKsimple.
 
-$$\frac{dC_{\text{int}}}{dt} = \frac 1 L (k_u\ C_{\text{ext}}-k_e\ C_{\text{int}})-\frac 1 V \frac{dV}{dt}C_{\text{int}}$$ {#eq-TKsimple}
+$$\frac{dC_{\text{int}}}{dt} =  (k_u\ C_{\text{ext}}-k_e\ C_{\text{int}})-\frac 1 V \frac{dV}{dt}C_{\text{int}}$$ {#eq-TKsimple}
 
 Because individual body weights were available throughout the experiment, a hierarchical model for growth was implemented on the same principle as in @gollot_2025. The structural length of the earthworm ($L=V^{1/3}$) is related to the weight without gut content ($W$) through an allometric relationship with a 1/3 power scaling. Both structural length and internal contaminant concentration are assumed to follow probability distributions, with structural length normally distributed around a mean with a specified standard deviation, and internal concentration following a log-normal distribution. Growth in soil is described by a growth rate parameter drawn from a normal distribution, which is set to zero during fasting phases in Petri dishes, where no growth is assumed. Since experimental data include weights with and without gut content, we converted all weight in weight without gut content with the relationship established @sec-gutcontent.
 
@@ -332,7 +332,7 @@ $$
         C_{\text{ext}}(21\ \mathrm{days}) = C_{\text{Clx}}^{0}
       \end{cases} \\[1ex]
 \frac{dC_{\text{int},\mu}}{dt}
-  &= \frac{1}{L_{i,\mu}}\bigl(k_u C_{\text{ext}}-k_e C_{\text{int},\mu}\bigr)
+  &= \bigl(k_u C_{\text{ext}}-k_e C_{\text{int},\mu}\bigr)
      -\frac{3a_i}{L_{i,\mu}} C_{\text{int},\mu}
   & & \text{with } C_{\text{int},\mu}(0) = C_{\text{int}}^{0}
 \end{align}
@@ -345,9 +345,9 @@ Because epoxiconazole is a lipophilic substance, a two-compartment model, built 
 $$
 \begin{aligned}
 & C_{\text{int},\mu} = C_{\text{int,central},\mu} + C_{\text{int,periph},\mu}\\ \\
-&\frac{dC_{\text{int,central},\mu}}{dt} = \frac{1}{L_{i,\mu}} (k_u\ C_{\text{ext}}-k_e\ C_{\text{int,central},\mu}+k_{periph}\ C_{\text{int,periph},\mu}-k_{periph}\ C_{\text{int,central},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,central},\mu}, \\ 
+&\frac{dC_{\text{int,central},\mu}}{dt} =  (k_u\ C_{\text{ext}}-k_e\ C_{\text{int,central},\mu}+k_{periph}\ C_{\text{int,periph},\mu}-k_{periph}\ C_{\text{int,central},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,central},\mu}, \\ 
 &\text{ with}\ \  C_{\text{int,central},\mu}(t=0) = \frac 1 2 C_{\text{int},\mu}^0\\ \\
-&\frac{dC_{\text{int,periph},\mu}}{dt} = \frac{1}{L_{i,\mu}} (k_{periph}\ C_{\text{int,central},\mu}-k_{periph}\ C_{\text{int,periph},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,periph},\mu}, \\ 
+&\frac{dC_{\text{int,periph},\mu}}{dt} =  (k_{periph}\ C_{\text{int,central},\mu}-k_{periph}\ C_{\text{int,periph},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,periph},\mu}, \\ 
 &\text{ with}\ \  C_{\text{int,periph},\mu}(t=0) = \frac 1 2 C_{\text{int},\mu}^0
 \end{aligned}
 $$ {#eq-2comp}
@@ -568,8 +568,8 @@ ggsave(
 | $\varphi$ | `phi` | Fraction of the uptake that is due to gut content | – |
 | $C_{\text{int}}$ | `CiEPX` or `CiIMD` | Concentration of contaminant in earthworm | ng·g(worm)⁻¹ |
 | $C_{\text{int}}^0$ | `Ci0EPX` or `Ci0IMD` | Concentration of contaminant in earthworm at the start of the experiment | ng·g(worm)⁻¹ |
-| $k_u$ | `ku` | Uptake rate of the contaminant by earthworm from soil | cm·g(soil)·g(worm)⁻¹·d⁻¹ |
-| $k_e$ | `ke` | Elimination rate of the contaminant by earthworm | cm·d⁻¹ |
+| $k_u$ | `ku` | Uptake rate of the contaminant by earthworm from soil | g(soil)·g(worm)⁻¹·d⁻¹ |
+| $k_e$ | `ke` | Elimination rate of the contaminant by earthworm | d⁻¹ |
 
 : State variables and parameters list. {#tbl-Variables}
 

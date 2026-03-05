@@ -52,7 +52,7 @@ Dynamics {
     a_real = (expo == 2 ? 0 : a_growth);
     CeEPX_real = (expo == 2 ? 0 : CeEPX);
     
-    dt(Ci_EPX) = 1/(L)*(kuEPX*CeEPX_real - keEPX*Ci_EPX) - 3*a_real/(L)*Ci_EPX;
+    dt(Ci_EPX) = (kuEPX*CeEPX_real - keEPX*Ci_EPX) - 3*a_real/(L)*Ci_EPX;
 }
 
 CalcOutputs {

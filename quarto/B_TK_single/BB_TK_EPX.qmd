@@ -353,7 +353,7 @@ f_In_tot(path_mod_EPX_C1, Molecule, text_priors, text_likelihood, text_param_ind
 path_mod_EPX_C1P <- here::here("mod/TK_EPX_C1P")
 path_fig_C1P <- here::here("fig/TK_single/EPX_C1P/")
 
-Nb_Iter <- 300000
+Nb_Iter <- 100000
 seeds <- c(C1 = 333266, C2 = 660660, C3 = 110110) # Done on CEA servers (CCRT)
 
 text_priors <- "Distrib(kuEPX,     LogUniform,   0.00001, 100000); # min, max 
@@ -406,7 +406,7 @@ f_In_tot(path_mod_EPX_C2, Molecule, text_priors, text_likelihood, text_param_ind
 path_mod_EPX_C2P <- here::here("mod/TK_EPX_C2P")
 path_fig_C2P <- here::here("fig/TK_single/EPX_C2P/")
 
-Nb_Iter <- 300000
+Nb_Iter <- 100000
 seeds <- c(C1 = 333266, C2 = 660660, C3 = 110110) # Done on CEA servers (CCRT)
 
 text_priors <- "Distrib(kuEPX,     LogUniform,   0.00001, 100000); # min, max 
@@ -3752,7 +3752,7 @@ time_limits <- dObs_ind %>%
 Time_points_Nb_rep <- dObs_ind |> 
   dplyr::select(ID, Time_point_f, Nb_rep)
 
-y_segment <- 750
+y_segment <- 1000
 
 df_phases <- dObs_ind |>
   arrange(ID, Time) |>
@@ -4122,7 +4122,6 @@ dObs_ind_plot <- dObs_ind |>
     Time_point_days = paste0(Time_point_f, " days"),
     Time_point_days = fct_reorder(Time_point_days, as.numeric(Time_point))
     )
-
 df_phases_plot <- subset(df_phases, ID %in% ID_tri)|> 
   left_join(Time_points_Nb_rep, by="ID") |> 
   mutate(
@@ -4155,6 +4154,7 @@ df_mod_CiEPX_ind_t_plot_C1 <- subset(df_mod_CiEPX_ind_t_C1, ID %in% ID_tri) |>
   )
 
 df_mod_CeEPX_ind_t_plot_C1 <- subset(df_mod_CeEPX_ind_t_C1, ID %in% ID_tri)
+
 df_mod_Weight_ind_t_plot_C1 <- subset(df_mod_Weight_ind_t_C1, ID %in% ID_tri) |> 
   mutate(
     No_rep = paste0("No ", Nb_rep),
@@ -4253,7 +4253,6 @@ p_CiEPX_traj <- ggplot()+
   #lims(y=c(0, 300))+
   theme_minimal()
   
-
 p_CiEPX_traj 
 
 ```
@@ -4291,7 +4290,6 @@ p_CiEPX_traj_1 <- ggplot()+
     linewidth = 2,
     alpha = 0.7
   ) +
-
   geom_line(
     data=df_mod_CiEPX_ind_t_plot_C1_1,
     aes(
@@ -4449,7 +4447,6 @@ p_CiEPX_traj_2 <- ggplot()+
 #| fig-height: 20
 
 p_CiEPX_traj_log <- p_CiEPX_traj + scale_y_log10()
-
 p_CiEPX_traj_log
 
 ```
@@ -4560,6 +4557,7 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C1
   )
+
 ggsave(
   filename="TK_EPX_comptrajpredW.png", 
   plot=p_W , 
@@ -4611,6 +4609,7 @@ df_mod_CiEPX_ind_t_plot_C1P <- subset(df_mod_CiEPX_ind_t_C1P, ID %in% ID_tri) |>
   )
 
 df_mod_CeEPX_ind_t_plot_C1P <- subset(df_mod_CeEPX_ind_t_C1P, ID %in% ID_tri)
+
 df_mod_Weight_ind_t_plot_C1P <- subset(df_mod_Weight_ind_t_C1P, ID %in% ID_tri) |> 
   mutate(
     No_rep = paste0("No ", Nb_rep),
@@ -4709,7 +4708,6 @@ p_CiEPX_traj <- ggplot()+
   #lims(y=c(0, 300))+
   theme_minimal()
   
-
 p_CiEPX_traj 
 
 ```
@@ -4747,7 +4745,6 @@ p_CiEPX_traj_1 <- ggplot()+
     linewidth = 2,
     alpha = 0.7
   ) +
-
   geom_line(
     data=df_mod_CiEPX_ind_t_plot_C1P_1,
     aes(
@@ -4905,7 +4902,6 @@ p_CiEPX_traj_2 <- ggplot()+
 #| fig-height: 20
 
 p_CiEPX_traj_log <- p_CiEPX_traj + scale_y_log10()
-
 p_CiEPX_traj_log
 
 ```
@@ -5004,6 +5000,7 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C1P
   )
+
 ggsave(
   filename="TK_EPX_comptrajpred_log.png", 
   plot=p_CiEPX_traj_log , 
@@ -5065,6 +5062,7 @@ df_mod_CiEPX_ind_t_plot_C2 <- subset(df_mod_CiEPX_ind_t_C2, ID %in% ID_tri) |>
   )
 
 df_mod_CeEPX_ind_t_plot_C2 <- subset(df_mod_CeEPX_ind_t_C2, ID %in% ID_tri)
+
 df_mod_Weight_ind_t_plot_C2 <- subset(df_mod_Weight_ind_t_C2, ID %in% ID_tri) |> 
   mutate(
     No_rep = paste0("No ", Nb_rep),
@@ -5201,7 +5199,6 @@ p_CiEPX_traj_1 <- ggplot()+
     linewidth = 2,
     alpha = 0.7
   ) +
-
   geom_line(
     data=df_mod_CiEPX_ind_t_plot_C2_1,
     aes(
@@ -5359,7 +5356,6 @@ p_CiEPX_traj_2 <- ggplot()+
 #| fig-height: 20
 
 p_CiEPX_traj_log <- p_CiEPX_traj + scale_y_log10()
-
 p_CiEPX_traj_log
 
 ```
@@ -5458,6 +5454,7 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C2
   )
+
 ggsave(
   filename="TK_EPX_comptrajpred_log.png", 
   plot=p_CiEPX_traj_log , 
@@ -5519,6 +5516,7 @@ df_mod_CiEPX_ind_t_plot_C2P <- subset(df_mod_CiEPX_ind_t_C2P, ID %in% ID_tri) |>
   )
 
 df_mod_CeEPX_ind_t_plot_C2P <- subset(df_mod_CeEPX_ind_t_C2P, ID %in% ID_tri)
+
 df_mod_Weight_ind_t_plot_C2P <- subset(df_mod_Weight_ind_t_C2P, ID %in% ID_tri) |> 
   mutate(
     No_rep = paste0("No ", Nb_rep),
@@ -5655,7 +5653,6 @@ p_CiEPX_traj_1 <- ggplot()+
     linewidth = 2,
     alpha = 0.7
   ) +
-
   geom_line(
     data=df_mod_CiEPX_ind_t_plot_C2P_1,
     aes(
@@ -5813,7 +5810,6 @@ p_CiEPX_traj_2 <- ggplot()+
 #| fig-height: 20
 
 p_CiEPX_traj_log <- p_CiEPX_traj + scale_y_log10()
-
 p_CiEPX_traj_log
 
 ```
@@ -5924,6 +5920,7 @@ ggsave(
   width=8, height = 20, 
   path=path_fig_C2P
   )
+
 ggsave(
   filename="TK_EPX_comptrajpredW.png", 
   plot=p_W , 

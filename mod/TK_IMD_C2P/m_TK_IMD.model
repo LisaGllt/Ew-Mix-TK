@@ -58,8 +58,8 @@ Dynamics {
     a_real = (expo == 2 ? 0 : a_growth);
     CeIMD_real = (expo == 2 ? phi * CeIMD : CeIMD);
     
-    dt(Ci_IMD2) = 1/(L)*(kperiph*Ci_IMD1 - kperiph*Ci_IMD2) - 3*a_real/(L)*Ci_IMD2;
-    dt(Ci_IMD1) = 1/(L)*(kuIMD*CeIMD_real - keIMD*Ci_IMD1 + kperiph*Ci_IMD2 - kperiph*Ci_IMD1) - 3*a_real/(L)*Ci_IMD1;
+    dt(Ci_IMD2) = (kperiph*Ci_IMD1 - kperiph*Ci_IMD2) - 3*a_real/(L)*Ci_IMD2;
+    dt(Ci_IMD1) = (kuIMD*CeIMD_real - keIMD*Ci_IMD1 + kperiph*Ci_IMD2 - kperiph*Ci_IMD1) - 3*a_real/(L)*Ci_IMD1;
 }
 
 CalcOutputs {

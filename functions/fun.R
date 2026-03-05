@@ -1808,13 +1808,13 @@ f_Simulation_mix_ind <- function(File_path, Molecule) {
 #===============================================
 
 # IMD 1 comp 0%
-kuIMD = 1.93461;
-keIMD = 0.115067;
-kperiph = 0.0334602;
+kuIMD = 2.39916;
+keIMD = 0.122215;
+kperiph = 0.0430107;
 # a_growth = 0.00351619;
 # Vr_a_growth = 0.00124984;
-Sigma_W = 0.0475934;
-Sigma_CiIMD = 1.36282;
+Sigma_W = 0.03896;
+Sigma_CiIMD = 1.35097;
 
 
 ########## Individuals ################################################')
@@ -1867,14 +1867,14 @@ Sigma_CiIMD = 1.36282;
 #===============================================
 
 # EPX 2 comp Phi%
-kuEPX = 1.64823;
-keEPX = 1.68255;
-kperiph = 0.00000003061920;
-phi = 0.912028;
+kuEPX = 1.80323;
+keEPX = 1.828;
+kperiph = 0.00001044500;
+phi = 0.666726;
 # a_growth_mean = 0.00355594;
 # Vr_a_growth = 0.00148897;
-Sigma_W = 0.0476993;
-Sigma_CiEPX = 1.28122;
+Sigma_W = 0.0283948;
+Sigma_CiEPX = 1.34507;
 
 ########## Individuals ################################################')
       
@@ -1950,13 +1950,13 @@ f_Simulation_mix_ind_full <- function(File_path, Molecule, print_times) {
 #===============================================
 
 # IMD 1 comp 0%
-kuIMD = 1.93461;
-keIMD = 0.115067;
-kperiph = 0.0334602;
+kuIMD = 2.39916;
+keIMD = 0.122215;
+kperiph = 0.0430107;
 # a_growth = 0.00351619;
 # Vr_a_growth = 0.00124984;
-Sigma_W = 0.0475934;
-Sigma_CiIMD = 1.36282;
+Sigma_W = 0.03896;
+Sigma_CiIMD = 1.35097;
 
 
 ########## Individuals ################################################')
@@ -2009,14 +2009,14 @@ Sigma_CiIMD = 1.36282;
 #===============================================
 
 # EPX 2 comp Phi%
-kuEPX = 1.64823;
-keEPX = 1.68255;
-kperiph = 0.00000003061920;
-phi = 0.912028;
+kuEPX = 1.80323;
+keEPX = 1.828;
+kperiph = 0.00001044500;
+phi = 0.666726;
 # a_growth_mean = 0.00355594;
 # Vr_a_growth = 0.00148897;
-Sigma_W = 0.0476993;
-Sigma_CiEPX = 1.28122;
+Sigma_W = 0.0283948;
+Sigma_CiEPX = 1.34507;
 
 ########## Individuals ################################################')
       

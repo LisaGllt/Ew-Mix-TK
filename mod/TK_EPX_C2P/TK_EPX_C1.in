@@ -1,7 +1,7 @@
 MCMC( "TK_EPX_C1.out",  # output file
       "",                # name of restart file
       "",                # name of data file
-      300000, 0,             # iterations, print prediction flag
+      100000, 0,             # iterations, print prediction flag
       1, 10000,          # printing frequency, iters to print
       333266);               # random seed
 

@@ -627,7 +627,7 @@ F-statistic: 1.568e+04 on 1 and 125 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="one-compartment-model" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="one-compartment-model"><span class="header-section-number">3.3.1</span> One compartment model</h3>
 <p>The dynamics of internal pesticide concentrations in earthworms were first modeled using a one-compartment toxicokinetic model that explicitly accounts for growth dilution effects. In this framework, the internal concentration changes over time as a balance between uptake from soil, elimination to the external medium, and dilution by growth. This dynamic is governed by <a href="#eq-TKsimple" class="quarto-xref">Equation&nbsp;<span>3.1</span></a>.</p>
-<p><span id="eq-TKsimple"><span class="math display">\[\frac{dC_{\text{int}}}{dt} = \frac 1 L (k_u\ C_{\text{ext}}-k_e\ C_{\text{int}})-\frac 1 V \frac{dV}{dt}C_{\text{int}} \tag{3.1}\]</span></span></p>
+<p><span id="eq-TKsimple"><span class="math display">\[\frac{dC_{\text{int}}}{dt} =  (k_u\ C_{\text{ext}}-k_e\ C_{\text{int}})-\frac 1 V \frac{dV}{dt}C_{\text{int}} \tag{3.1}\]</span></span></p>
 <p>Because individual body weights were available throughout the experiment, a hierarchical model for growth was implemented on the same principle as in <span class="citation" data-cites="gollot_2025">Gollot et al. (<a href="../references.html#ref-gollot_2025" role="doc-biblioref">2025</a>)</span>. The structural length of the earthworm (<span class="math inline">\(L=V^{1/3}\)</span>) is related to the weight without gut content (<span class="math inline">\(W\)</span>) through an allometric relationship with a 1/3 power scaling. Both structural length and internal contaminant concentration are assumed to follow probability distributions, with structural length normally distributed around a mean with a specified standard deviation, and internal concentration following a log-normal distribution. Growth in soil is described by a growth rate parameter drawn from a normal distribution, which is set to zero during fasting phases in Petri dishes, where no growth is assumed. Since experimental data include weights with and without gut content, we converted all weight in weight without gut content with the relationship established <a href="#sec-gutcontent" class="quarto-xref"><span>Section 3.2</span></a>.</p>
 <p>The external contaminant concentration in soil (<span class="math inline">\(C_{ext}\)</span>) is described by first-order dissipation, parameterized by the pesticide-specific half-life (DT<span class="math inline">\(_{50}\)</span>). For epoxiconazole (EPX) and imidacloprid (IMD), the DT<span class="math inline">\(_{50}\)</span> values are 353.3 and 187 days, respectively. The initial concentration corresponds to the spiked soil, which decreases over time following first-order kinetics, and after 21 days is set equal to the residual concentration measured in natural soil. In Petri dishes, where no exposure occurs, <span class="math inline">\(C_{ext}\)</span> is set to zero.</p>
 <p>The internal contaminant concentration (<span class="math inline">\(C_{int}\)</span>) is then modeled by a differential equation integrating three processes: (i) uptake from soil, which is proportional to Cext via the uptake rate constant (<span class="math inline">\(k_u\)</span>); (ii) elimination from the organism, which follows first-order kinetics with rate constant (<span class="math inline">\(k_e\)</span>); and (iii) growth dilution, expressed as a term proportional to the growth rate and the current internal concentration. This last process reduces the concentration, reflecting the increase in biomass.</p>
@@ -656,7 +656,7 @@ a_i &amp;\sim \mathcal N (a_{i,\mu},a_{i,\sigma})\\
         C_{\text{ext}}(21\ \mathrm{days}) = C_{\text{Clx}}^{0}
       \end{cases} \\[1ex]
 \frac{dC_{\text{int},\mu}}{dt}
-  &amp;= \frac{1}{L_{i,\mu}}\bigl(k_u C_{\text{ext}}-k_e C_{\text{int},\mu}\bigr)
+  &amp;= \bigl(k_u C_{\text{ext}}-k_e C_{\text{int},\mu}\bigr)
      -\frac{3a_i}{L_{i,\mu}} C_{\text{int},\mu}
   &amp; &amp; \text{with } C_{\text{int},\mu}(0) = C_{\text{int}}^{0}
 \end{align}
@@ -668,9 +668,9 @@ a_i &amp;\sim \mathcal N (a_{i,\mu},a_{i,\sigma})\\
 <p><span id="eq-2comp"><span class="math display">\[
 \begin{aligned}
 &amp; C_{\text{int},\mu} = C_{\text{int,central},\mu} + C_{\text{int,periph},\mu}\\ \\
-&amp;\frac{dC_{\text{int,central},\mu}}{dt} = \frac{1}{L_{i,\mu}} (k_u\ C_{\text{ext}}-k_e\ C_{\text{int,central},\mu}+k_{periph}\ C_{\text{int,periph},\mu}-k_{periph}\ C_{\text{int,central},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,central},\mu}, \\
+&amp;\frac{dC_{\text{int,central},\mu}}{dt} =  (k_u\ C_{\text{ext}}-k_e\ C_{\text{int,central},\mu}+k_{periph}\ C_{\text{int,periph},\mu}-k_{periph}\ C_{\text{int,central},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,central},\mu}, \\
 &amp;\text{ with}\ \  C_{\text{int,central},\mu}(t=0) = \frac 1 2 C_{\text{int},\mu}^0\\ \\
-&amp;\frac{dC_{\text{int,periph},\mu}}{dt} = \frac{1}{L_{i,\mu}} (k_{periph}\ C_{\text{int,central},\mu}-k_{periph}\ C_{\text{int,periph},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,periph},\mu}, \\
+&amp;\frac{dC_{\text{int,periph},\mu}}{dt} =  (k_{periph}\ C_{\text{int,central},\mu}-k_{periph}\ C_{\text{int,periph},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,periph},\mu}, \\
 &amp;\text{ with}\ \  C_{\text{int,periph},\mu}(t=0) = \frac 1 2 C_{\text{int},\mu}^0
 \end{aligned}
 \tag{3.4}\]</span></span></p>
@@ -1000,13 +1000,13 @@ Table&nbsp;3.1: State variables and parameters list.
 <td><span class="math inline">\(k_u\)</span></td>
 <td><code>ku</code></td>
 <td>Uptake rate of the contaminant by earthworm from soil</td>
-<td>cm·g(soil)·g(worm)⁻¹·d⁻¹</td>
+<td>g(soil)·g(worm)⁻¹·d⁻¹</td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(k_e\)</span></td>
 <td><code>ke</code></td>
 <td>Elimination rate of the contaminant by earthworm</td>
-<td>cm·d⁻¹</td>
+<td>d⁻¹</td>
 </tr>
 </tbody>
 </table>
@@ -1033,7 +1033,7 @@ Belfroid, A. C., Scinen, W., Van Gestel, K. C. A. M., Hermens, J. L. M., &amp; V
 Gollot, L., Beaudouin, R., Mathieu, J., Faburé, J., &amp; Royauté, R. (2025). Uncovering <span>Hidden Sensitivity</span>: <span>Inter-Individual Growth Variation</span> in <span>Earthworms Under Fungicide Exposure</span>. <em>Environmental Toxicology and Chemistry</em>. <a href="https://doi.org/10.1093/etojnl/vgaf292">https://doi.org/10.1093/etojnl/vgaf292</a>
 </div>
 <div id="ref-jager_2003a" class="csl-entry" role="listitem">
-Jager, T., Fleuren, R. H. L. J., Hogendoorn, E. A., &amp; De Korte, G. (2003). Elucidating the <span>Routes</span> of <span>Exposure</span> for <span>Organic Chemicals</span> in the <span>Earthworm</span>, <span><em>Eisenia</em></span><span> <em>Andrei</em></span> (<span>Oligochaeta</span>). <em>Environmental Science &amp; Technology</em>, <em>37</em>(15), 3399–3404. <a href="https://doi.org/10.1021/es0340578">https://doi.org/10.1021/es0340578</a>
+Jager, T., Fleuren, R. H. L. J., Hogendoorn, E. A., &amp; De Korte, G. (2003). Elucidating the <span>Routes</span> of <span>Exposure</span> for <span>Organic Chemicals</span> in the <span>Earthworm</span>, <span><span><em>Eisenia</em></span></span><span><span><em> Andrei</em></span></span> (<span>Oligochaeta</span>). <em>Environmental Science &amp; Technology</em>, <em>37</em>(15), 3399–3404. <a href="https://doi.org/10.1021/es0340578">https://doi.org/10.1021/es0340578</a>
 </div>
 <div id="ref-pelosi_2021" class="csl-entry" role="listitem">
 Pelosi, C., Bertrand, C., Daniele, G., Coeurdassier, M., Benoit, P., Nélieu, S., Lafay, F., Bretagnolle, V., Gaba, S., Vulliet, E., &amp; Fritsch, C. (2021). Residues of currently used pesticides in soils and earthworms: <span>A</span> silent threat? <em>Agriculture, Ecosystems &amp; Environment</em>, <em>305</em>, 107167. <a href="https://doi.org/10.1016/j.agee.2020.107167">https://doi.org/10.1016/j.agee.2020.107167</a>
@@ -1863,7 +1863,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-299"><a href="#cb17-299" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-300"><a href="#cb17-300" aria-hidden="true" tabindex="-1"></a>The dynamics of internal pesticide concentrations in earthworms were first modeled using a one-compartment toxicokinetic model that explicitly accounts for growth dilution effects. In this framework, the internal concentration changes over time as a balance between uptake from soil, elimination to the external medium, and dilution by growth. This dynamic is governed by @eq-TKsimple.</span>
 <span id="cb17-301"><a href="#cb17-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-302"><a href="#cb17-302" aria-hidden="true" tabindex="-1"></a>$$\frac{dC_{\text{int}}}{dt} = \frac 1 L (k_u\ C_{\text{ext}}-k_e\ C_{\text{int}})-\frac 1 V \frac{dV}{dt}C_{\text{int}}$$ {#eq-TKsimple}</span>
+<span id="cb17-302"><a href="#cb17-302" aria-hidden="true" tabindex="-1"></a>$$\frac{dC_{\text{int}}}{dt} =  (k_u\ C_{\text{ext}}-k_e\ C_{\text{int}})-\frac 1 V \frac{dV}{dt}C_{\text{int}}$$ {#eq-TKsimple}</span>
 <span id="cb17-303"><a href="#cb17-303" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-304"><a href="#cb17-304" aria-hidden="true" tabindex="-1"></a>Because individual body weights were available throughout the experiment, a hierarchical model for growth was implemented on the same principle as in @gollot_2025. The structural length of the earthworm ($L=V^{1/3}$) is related to the weight without gut content ($W$) through an allometric relationship with a 1/3 power scaling. Both structural length and internal contaminant concentration are assumed to follow probability distributions, with structural length normally distributed around a mean with a specified standard deviation, and internal concentration following a log-normal distribution. Growth in soil is described by a growth rate parameter drawn from a normal distribution, which is set to zero during fasting phases in Petri dishes, where no growth is assumed. Since experimental data include weights with and without gut content, we converted all weight in weight without gut content with the relationship established @sec-gutcontent.</span>
 <span id="cb17-305"><a href="#cb17-305" aria-hidden="true" tabindex="-1"></a></span>
@@ -1898,7 +1898,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-334"><a href="#cb17-334" aria-hidden="true" tabindex="-1"></a>        C_{\text{ext}}(21\ \mathrm{days}) = C_{\text{Clx}}^{0}</span>
 <span id="cb17-335"><a href="#cb17-335" aria-hidden="true" tabindex="-1"></a>      \end{cases} <span class="sc">\\</span><span class="co">[</span><span class="ot">1ex</span><span class="co">]</span></span>
 <span id="cb17-336"><a href="#cb17-336" aria-hidden="true" tabindex="-1"></a>\frac{dC_{\text{int},\mu}}{dt}</span>
-<span id="cb17-337"><a href="#cb17-337" aria-hidden="true" tabindex="-1"></a>  &amp;= \frac{1}{L_{i,\mu}}\bigl(k_u C_{\text{ext}}-k_e C_{\text{int},\mu}\bigr)</span>
+<span id="cb17-337"><a href="#cb17-337" aria-hidden="true" tabindex="-1"></a>  &amp;= \bigl(k_u C_{\text{ext}}-k_e C_{\text{int},\mu}\bigr)</span>
 <span id="cb17-338"><a href="#cb17-338" aria-hidden="true" tabindex="-1"></a>     -\frac{3a_i}{L_{i,\mu}} C_{\text{int},\mu}</span>
 <span id="cb17-339"><a href="#cb17-339" aria-hidden="true" tabindex="-1"></a>  &amp; &amp; \text{with } C_{\text{int},\mu}(0) = C_{\text{int}}^{0}</span>
 <span id="cb17-340"><a href="#cb17-340" aria-hidden="true" tabindex="-1"></a>\end{align}</span>
@@ -1911,9 +1911,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-347"><a href="#cb17-347" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb17-348"><a href="#cb17-348" aria-hidden="true" tabindex="-1"></a>\begin{aligned}</span>
 <span id="cb17-349"><a href="#cb17-349" aria-hidden="true" tabindex="-1"></a>&amp; C_{\text{int},\mu} = C_{\text{int,central},\mu} + C_{\text{int,periph},\mu}<span class="sc">\\</span> <span class="sc">\\</span></span>
-<span id="cb17-350"><a href="#cb17-350" aria-hidden="true" tabindex="-1"></a>&amp;\frac{dC_{\text{int,central},\mu}}{dt} = \frac{1}{L_{i,\mu}} (k_u\ C_{\text{ext}}-k_e\ C_{\text{int,central},\mu}+k_{periph}\ C_{\text{int,periph},\mu}-k_{periph}\ C_{\text{int,central},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,central},\mu}, <span class="sc">\\</span> </span>
+<span id="cb17-350"><a href="#cb17-350" aria-hidden="true" tabindex="-1"></a>&amp;\frac{dC_{\text{int,central},\mu}}{dt} =  (k_u\ C_{\text{ext}}-k_e\ C_{\text{int,central},\mu}+k_{periph}\ C_{\text{int,periph},\mu}-k_{periph}\ C_{\text{int,central},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,central},\mu}, <span class="sc">\\</span> </span>
 <span id="cb17-351"><a href="#cb17-351" aria-hidden="true" tabindex="-1"></a>&amp;\text{ with}\ \  C_{\text{int,central},\mu}(t=0) = \frac 1 2 C_{\text{int},\mu}^0<span class="sc">\\</span> <span class="sc">\\</span></span>
-<span id="cb17-352"><a href="#cb17-352" aria-hidden="true" tabindex="-1"></a>&amp;\frac{dC_{\text{int,periph},\mu}}{dt} = \frac{1}{L_{i,\mu}} (k_{periph}\ C_{\text{int,central},\mu}-k_{periph}\ C_{\text{int,periph},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,periph},\mu}, <span class="sc">\\</span> </span>
+<span id="cb17-352"><a href="#cb17-352" aria-hidden="true" tabindex="-1"></a>&amp;\frac{dC_{\text{int,periph},\mu}}{dt} =  (k_{periph}\ C_{\text{int,central},\mu}-k_{periph}\ C_{\text{int,periph},\mu})-\frac{3a_i}{L_{i,\mu}}C_{\text{int,periph},\mu}, <span class="sc">\\</span> </span>
 <span id="cb17-353"><a href="#cb17-353" aria-hidden="true" tabindex="-1"></a>&amp;\text{ with}\ \  C_{\text{int,periph},\mu}(t=0) = \frac 1 2 C_{\text{int},\mu}^0</span>
 <span id="cb17-354"><a href="#cb17-354" aria-hidden="true" tabindex="-1"></a>\end{aligned}</span>
 <span id="cb17-355"><a href="#cb17-355" aria-hidden="true" tabindex="-1"></a>$$ {#eq-2comp}</span>
@@ -2134,8 +2134,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-572"><a href="#cb17-572" aria-hidden="true" tabindex="-1"></a>| $\varphi$ | <span class="in">`phi`</span> | Fraction of the uptake that is due to gut content | – |</span>
 <span id="cb17-573"><a href="#cb17-573" aria-hidden="true" tabindex="-1"></a>| $C_{\text{int}}$ | <span class="in">`CiEPX`</span> or <span class="in">`CiIMD`</span> | Concentration of contaminant in earthworm | ng·g(worm)⁻¹ |</span>
 <span id="cb17-574"><a href="#cb17-574" aria-hidden="true" tabindex="-1"></a>| $C_{\text{int}}^0$ | <span class="in">`Ci0EPX`</span> or <span class="in">`Ci0IMD`</span> | Concentration of contaminant in earthworm at the start of the experiment | ng·g(worm)⁻¹ |</span>
-<span id="cb17-575"><a href="#cb17-575" aria-hidden="true" tabindex="-1"></a>| $k_u$ | <span class="in">`ku`</span> | Uptake rate of the contaminant by earthworm from soil | cm·g(soil)·g(worm)⁻¹·d⁻¹ |</span>
-<span id="cb17-576"><a href="#cb17-576" aria-hidden="true" tabindex="-1"></a>| $k_e$ | <span class="in">`ke`</span> | Elimination rate of the contaminant by earthworm | cm·d⁻¹ |</span>
+<span id="cb17-575"><a href="#cb17-575" aria-hidden="true" tabindex="-1"></a>| $k_u$ | <span class="in">`ku`</span> | Uptake rate of the contaminant by earthworm from soil | g(soil)·g(worm)⁻¹·d⁻¹ |</span>
+<span id="cb17-576"><a href="#cb17-576" aria-hidden="true" tabindex="-1"></a>| $k_e$ | <span class="in">`ke`</span> | Elimination rate of the contaminant by earthworm | d⁻¹ |</span>
 <span id="cb17-577"><a href="#cb17-577" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-578"><a href="#cb17-578" aria-hidden="true" tabindex="-1"></a>: State variables and parameters list. {#tbl-Variables}</span>
 <span id="cb17-579"><a href="#cb17-579" aria-hidden="true" tabindex="-1"></a></span>

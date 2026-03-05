@@ -55,7 +55,7 @@ Dynamics {
     kuIMD_real = (expo == 2 ? 0 : kuIMD);
     keIMD_real = (expo == 2 ? 0 : keIMD);
     
-    dt(Ci_IMD) = 1/(L)*(kuIMD_real*CeIMD_real - keIMD_real*Ci_IMD) - 3*a_real/(L)*Ci_IMD;
+    dt(Ci_IMD) = (kuIMD_real*CeIMD_real - keIMD_real*Ci_IMD) - 3*a_real/(L)*Ci_IMD;
 }
 
 CalcOutputs {
