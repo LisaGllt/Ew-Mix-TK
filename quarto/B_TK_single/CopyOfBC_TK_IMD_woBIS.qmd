@@ -1,0 +1,319 @@
+```{r lib, include=F}
+library(here)
+source(file = here::here("functions/fun.R"))
+f_load_libraries_colors()
+col_Molecule <- rev(col_Molecule)
+```
+
+# Toxicokinetics of Imidacloprid - Impact of TK BIS on model estimations
+
+```{r data, warning=F, message=F}
+
+Levels_time_points <- c(as.character(seq(1,3,1)), "3b", as.character(seq(4,7,1)), "7b", as.character(seq(8,14,1)), "14b", as.character(seq(15,42,1)))
+
+df_TK_IMD <- f_read_data_TK("IMD") %>%
+  mutate(across(where(is.numeric), ~ na_if(.x, -1))) |> 
+  filter(Experiment != "TKBIS")
+
+
+df_TK_IMD <- df_TK_IMD |> 
+  mutate(
+    Time = t,
+    CiEPX = C_worm_EPX,
+    CiIMD = C_worm_IMD,
+    Weight = Weight_nog,
+    Time_point_f = as.factor(Time_point)
+  ) |> 
+  dplyr::select(Time, CiEPX, CiIMD, Weight, w, Molecule, ID, expo, Time_point_f, Nb_rep, Experiment) |> 
+  mutate(
+    CiEPX = na_if(CiEPX, -1),
+    CiIMD = na_if(CiIMD, -1)
+    )|> 
+  mutate(
+    Time_point_f = fct_relevel(Time_point_f, Levels_time_points)
+  )
+
+df_TK_IMD_mean <- df_TK_IMD |> 
+  dplyr::select(-ID) |> 
+  group_by(Time) |> 
+  summarise(
+    CiEPX = exp(mean(log(CiEPX[CiEPX > 0]), na.rm = TRUE)),
+    CiIMD = exp(mean(log(CiIMD[CiIMD > 0]), na.rm = TRUE)),
+    Weight = mean(Weight, na.rm = TRUE),
+    w = mean(w, na.rm = TRUE),
+    expo = mean(expo),
+    .groups = "drop"
+  ) |> 
+  mutate(Molecule = "IMD")
+
+```
+
+## C2
+
+```{r}
+Molecule <- "IMD"
+
+path_mod_IMD_C2 <- here::here("mod/TK_IMD_C2_woBIS")
+path_fig_C2 <- here::here("fig/TK_single/IMD_C2_woBIS/")
+
+Nb_Iter <- 100000
+seeds <- c(C1 = 3331, C2 = 6662, C3 = 1110)
+
+text_priors <- "Distrib(kuIMD,     LogUniform,   0.0001, 100000); # min, max 
+Distrib(keIMD,    LogUniform,   0.0001, 100000); # min, max
+
+Distrib(kperiph,     LogUniform,   0.00001, 100000); # min, max
+
+Distrib(a_growth,  TruncNormal,   0.005,   0.0010,    -0.5,    1); # mean, sd, min, max
+Distrib (Vr_a_growth,  TruncNormal, 0.0015, 0.01, 0, 1);
+
+Distrib(Sigma_W,     TruncNormal,  0.03, 0.01, 0.0001, 1);
+Distrib(Sigma_CiIMD, TruncNormal,  3.0, 3.0,    1, 1000);"
+
+text_likelihood <- "Likelihood(CiIMD,  LogNormal, Prediction(CiIMD),  Sigma_CiIMD);  # Calcul des vraisemblances (geometric mean, geometric standard deviation)
+Likelihood(Weight, Normal,    Prediction(Weight), Sigma_W);      # Calcul des vraisemblances"
+
+text_param_ind <- "Distrib(a_growth,  TruncNormal, a_growth,  Vr_a_growth, -1.0, 1);"
+
+# f_In_tot(path_mod_IMD_C2, Molecule, text_priors, text_likelihood, text_param_ind, Nb_Iter, seeds)
+# Remove IDs > 128 by hand
+```
+
+```{r}
+MCMC_out_IMD_C2 <- f_MCSim_ind(path_mod_IMD_C2)
+
+NC_C2 <- MCMC_out_IMD_C2$NC
+Nb_param_C2 <- MCMC_out_IMD_C2$Nb_param
+Nb_experiment_C2 <- MCMC_out_IMD_C2$Nb_experiment
+Nb_iter_kept_C2 <- MCMC_out_IMD_C2$Nb_iter_kept
+N_iter_setpoint_C2 <- MCMC_out_IMD_C2$N_iter_setpoint
+L_parameters_C2 <- unique(MCMC_out_IMD_C2$Priors$Nom)
+```
+
+```{r IMDChainsC2, message=F, warning=F}
+#| fig-cap: Parameters chains. Only the first iteration and the last `r Nb_iter_kept` are represented.
+#| label: fig-IMDchainsC2
+#| fig-height: 5
+#| fig-width: 8
+
+p_chains <-  
+  ggplot(
+    data = MCMC_out_IMD_C2$Chains |> filter(Iteration !=1), 
+    aes(
+      x = Iteration, 
+      y = value, 
+      color = as.factor(Chain), 
+      group = as.factor(Chain)
+      )
+  )+
+  geom_line(alpha=0.7)+
+  scale_y_log10()+
+  facet_wrap(~Parameter, scales = "free", ncol = 2)+
+  
+  scale_color_manual(name = "Chains", values = nord(palette = "frost"))+
+  
+  theme_bw()+
+  theme(
+    legend.position = "right", 
+    title=element_text(size=12, face="plain"), 
+    axis.title.x = element_text(face="plain"),
+    strip.background = element_rect(fill="white")
+    )
+
+p_chains
+  
+```
+
+```{r savechainsC2, include = F}
+ggsave(
+  filename="TK_IMD_chains.png", 
+  plot=p_chains, 
+  width=8, height = 5, 
+  path=path_fig_C2
+  )
+ggsave(
+  filename="TK_IMD_chains.svg", 
+  plot=p_chains, 
+  width=8, height = 5, 
+  path=path_fig_C2
+  )
+```
+
+```{r IMDlikeC2, message=F, warning=F}
+#| fig-cap: Evolution of likelihood and deviance ratio through the iterations.
+#| label: fig-IMDlikeC2
+#| fig-height: 4
+#| fig-width: 8
+
+p1 <- ggplot(
+  MCMC_out_IMD_C2$df_LnPost_start, 
+  aes(
+    x = iteration, 
+    y = LnPosterior, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = "First half iterations", 
+    y = "LnPosterior"
+    ) +
+  theme_minimal()
+
+p2 <- ggplot(
+  MCMC_out_IMD_C2$df_LnPost |> filter(iteration !=1), 
+  aes(
+    x = iteration, 
+    y = LnPosterior, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = paste(MCMC_out_IMD_C2$Nb_iter_kept, "last iterations"), 
+    y = "LnPosterior"
+    ) +
+  theme_minimal()
+
+p3 <- ggplot(
+  MCMC_out_IMD_C2$df_Devc |>  filter(iteration != 1), 
+  aes(
+    x = iteration, 
+    y = RatioDeviance, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = paste(MCMC_out_IMD_C2$Nb_iter_kept, "last iterations"), 
+    y = "Ratio Deviance"
+    ) +
+  theme_minimal()
+
+p_LL <- p1 + p2 + p3 +
+  plot_layout(ncol=3, guides = "collect")
+p_LL
+
+```
+
+```{r saveLLC2, include = F}
+ggsave(
+  filename="TK_IMD_likedevratio.png", 
+  plot=p_LL, 
+  width=8, height = 4, 
+  path=path_fig_C2
+  )
+ggsave(
+  filename="TK_IMD_likedevratio.svg", 
+  plot=p_LL, 
+  width=8, height = 4, 
+  path=path_fig_C2
+  )
+```
+
+```{r mcmclistC2, message=F, warning=F}
+# Large format per chain
+mcmc_list_C2 <- lapply(split(MCMC_out_IMD_C2$Chains, MCMC_out_IMD_C2$Chains$Chain), function(d) {
+  wide <- d %>%
+    dplyr::select(Iteration, Parameter, value) %>%
+    pivot_wider(names_from = Parameter, values_from = value) %>%
+    arrange(Iteration)
+  
+  mcmc(as.matrix(wide[,-1]))
+})
+
+mcmc_list_C2 <- as.mcmc.list(mcmc_list_C2)
+
+```
+
+```{r}
+#| fig-cap: Chains convergence.
+#| label: fig-IMDchainsconvergenceC2
+#| fig-height: 8
+#| fig-width: 8
+
+  par(mfrow=c(1,3))
+
+  gelman.plot(mcmc_list_C2,
+            bin.width = 10,      # Number of observations per segment,
+            # first segment --> at least 50 iterations.
+            max.bins = 50,       # Maximum number of bins, excluding the last one
+            confidence = 0.95,   # Coverage probability of confidence interval.
+            transform = FALSE,   # improve the normality of the distribution
+            autoburnin=TRUE)     # Remove first half of sequence
+
+  
+  gelman <- gelman.diag(mcmc_list_C2, confidence = 0.95, transform=FALSE, autoburnin=TRUE, multivariate=TRUE)
+  print(gelman)
+```
+
+```{r}
+####### C2 ##########################################################
+
+MCMC_out_IMD_C2$Chains <- MCMC_out_IMD_C2$Chains |> 
+  mutate(Nom = str_remove(Parameter, "\\.\\d+\\.$")) 
+
+ku_samples_C2 <- MCMC_out_IMD_C2$Chains |> filter(Nom == "kuIMD")
+ke_samples_C2 <- MCMC_out_IMD_C2$Chains |> filter(Nom == "keIMD")
+
+BCF_samples_C2 <- ku_samples_C2$value / ke_samples_C2$value
+
+BCF_mode_C2 <- f_get_mode(BCF_samples_C2)
+BCF_CI_C2 <- quantile(BCF_samples_C2, probs = c(0.025, 0.975))
+BCF_CI_low_C2 <- as.numeric(BCF_CI_C2[1])
+BCF_CI_up_C2 <- as.numeric(BCF_CI_C2[2])
+BCF_min_C2 <- min(BCF_samples_C2)
+BCF_max_C2 <- max(BCF_samples_C2)
+BCF_mean_C2 <- mean(BCF_samples_C2)
+BCF_sd_C2 <- sd(BCF_samples_C2)
+
+BCF_C2 <- c(
+  BCF_mode_C2, 
+  BCF_CI_low_C2, BCF_CI_up_C2, 
+  BCF_min_C2, BCF_max_C2, 
+  BCF_mean_C2, BCF_sd_C2
+  )
+```
+
+```{r IMDSummaryResC2, message=F, warning=F}
+#| tbl-cap: Results summary
+#| tbl-label: tbl-IMDressumC2
+
+Summary_res_IMD_tmp_C2 <- cbind(as.data.frame(MCMC_out_IMD_C2$Summary_res)[1:length(L_parameters_C2)], BCF_C2)
+
+Summary_res_IMD_f_C2 <- Summary_res_IMD_tmp_C2 |> 
+  mutate(across(where(is.numeric), signif, 2))
+
+Summary_res_IMD_f_C2 |> datatable(
+  options = list(
+    dom = 't',
+    autoWidth = TRUE,
+    columnDefs = list(
+      list(className = 'dt-left', targets = "_all")
+      )
+    ),
+  class="hover"
+  )
+
+# Summary_res_IMD_f
+
+```
+
+```{r bicC2}
+# BIC calculation
+
+LL <- f_get_mode(MCMC_out_IMD_C2$df_LnData$LnData)
+
+n <- length(na.omit(df_TK_IMD$Weight)) + length(na.omit(df_TK_IMD$CiIMD))
+k <- Nb_param_C2 -2
+
+BIC <- -2*LL + k*log(n)
+
+cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-likelihood, LL = ", LL, "\nBIC = ", BIC)
+
+```
+
+## C1

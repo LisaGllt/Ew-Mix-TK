@@ -8,7 +8,7 @@ f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 path_fig <- here::here("fig/TK_mix")
 #pal_Ratio <- c(Nord_frost[4], Nord_aurora[5], Nord_aurora[1:4])
-pal_Ratio <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
+pal_Ratio <- c(col_EPX, Nord_aurora[3], Nord_aurora[1],  Nord_aurora[4], col_IMD, Nord_aurora[4] )
 ```
 
 # Is there an interaction between IMD & EPX at the TK level ?
@@ -330,8 +330,9 @@ path_mod_mix <- here::here("mod/TK_Mix_IMD")
 Nb_experiement <- length(unique(df_TK_mix$ID))
 Molecule <- "IMD"
 N_draws <- 1000
+l_param_name <- "kuIMD, keIMD, kperiph"
 
-f_Simulation_mix_ind(path_mod_mix, Molecule)
+f_Simulation_mix_ind(path_mod_mix, Molecule, l_param_name)
 
 ```
 
@@ -351,6 +352,9 @@ done
 ### Predicted vs. Observed
 
 ```{r EPXdatapred, message=F, warning=F}
+
+Nb_experiment_IMD <- 43
+
 dObs_ind <- df_TK_mix |>
   mutate(
     ID = as.numeric(ID)
@@ -364,14 +368,72 @@ colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
 
 IDs <- unique(df_TK_mix$ID)
 
-df_sim <- lapply(1:43, function(j) {
-  f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_IMD_", j, ".out"))) %>%
+Sim.Res.ind <- lapply(1:43, function(j) {
+  read_tsv(file.path(path_mod_mix, paste0("Simulation_ind_IMD_", j, ".out"))) %>%
     mutate(
       sim = j,
       ID = as.numeric(IDs[j])
     )
 }) %>%
   bind_rows()
+
+
+df_mod_ind_IMD <- NULL
+
+for (i in 1:Nb_experiment_IMD){
+  
+  ID_i <- unique(dObs_ind$ID)[i]
+
+  Sim.Res.ind_i  <- subset(Sim.Res.ind, sim == i) |> 
+    dplyr::select(where(~ !all(is.na(.x))))
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Time_pred = dObs_i$Time # !!!
+  
+  Nom_Endpoints = c("Weight", "CiIMD")
+  
+  Nsortie = 2
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind_i), fixed=FALSE)
+
+    
+    Data_sim = as.matrix( Sim.Res.ind_i[ , index] )
+    
+    MPV    = c(  MPV,  as.numeric( Data_sim[nrow(Data_sim), ] ) )
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+
+  df_mod_ind_IMD <- rbind(df_mod_ind_IMD, df_mod_ind_i)
+}
+
+
+df_mod_Weight_ind_IMD <- subset(df_mod_ind_IMD, Endpt == "Weight" & Time !=0) |> 
+  mutate(Weight = predict.endpoint)|> 
+  dplyr::select(c("Time", "low", "up", "ID", "Weight"))
+df_mod_CiEPX_ind_IMD <- subset(df_mod_ind_IMD, Endpt == "CiIMD" & Time !=0) |> 
+  mutate(CiIMD = predict.endpoint) |> 
+  dplyr::select(c("Time", "low", "up", "ID", "CiIMD"))
+
+
 
 df_predobs_CiIMD_ind <- dObs_ind |>
   filter(Ratio != "N" & Line != 1) |> 
@@ -380,14 +442,14 @@ df_predobs_CiIMD_ind <- dObs_ind |>
     Line == 5 ~ "High doses (Isobole 5)"
   )
   ) |> 
-  left_join(df_sim, suffix = c("_obs", "_pred")) |>
+  left_join(df_mod_CiEPX_ind_IMD, suffix = c("_obs", "_pred")) |>
   dplyr::select(-c(Weight_obs, CiEPX, CeIMD, CeEPX)) |>
   mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |> 
   filter(Time != 0)
 
 df_predobs_Weight_ind <- dObs_ind |>
   filter(Ratio != "N" & Line != 1) |> 
-  left_join(df_sim, suffix = c("_obs", "_pred")) |>
+  left_join(df_mod_Weight_ind_IMD, suffix = c("_obs", "_pred")) |>
   dplyr::select(-c(CiIMD_obs, CiEPX, CeIMD, CeEPX)) |>
   mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |> 
   filter(Time != 0)
@@ -401,7 +463,7 @@ df_predobs_Weight_ind <- dObs_ind |>
 #| fig-height: 4
 #| fig-width: 8
 
-pal_Ratio_bis <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
+pal_Ratio_bis <- c(col_EPX, Nord_aurora[3], Nord_aurora[1],  Nord_aurora[4], col_IMD, Nord_aurora[4] )
 
 fact_1 <- 2
 fact_2 <- 5
@@ -475,7 +537,7 @@ p_WIMD <- ggplot(
 fact_1 <- 2
 fact_2 <- 5
 
-seq_line <- seq(1, 50000, 10)
+seq_line <- 10^seq(log10(1), log10(50000), length.out = 1000)
 
 df_line <- data.frame(
   x1  = seq_line,
@@ -521,12 +583,15 @@ p_CiIMD_predobs <- ggplot(
     color = col_line0,
     linewidth = 1
   ) +
-  geom_point(
+  geom_pointrange(
     mapping = aes(
+      ymin = low, 
+      ymax = up,
       color = Ratio_plot,
       shape = Line_plot
     ),
-    alpha = 0.5
+    alpha = 0.5,
+    #size = 2
   ) +
   labs(
     x = "Observed concentrations of IMD\nin earthworms (ng/g)",
@@ -543,6 +608,65 @@ p_CiIMD_predobs <- ggplot(
   theme_minimal()
 
 p_predobs_IMD <- p_WIMD + p_CiIMD_predobs + plot_layout(ncol = 2)
+```
+
+### Ratio PredObs vs. Obs
+
+```{r predobsratioIMD, message=F, warning=F}
+#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line.
+#| label: fig-IMDpredobsratio
+#| fig-height: 4
+#| fig-width: 8
+
+pal_Ratio_bis <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
+
+fact_1 <- 2
+fact_2 <- 5
+
+seq_line <- seq(1, 50000, 10)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line * fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line / fact_1,
+  x2  = seq_line,
+  y2  = seq_line * fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line / fact_2
+)
+
+p_CiIMD_predobsratio <- ggplot(
+  data = df_predobs_CiIMD_ind,
+  mapping = aes(
+    x = CiIMD_obs,
+    y = CiIMD/CiIMD_obs
+  )
+) +
+  geom_pointrange(
+    mapping = aes(
+      ymin=low,
+      ymax=up,
+      color = Ratio_plot,
+      shape = Line_plot
+    ),
+    alpha = 0.5
+  ) +
+  labs(
+    x = "Observed concentrations of IMD\nin earthworms (ng/g)",
+    y = "Ratio of Predicted to observed concentrations of IMD\nin earthworms (ng/g)"
+  ) +
+  scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
+  scale_shape_manual(values = c(shape_EPX, shape_IMD, shape_IMD, shape_IMD), name = "Isobole Number")+
+  scale_x_log10(
+    limits=c(0.1, 50000)
+  ) +
+  scale_y_log10(
+    limits=c(0.1, 50000)
+  ) +
+  theme_minimal()
+
+p_CiIMD_predobsratio
 ```
 
 ### Full trajectories
@@ -665,8 +789,9 @@ p_CiIMD_traj <- ggplot() +
 path_mod_mix <- here::here("mod/TK_Mix_EPX")
 Nb_experiement <- length(unique(df_TK_mix$ID))
 Molecule <- "EPX"
+l_param_name <- "kuEPX, keEPX, kperiph"
 
-f_Simulation_mix_ind(path_mod_mix, Molecule)
+f_Simulation_mix_ind(path_mod_mix, Molecule, l_param_name)
 ```
 
 ```{bash, results=F, eval=F}
@@ -685,6 +810,9 @@ done
 ### Predicted vs. Observed
 
 ```{r EPXdatapredobs, message=F, warning=F}
+
+Nb_experiment_EPX <- 43
+
 dObs_ind <- df_TK_mix |>
   mutate(
     ID = as.numeric(ID)
@@ -698,14 +826,72 @@ col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
 IDs <- unique(df_TK_mix$ID)
 
-df_sim <- lapply(1:43, function(j) {
-  f_MCSim_read_sim(file.path(path_mod_mix, paste0("Simulation_ind_EPX_", j, ".out"))) %>%
+Sim.Res.ind <- lapply(1:43, function(j) {
+  read_tsv(file.path(path_mod_mix, paste0("Simulation_ind_EPX_", j, ".out"))) %>%
     mutate(
       sim = j,
       ID = as.numeric(IDs[j])
     )
 }) %>%
   bind_rows()
+
+
+df_mod_ind_EPX <- NULL
+
+for (i in 1:Nb_experiment_EPX){
+  
+  ID_i <- unique(dObs_ind$ID)[i]
+
+  Sim.Res.ind_i  <- subset(Sim.Res.ind, sim == i) |> 
+    dplyr::select(where(~ !all(is.na(.x))))
+  
+  dObs_i <- subset(dObs_ind, ID == ID_i)
+  
+  Time_pred = dObs_i$Time # !!!
+  
+  Nom_Endpoints = c("Weight", "CiEPX")
+  
+  Nsortie = 2
+  
+  MPV = IC_min = IC_max = Endpoint = index = NULL
+  
+  for (j in 1:length(Nom_Endpoints)){
+    
+    index =grep(paste0("^",Nom_Endpoints[j],"_") , colnames(Sim.Res.ind_i), fixed=FALSE)
+
+    
+    Data_sim = as.matrix( Sim.Res.ind_i[ , index] )
+    
+    MPV    = c(  MPV,  as.numeric( Data_sim[nrow(Data_sim), ] ) )
+    IC_min = c(IC_min,  apply(Data_sim, 2, quantile,  0.025, na.rm=TRUE) )
+    IC_max = c(IC_max,  apply(Data_sim, 2, quantile,  0.975, na.rm=TRUE) ) 
+    
+    Endpoint = c(Endpoint, rep(Nom_Endpoints[j], ncol(Data_sim)))
+  }
+  
+  df_mod_ind_i <- data.frame(
+    predict.endpoint = MPV,
+    Time    = rep(Time_pred, Nsortie),
+    low     = IC_min,
+    up      = IC_max,
+    Endpt   = Endpoint
+    )
+  
+  df_mod_ind_i <- df_mod_ind_i %>%
+    mutate(ID=ID_i)
+
+  df_mod_ind_EPX <- rbind(df_mod_ind_EPX, df_mod_ind_i)
+}
+
+
+df_mod_Weight_ind_EPX <- subset(df_mod_ind_EPX, Endpt == "Weight" & Time !=0) |> 
+  mutate(Weight = predict.endpoint)|> 
+  dplyr::select(c("Time", "low", "up", "ID", "Weight"))
+df_mod_CiEPX_ind_EPX <- subset(df_mod_ind_EPX, Endpt == "CiEPX" & Time !=0) |> 
+  mutate(CiEPX = predict.endpoint) |> 
+  dplyr::select(c("Time", "low", "up", "ID", "CiEPX"))
+
+
 
 df_predobs_CiEPX_ind <- dObs_ind |>
   filter(Ratio != "N" & Line != 1) |> 
@@ -714,24 +900,17 @@ df_predobs_CiEPX_ind <- dObs_ind |>
     Line == 5 ~ "High doses (Isobole 5)"
   )
   ) |> 
-  left_join(df_sim, suffix = c("_obs", "_pred")) |>
-  dplyr::select(-c(Weight_obs, CiIMD, CeIMD, CeEPX)) |>
-  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |>
+  left_join(df_mod_CiEPX_ind_EPX, suffix = c("_obs", "_pred")) |>
+  dplyr::select(-c(CiIMD, CeIMD, CeEPX)) |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |> 
   filter(Time != 0)
 
 df_predobs_Weight_ind <- dObs_ind |>
   filter(Ratio != "N" & Line != 1) |> 
-  left_join(df_sim, suffix = c("_obs", "_pred")) |>
-  dplyr::select(-c(CiEPX_obs, CiIMD, CeIMD, CeEPX)) |>
-  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |>
+  left_join(df_mod_Weight_ind_EPX, suffix = c("_obs", "_pred")) |>
+  dplyr::select(-c(CiIMD, CeIMD, CeEPX)) |>
+  mutate(across(everything(), ~ replace(.x, .x == -1, NA))) |> 
   filter(Time != 0)
-
-
-df_predobs_CiEPX_ind_ratio <- df_predobs_CiEPX_ind |>
-  mutate(
-    Ratio_predobs = CiEPX / CiEPX_obs,
-    Residuals = CiEPX - CiEPX_obs
-  )
 
 # mean(subset(df_predobs_CiEPX_ind_ratio, Line == 5)$Ratio_predobs, na.rm=TRUE)
 ```
@@ -742,7 +921,7 @@ df_predobs_CiEPX_ind_ratio <- df_predobs_CiEPX_ind |>
 #| fig-height: 4
 #| fig-width: 8
 
-pal_Ratio_bis <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
+pal_Ratio_bis <- c(col_EPX, Nord_aurora[3], Nord_aurora[1],  Nord_aurora[4], col_IMD, Nord_aurora[4] )
 
 fact_1 <- 2
 fact_2 <- 5
@@ -816,7 +995,7 @@ p_WEPX <- ggplot(
 fact_1 <- 2
 fact_2 <- 5
 
-seq_line <- seq(1, 100000, 10)
+seq_line <- 10^seq(log10(0.005), log10(100000), length.out = 1000)
 
 df_line <- data.frame(
   x1  = seq_line,
@@ -863,20 +1042,15 @@ p_CiEPX_predobs <- ggplot(
     color = col_line0,
     linewidth = 1
   ) +
-  geom_point(
+  geom_pointrange(
     mapping = aes(
+      ymin = low, 
+      ymax = up,
       color = Ratio_plot,
       shape = Line_plot
     ),
-    alpha = 0.5
-  ) +
-  xlim(
-    xmin = 0.5,
-    xmax = max(df_predobs_CiEPX_ind$CiEPX_obs)
-  ) +
-  ylim(
-    ymin = 0.5,
-    ymax = max(df_predobs_CiEPX_ind$predict.endpoint)
+    alpha = 0.5,
+    #size = 2
   ) +
   labs(
     x = "Observed concentrations of EPX\nin earthworms (ng/g)",
@@ -885,10 +1059,10 @@ p_CiEPX_predobs <- ggplot(
   scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
   scale_shape_manual(values = c(shape_EPX, shape_IMD, shape_IMD, shape_IMD), name = "Isobole Number")+
   scale_x_log10(
-    limits=c(5, 100000)
+    limits=c(0.005, 100000)
   ) +
   scale_y_log10(
-    limits=c(5, 100000)
+    limits=c(0.005, 100000)
   ) +
   theme_minimal()
 
@@ -1036,6 +1210,28 @@ ggsave(
 )
 ```
 
+```{r, include = FALSE}
+p_predobs_Ci <- (
+  (p_CiIMD_predobs + theme(legend.position = "none")) +
+    p_CiEPX_predobs +
+    plot_layout(ncol = 2, guides = "collect")
+) +
+  plot_annotation(tag_levels = "A") &
+  theme(
+    plot.tag = element_text(face = "bold"),
+    plot.tag.position = c(0, 1)
+  )
+```
+
+```{r, include = F}
+ggsave(
+  filename = "Article_predobs_mix.png",
+  plot = p_predobs_Ci,
+  width = 8, height = 4,
+  path = here::here("fig")
+)
+```
+
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX & IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
 #| fig-label: fig-MIXdatapredfull
@@ -1073,3 +1269,9 @@ ggsave(
   path = path_fig
 )
 ```
+
+Single substances were also tested at two concentrations within the mixture experiment and served to validate the single-substance toxicokinetic models (@fig-MIXdatapredfull). For both compounds, internal concentrations measured in earthworms exposed to low doses were well predicted by the respective single-substance models.
+
+However, deviations emerged at higher doses. For imidacloprid, internal concentrations appeared to reach a plateau in earthworm tissues, with a mean internal concentration of 1676 ng/g, suggesting a potential saturation process. In contrast, epoxiconazole internal concentrations were systematically underestimated by the model at high doses, with a mean predicted-to-observed ratio of 0.34. No consistent trend related to mixture ratios was observed.
+
+Additionally, the residual concentration of epoxiconazole measured in earthworms exposed only to imidacloprid is not captured by our model, which predicts a decline toward zero due to the absence of epoxiconazole in the soil and ongoing elimination during the experiment. This discrepancy may be explained by the presence of a small background burden of epoxiconazole retained in earthworm tissues, potentially accumulated over time during laboratory culture.

@@ -1753,7 +1753,7 @@ f_GrowthRate <- function(data){
   return(df_GrowthRate) 
 }
 
-f_Simulation_mix_ind <- function(File_path, Molecule) {
+f_Simulation_mix_ind <- function(File_path, Molecule, l_param_name) {
   
   text_end <- "End."
   
@@ -1766,7 +1766,7 @@ f_Simulation_mix_ind <- function(File_path, Molecule) {
   df_growth_rate_mix <- f_GrowthRate(subset(df_TK_f, t < 28.5))
   
   C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "E")$CiIMD, na.rm=T)
-  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio == "I")$CiEPX, na.rm=T)
+  C_worm_t0_EPX <-  mean(subset(df_TK_f, Ratio == "I")$CiEPX, na.rm=T)
   C_clx_IMD <- 16 / 1000 # ng/g
   C_clx_EPX <- 90 / 1000 # ng/g
   
@@ -1804,18 +1804,13 @@ f_Simulation_mix_ind <- function(File_path, Molecule) {
         sep = "\n"
       )
       
-      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa (Mixture edition)
+      text_start <- text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa
 #===============================================
 
-# IMD 1 comp 0%
-kuIMD = 2.39916;
-keIMD = 0.122215;
-kperiph = 0.0430107;
-# a_growth = 0.00351619;
-# Vr_a_growth = 0.00124984;
-Sigma_W = 0.03896;
-Sigma_CiIMD = 1.35097;
 
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Simulation_ind_IMD_',compteur_exp,'.out", "tab_setpoint_ind_IMD.out", 0,', l_param_name,');
 
 ########## Individuals ################################################')
       
@@ -1863,18 +1858,13 @@ Sigma_CiIMD = 1.35097;
         sep = "\n"
       )
       
-      text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa (Mixture edition)
+      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa
 #===============================================
 
-# EPX 2 comp Phi%
-kuEPX = 1.80323;
-keEPX = 1.828;
-kperiph = 0.00001044500;
-phi = 0.666726;
-# a_growth_mean = 0.00355594;
-# Vr_a_growth = 0.00148897;
-Sigma_W = 0.0283948;
-Sigma_CiEPX = 1.34507;
+
+Integrate(Lsodes, 1E-6, 1E-8, 1);
+
+SetPoints("Simulation_ind_EPX_',compteur_exp,'.out", "tab_setpoint_ind_EPX.out", 0,', l_param_name,');
 
 ########## Individuals ################################################')
       

@@ -1,0 +1,301 @@
+```{r lib, include=F}
+library(here)
+source(file = here::here("functions/fun.R"))
+f_load_libraries_colors()
+col_Molecule <- rev(col_Molecule)
+```
+
+# Toxicokinetics of Epoxiconazole - Impact of TK BIS on model estimations
+
+```{r data, warning=F, message=F}
+
+Levels_time_points <- c("0,25b", "1", "1b", "2", "3", "3b", as.character(seq(4,42,1)))
+
+
+df_TK_EPX <- f_read_data_TK("EPX") %>%
+  mutate(across(where(is.numeric), ~ na_if(.x, -1))) |> 
+  filter(Experiment != "TKBIS")
+
+
+df_TK_EPX <- df_TK_EPX |> 
+  mutate(
+    Time = t,
+    CiIMD = C_worm_IMD,
+    CiEPX = C_worm_EPX,
+    Weight = Weight_nog,
+    Time_point_f = as.factor(Time_point)
+  ) |> 
+  dplyr::select(Time, CiEPX, CiIMD, Weight, w, Molecule, ID, expo, Time_point_f, Nb_rep, Experiment) |> 
+  mutate(
+    CiEPX = na_if(CiEPX, -1),
+    CiIMD = na_if(CiIMD, -1)
+    )|> 
+  mutate(
+    Time_point_f = fct_relevel(Time_point_f, Levels_time_points)
+  )
+
+df_TK_EPX_mean <- df_TK_EPX |> 
+  dplyr::select(-ID) |> 
+  group_by(Time) |> 
+  summarise(
+    CiEPX = exp(mean(log(CiEPX[CiEPX > 0]), na.rm = TRUE)),
+    CiIMD = exp(mean(log(CiIMD[CiIMD > 0]), na.rm = TRUE)),
+    Weight = mean(Weight, na.rm = TRUE),
+    w = mean(w, na.rm = TRUE),
+    expo = mean(expo),
+    .groups = "drop"
+  ) |> 
+  mutate(Molecule = "EPX")
+```
+
+```{r}
+Molecule <- "EPX"
+path_mod_EPX_C2P <- here::here("mod/TK_EPX_C2P_woBIS")
+path_fig_C2P <- here::here("fig/TK_single/EPX_C2P_woBIS/")
+
+Nb_Iter <- 100000
+seeds <- c(C1 = 3331, C2 = 3683, C3 = 1222) # Done on CEA servers (CCRT)
+
+text_priors <- "Distrib(kuEPX,     LogUniform,   0.00001, 100000); # min, max 
+Distrib(keEPX,    LogUniform,   0.00001, 100000); # min, max
+
+Distrib(kperiph,     LogUniform,   0.0000001, 100000); # min, max
+Distrib(phi,     Uniform,   0.0, 1); # min, max
+
+Distrib(a_growth,  TruncNormal,   0.005,   0.005,    -0.5,    1); # mean, sd, min, max
+Distrib (Vr_a_growth,  TruncNormal, 0.0015, 0.01, 0, 1);
+
+Distrib(Sigma_W,     TruncNormal,  0.03, 0.01, 0.0001, 1);
+Distrib(Sigma_CiEPX, TruncNormal,  3.0, 3.0,    1, 1000);"
+
+text_likelihood <- "Likelihood(CiEPX,  LogNormal, Prediction(CiEPX),  Sigma_CiEPX);  # Calcul des vraisemblances (geometric mean, geometric standard deviation)
+Likelihood(Weight, Normal,    Prediction(Weight), Sigma_W);      # Calcul des vraisemblances"
+
+text_param_ind <- "Distrib(a_growth,  TruncNormal, a_growth,  Vr_a_growth, -1.0, 1);"
+
+#f_In_tot(path_mod_EPX_C2P, Molecule, text_priors, text_likelihood, text_param_ind, Nb_Iter, seeds)
+# Remove IDs > 128 by hand
+```
+
+```{r}
+MCMC_out_EPX_C2P <- f_MCSim_ind(path_mod_EPX_C2P)
+
+NC_C2P <- MCMC_out_EPX_C2P$NC
+Nb_param_C2P <- MCMC_out_EPX_C2P$Nb_param
+Nb_experiment_C2P <- MCMC_out_EPX_C2P$Nb_experiment
+Nb_iter_kept_C2P <- MCMC_out_EPX_C2P$Nb_iter_kept
+N_iter_setpoint_C2P <- MCMC_out_EPX_C2P$N_iter_setpoint
+L_parameters_C2P <- unique(MCMC_out_EPX_C2P$Priors$Nom)
+```
+
+```{r EPXChainsC2P, message=F, warning=F}
+#| fig-cap: Parameters chains. Only the first iteration and the last `r Nb_iter_kept` are represented.
+#| label: fig-EPXchainsC2P
+#| fig-height: 5
+#| fig-width: 8
+
+p_chains <-  
+  ggplot(
+    data = MCMC_out_EPX_C2P$Chains |> filter(Iteration !=1), 
+    aes(
+      x = Iteration, 
+      y = value, 
+      color = as.factor(Chain), 
+      group = as.factor(Chain)
+      )
+  )+
+  geom_line(alpha=0.7)+
+  scale_y_log10()+
+  facet_wrap(~Parameter, scales = "free", ncol = 2)+
+  
+  scale_color_manual(name = "Chains", values = nord(palette = "frost"))+
+  
+  theme_bw()+
+  theme(
+    legend.position = "right", 
+    title=element_text(size=12, face="plain"), 
+    axis.title.x = element_text(face="plain"),
+    strip.background = element_rect(fill="white")
+    )
+
+p_chains
+  
+```
+
+```{r savechainsC2P, include = F}
+ggsave(
+  filename="TK_EPX_chains.png", 
+  plot=p_chains, 
+  width=8, height = 5, 
+  path=path_fig_C2P
+  )
+ggsave(
+  filename="TK_EPX_chains.svg", 
+  plot=p_chains, 
+  width=8, height = 5, 
+  path=path_fig_C2P
+  )
+```
+
+```{r EPXlikeC2P, message=F, warning=F}
+#| fig-cap: Evolution of likelihood and deviance ratio through the iterations.
+#| label: fig-EPXlikeC2P
+#| fig-height: 4
+#| fig-width: 8
+
+p1 <- ggplot(
+  MCMC_out_EPX_C2P$df_LnPost_start, 
+  aes(
+    x = iteration, 
+    y = LnPosterior, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = "First half iterations", 
+    y = "LnPosterior"
+    ) +
+  theme_minimal()
+
+p2 <- ggplot(
+  MCMC_out_EPX_C2P$df_LnPost |> filter(iteration !=1), 
+  aes(
+    x = iteration, 
+    y = LnPosterior, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = paste(MCMC_out_EPX_C2P$Nb_iter_kept, "last iterations"), 
+    y = "LnPosterior"
+    ) +
+  theme_minimal()
+
+p3 <- ggplot(
+  MCMC_out_EPX_C2P$df_Devc |>  filter(iteration != 1), 
+  aes(
+    x = iteration, 
+    y = RatioDeviance, 
+    color = Chain
+    )
+  ) +
+  geom_line() +
+  scale_color_manual(name = "Chains", label = c("1", "2", "3"), values = Nord_frost) +
+  labs(
+    x = paste(MCMC_out_EPX_C2P$Nb_iter_kept, "last iterations"), 
+    y = "Ratio Deviance"
+    ) +
+  theme_minimal()
+
+p_LL <- p1 + p2 + p3 +
+  plot_layout(ncol=3, guides = "collect")
+p_LL
+
+```
+
+```{r saveLLC2P, include = F}
+ggsave(
+  filename="TK_EPX_likedevratio.png", 
+  plot=p_LL, 
+  width=8, height = 4, 
+  path=path_fig_C2P
+  )
+ggsave(
+  filename="TK_EPX_likedevratio.svg", 
+  plot=p_LL, 
+  width=8, height = 4, 
+  path=path_fig_C2P
+  )
+```
+
+```{r mcmclistC2P, message=F, warning=F}
+# Large format per chain
+mcmc_list_C2P <- lapply(split(MCMC_out_EPX_C2P$Chains, MCMC_out_EPX_C2P$Chains$Chain), function(d) {
+  wide <- d %>%
+    dplyr::select(Iteration, Parameter, value) %>%
+    pivot_wider(names_from = Parameter, values_from = value) %>%
+    arrange(Iteration)
+  
+  mcmc(as.matrix(wide[,-1]))
+})
+
+mcmc_list_C2P <- as.mcmc.list(mcmc_list_C2P)
+
+```
+
+```{r}
+#| fig-cap: Chains convergence.
+#| label: fig-EPXchainsconvergenceC2P
+#| fig-height: 8
+#| fig-width: 8
+
+  par(mfrow=c(1,3))
+
+  gelman.plot(mcmc_list_C2P,
+            bin.width = 10,      # Number of observations per segment,
+            # first segment --> at least 50 iterations.
+            max.bins = 50,       # Maximum number of bins, excluding the last one
+            confidence = 0.95,   # Coverage probability of confidence interval.
+            transform = FALSE,   # improve the normality of the distribution
+            autoburnin=TRUE)     # Remove first half of sequence
+
+  
+  gelman <- gelman.diag(mcmc_list_C2P, confidence = 0.95, transform=FALSE, autoburnin=TRUE, multivariate=TRUE)
+  print(gelman)
+```
+
+```{r}
+####### C2P ##########################################################
+
+MCMC_out_EPX_C2P$Chains <- MCMC_out_EPX_C2P$Chains |> 
+  mutate(Nom = str_remove(Parameter, "\\.\\d+\\.$")) 
+
+ku_samples_C2P <- MCMC_out_EPX_C2P$Chains |> filter(Nom == "kuEPX")
+ke_samples_C2P <- MCMC_out_EPX_C2P$Chains |> filter(Nom == "keEPX")
+
+BCF_samples_C2P <- ku_samples_C2P$value / ke_samples_C2P$value
+
+BCF_mode_C2P <- f_get_mode(BCF_samples_C2P)
+BCF_CI_C2P <- quantile(BCF_samples_C2P, probs = c(0.025, 0.975))
+BCF_CI_low_C2P <- as.numeric(BCF_CI_C2P[1])
+BCF_CI_up_C2P <- as.numeric(BCF_CI_C2P[2])
+BCF_min_C2P <- min(BCF_samples_C2P)
+BCF_max_C2P <- max(BCF_samples_C2P)
+BCF_mean_C2P <- mean(BCF_samples_C2P)
+BCF_sd_C2P <- sd(BCF_samples_C2P)
+
+BCF_C2P <- c(
+  BCF_mode_C2P, 
+  BCF_CI_low_C2P, BCF_CI_up_C2P, 
+  BCF_min_C2P, BCF_max_C2P, 
+  BCF_mean_C2P, BCF_sd_C2P
+  )
+```
+
+```{r EPXSummaryResC2P, message=F, warning=F}
+#| tbl-cap: Results summary
+#| tbl-label: tbl-EPXressumC2P
+
+Summary_res_EPX_tmp_C2P <- cbind(as.data.frame(MCMC_out_EPX_C2P$Summary_res)[1:length(L_parameters_C2P)], BCF_C2P)
+
+Summary_res_EPX_f_C2P <- Summary_res_EPX_tmp_C2P |> 
+  mutate(across(where(is.numeric), signif, 2))
+
+Summary_res_EPX_f_C2P |> datatable(
+  options = list(
+    dom = 't',
+    autoWidth = TRUE,
+    columnDefs = list(
+      list(className = 'dt-left', targets = "_all")
+      )
+    ),
+  class="hover"
+  )
+
+# Summary_res_EPX_f
+
+```
