@@ -72,6 +72,7 @@ df_TK_IMD_mean <- df_TK_IMD |>
 ### Initial state
 
 ```{r D0}
+summary(subset(df_TK_IMD, Time==0))
 cat("TK Experiment")
 summary(subset(df_TK_IMD, Time==0 & Experiment == "TK"))
 cat("TK BIS experiment")
@@ -3111,8 +3112,8 @@ dObs_ind <- df_TK_IMD |>
     Group_tmp = case_when(
       ID < 65 ~ "Uptake",
       (ID > 64 & ID <= 128) ~ "Elimination",
-      ID > 128 ~ "Uptake bis"),
-    Group = fct_relevel(Group_tmp, c("Uptake", "Elimination", "Uptake bis"))
+      ID > 128 ~ "Uptake\n(with massage only)"),
+    Group = fct_relevel(Group_tmp, c("Uptake", "Elimination", "Uptake\n(with massage only)"))
     )
 
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
@@ -4507,7 +4508,6 @@ cat(
 
 fact_1 <- 2
 fact_2 <- 5
-
 col_line0 <- Nord_polar[1]
 col_line1 <- Nord_polar[4]
 col_line2 <- Nord_snow[1]
@@ -4682,14 +4682,13 @@ p_predobs
 ggsave(
   filename = "TK_IMD_predobs.png",
   plot = p_predobs,
-  width = 8, height = 4,
+  width = 10, height = 4,
   path = path_fig_C2P
 ) 
-
 ggsave(
   filename = "TK_IMD_predobs.svg",
   plot = p_predobs,
-  width = 8, height = 4,
+  width = 10, height = 4,
   path = path_fig_C2P
 )
 ```

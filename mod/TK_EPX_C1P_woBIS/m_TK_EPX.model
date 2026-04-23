@@ -19,8 +19,8 @@ Sigma_CiEPX; # Error on CiEPX measurements
 
 # Kinetics in soil 
 DT50EPX = 353.5;   # EPX Half-life in soil (days)
-DT50gut = 0.182; # In days ! (= 4,37 h)
-phi = 0.15; 
+DT50gut = 0.19; # In days ! (= 4,58 h)
+phi; 
 
 # Growth parameters 
 a_growth;   # Growth rate of earthworms in soil (g^(1/3)/d)

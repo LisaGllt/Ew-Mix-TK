@@ -19,7 +19,7 @@ Sigma_CiIMD; # Error on CiIMD measurements
 
 # Kinetics in soil 
 DT50IMD = 353.5;   # IMD Half-life in soil (days)
-DT50gut = 0.182; # In days ! (= 4,37 h)
+DT50gut = 0.19; # In days ! (= 4,58 h)
 phi; 
 
 # Second compartment

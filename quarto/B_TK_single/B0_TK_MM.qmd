@@ -34,12 +34,12 @@ A first analysis of the toxicokinetics revealed very rapid uptake and eliminatio
 #| fig-height: 3
 
 t_elim <- 21
-t <- seq(0,t_elim*2,0.01)
+t <- seq(0,t_elim*2,0.1)
 C0 <- 0
 C_soil <- 10
 C_soil <- 1000
-ks <- 0.1
-ke <- 1
+ks <- 3
+ke <- 0.3
 
 fdata <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
@@ -151,6 +151,23 @@ ggsave(
   height = 4, 
   path=here::here("fig/TK_single")
   )
+
+p_poster <- p+
+  theme_minimal() +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA),
+    plot.background  = element_rect(fill = "transparent", color = NA),
+    legend.background = element_rect(fill = "transparent", color = NA),
+    legend.box.background = element_rect(fill = "transparent", color = NA),
+    legend.position = "none"
+  )
+  
+  ggsave(
+    filename="TK_design_poster.png", 
+    plot=p_poster, 
+    width=5, height = 3, 
+    path=here::here("fig/TK_single")
+    )
 ```
 
 ### Chemical analysis of soils and earthworms (HPLC-HRMS)
@@ -321,12 +338,17 @@ df_gut <- read_excel(here::here("data/Data_GUT.xlsx")) |>
     Handling == "Massaged" ~ "After complete gut\nclearance (post-massage)",
     .default = "During gut\ndepuration phase"
   )) |> 
-  mutate(Handling_plot = fct_relevel(Handling_plot, c("During gut\ndepuration phase", "After complete gut\nclearance (post-massage)")))
+  mutate(Handling_plot = fct_relevel(Handling_plot, c("During gut\ndepuration phase", "After complete gut\nclearance (post-massage)"))) |> 
+  mutate(keep = case_when(
+    ID %in% c(3,5) ~ "No",
+    .default = "Yes"
+  ))
 ```
 
 ```{r modgut, message=F, warning=F}
 
 df_gut_mod <- df_gut |> 
+  filter(keep == "Yes") |> 
   mutate(
     t = case_when(
       Handling == "None" ~ t,
@@ -380,17 +402,16 @@ p_mg <- ggplot(
     x = t,
     y = Weight,
     group = ID,
-    shape = Handling_plot
+    shape = Handling_plot,
+    alpha = keep
   )
 )+
   geom_line(
     color = Nord_polar[4],
-    linewidth = 0.8,
-    alpha = 0.8
+    linewidth = 0.8
   )+
   geom_point(
     color = Nord_polar[1],
-    alpha = 0.5,
     size = 2.5
   )+
   
@@ -398,7 +419,8 @@ p_mg <- ggplot(
     x = "Time (hours)",
     y = "Weight (mg)"
   )+
-  scale_shape_manual(name = "Handling", values = shape_Molecule)+
+  scale_shape_manual(name = "Handling", values = rev(shape_Molecule))+
+  scale_alpha_manual(values = c(0.3, 0.7), guide = "none")+
   theme_minimal()+
   theme(
     legend.spacing.y = unit(0.4, "cm"),
@@ -409,20 +431,20 @@ p_mg <- ggplot(
   )
 
 p_mod <- ggplot(
-  data = df_gut_mod_plot, 
+  data = df_gut |> 
+    filter(Handling == "None"), 
   aes(
     x = t,
     y = Per_Weight,
-    group = ID
+    group = ID,
+    alpha = keep
   )
 )+
   geom_line(
     linewidth = 0.8,
-    alpha = 0.5,
     color = Nord_polar[4]
   )+
   geom_point(
-    alpha = 0.5,
     size = 2.5,
     color = Nord_polar[1]
   )+
@@ -433,15 +455,16 @@ p_mod <- ggplot(
       y = Per_Weight_pred
     ),
     linewidth = 2,
-    color = Nord_aurora[4],
-    alpha = 0.2
+    color = Nord_aurora[4]
   )+
-  
+  scale_shape_manual(name = "Handling", values = shape_Molecule)+
+  scale_alpha_manual(values = c(0.3, 0.7), guide = "none")+
   labs(
     x = "Time (hours)",
     y = "Percentage of initial weight (%)"
   )+
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = "none")
 
 p <- p_mg + p_mod + plot_layout(ncol=2, guides="collect") &
   theme(
@@ -455,8 +478,176 @@ p
 ggsave(
   filename="TK_depuration_Article.png", 
   plot=p, 
-  width=10, 
+  width=8, 
+  height = 4, 
+  path=here::here("fig/TK_single")
+  )
+```
+
+Model diagnostic :
+
+```{r, message = F, warning=F}
+#| fig-cap: Residuals of the model for earthworm depuration.
+#| label: fig-GUTArticleResiduals
+#| fig-height: 6 
+#| fig-width: 8
+
+Val_Infinity <- 100
+Label_Infinity <- "+Inf"
+
+df_residuals_gut <- data.frame(
+  fitted = fitted(mod.gut),
+  residuals = resid(mod.gut),
+  t = df_gut_mod$t,
+  observed = df_gut_mod$Per_Weight
+) |> 
+  mutate(
+    t = case_when(
+      t == 1000 ~ Val_Infinity,
+      .default = t
+    )
+  )
+
+p_fit <- ggplot(
+  data = df_residuals_gut,
+  aes(
+    x = fitted,
+    y = residuals
+  )
+)+
+  geom_point(
+    color = Nord_polar[1],
+    alpha = 0.7
+  )+
+  geom_abline(
+    intercept = 0,
+    slope = 0,
+    color = Nord_aurora[1]
+  )+
+  theme_minimal()
+
+p_t <- ggplot(
+  data = df_residuals_gut,
+  aes(
+    x = t,
+    y = residuals
+  )
+)+
+  geom_point(
+    color = Nord_polar[1],
+    alpha = 0.7
+  )+
+  geom_abline(
+    intercept = 0,
+    slope = 0,
+    color = Nord_aurora[1]
+  )+
+  scale_x_log10(
+    breaks = c(1, 10, Val_Infinity),
+    labels = c("1", "10", Label_Infinity)
+  )+
+  
+  labs(x = "Time (h)") +
+  theme_minimal()
+
+p <- p_fit + p_t + plot_layout(ncol=1)
+p
+```
+
+```{r, include=F}
+ggsave(
+  filename="TK_depuration_residuals.png", 
+  plot=p, 
+  width=8, 
   height = 6, 
+  path=here::here("fig/TK_single")
+  )
+```
+
+```{r}
+#| fig-cap: Predicted vs observed percentage of initial weight. All data points fall within fold 2.
+#| label: fig-GUTArticlePredobs
+#| fig-height: 6 
+#| fig-width: 6
+
+col_line0 <- Nord_polar[1]
+col_line1 <- Nord_polar[4]
+col_line2 <- Nord_snow[1]
+
+fact_1 <- 2
+fact_2 <- 5
+
+seq_line <- 10^seq(log10(1), log10(100), length.out = 1000)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line * fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line / fact_1,
+  x2  = seq_line,
+  y2  = seq_line * fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line / fact_2
+)
+
+p_gut_predobs <- ggplot(
+  data = df_residuals_gut,
+  mapping = aes(
+    x = observed,
+    y = fitted
+  )
+) +
+  geom_path(
+    data = df_line,
+    mapping = aes(x = x1, y = y1),
+    color = col_line1
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x_1, y = y_1),
+    color = col_line1
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x2, y = y2),
+    color = col_line2
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x_2, y = y_2),
+    color = col_line2
+  ) +
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    color = col_line0,
+    linewidth = 1
+  ) +
+  geom_point(
+    alpha = 0.7,
+    color = Nord_aurora[4]
+  ) +
+  labs(
+    x = "Observed percentage of initial weight (%)",
+    y = "Predicted percentage of initial weight (%)"
+  ) +
+  scale_x_log10(
+    limits=c(80, 100)
+  ) +
+  scale_y_log10(
+    limits=c(80, 100)
+  ) +
+  theme_minimal()
+
+p_gut_predobs
+```
+
+```{r, include=F}
+ggsave(
+  filename="TK_depuration_predobs.png", 
+  plot=p_gut_predobs, 
+  width=5, 
+  height = 4, 
   path=here::here("fig/TK_single")
   )
 ```

@@ -138,15 +138,15 @@
 <circle cx='462.50' cy='164.17' r='1.95' style='stroke-width: 0.71; stroke: #A3BE8C; stroke-opacity: 0.70; fill: #A3BE8C; fill-opacity: 0.70;' />
 <circle cx='462.50' cy='189.85' r='1.95' style='stroke-width: 0.71; stroke: #A3BE8C; stroke-opacity: 0.70; fill: #A3BE8C; fill-opacity: 0.70;' />
 <circle cx='462.50' cy='206.96' r='1.95' style='stroke-width: 0.71; stroke: #A3BE8C; stroke-opacity: 0.70; fill: #A3BE8C; fill-opacity: 0.70;' />
-<circle cx='75.73' cy='153.65' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='75.73' cy='149.72' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='75.73' cy='174.18' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='115.40' cy='85.05' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='115.40' cy='105.61' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='115.40' cy='97.81' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='184.82' cy='84.21' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='184.82' cy='27.07' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
-<circle cx='184.82' cy='78.18' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
+<circle cx='75.73' cy='153.65' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='75.73' cy='149.72' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='75.73' cy='174.18' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='115.40' cy='85.05' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='115.40' cy='105.61' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='115.40' cy='97.81' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='184.82' cy='84.21' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='184.82' cy='27.07' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
+<circle cx='184.82' cy='78.18' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1NzYuMDB8MC4wMHwyODguMDA=)'>
 <text x='30.63' y='202.77' text-anchor='end' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arial";' textLength='12.22px' lengthAdjust='spacingAndGlyphs'>0.5</text>
@@ -173,10 +173,10 @@
 <text x='499.27' y='106.27' style='font-size: 11.00px; font-family: "Arial";' textLength='30.59px' lengthAdjust='spacingAndGlyphs'>Group</text>
 <circle cx='507.91' cy='121.55' r='1.95' style='stroke-width: 0.71; stroke: #BF616A; stroke-opacity: 0.70; fill: #BF616A; fill-opacity: 0.70;' />
 <circle cx='507.91' cy='138.83' r='1.95' style='stroke-width: 0.71; stroke: #A3BE8C; stroke-opacity: 0.70; fill: #A3BE8C; fill-opacity: 0.70;' />
-<circle cx='507.91' cy='156.11' r='1.95' style='stroke-width: 0.71; stroke: #B48EAD; stroke-opacity: 0.70; fill: #B48EAD; fill-opacity: 0.70;' />
+<circle cx='507.91' cy='156.11' r='1.95' style='stroke-width: 0.71; stroke: #7F7F7F; stroke-opacity: 0.70; fill: #7F7F7F; fill-opacity: 0.70;' />
 <text x='522.03' y='124.70' style='font-size: 8.80px; font-family: "Arial";' textLength='27.88px' lengthAdjust='spacingAndGlyphs'>Uptake</text>
 <text x='522.03' y='141.98' style='font-size: 8.80px; font-family: "Arial";' textLength='43.02px' lengthAdjust='spacingAndGlyphs'>Elimination</text>
-<text x='522.03' y='159.26' style='font-size: 8.80px; font-family: "Arial";' textLength='41.56px' lengthAdjust='spacingAndGlyphs'>Uptake bis</text>
+<text x='522.03' y='159.26' style='font-size: 8.80px; font-family: "Arial";' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>NA</text>
 </g>
 </g>
 </svg>

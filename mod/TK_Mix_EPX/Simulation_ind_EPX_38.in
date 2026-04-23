@@ -7,10 +7,10 @@ Integrate(Lsodes, 1E-6, 1E-8, 1);
 SetPoints("Simulation_ind_EPX_38.out", "tab_setpoint_ind_EPX.out", 0,kuEPX, keEPX, kperiph);
 
 ########## Individuals ################################################
-Simulation { # TK EPX - i =  62
+Simulation { # TK EPX - i =  62 ,  G 2
     a_growth=0.00318210067217417;
     Winit=0.5231097;
-    Ci0EPX=82.2349597626437;
+    Ci0EPX=54.4899731750958;
     Ce0EPX=3519.5;
     CclxEPX=0.09;
     expo=NDoses(3,1,2,2,0,28,29.1);

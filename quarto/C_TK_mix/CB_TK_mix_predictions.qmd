@@ -9,6 +9,9 @@ col_Molecule <- rev(col_Molecule)
 path_fig <- here::here("fig/TK_mix")
 #pal_Ratio <- c(Nord_frost[4], Nord_aurora[5], Nord_aurora[1:4])
 pal_Ratio <- c(col_EPX, Nord_aurora[3], Nord_aurora[1],  Nord_aurora[4], col_IMD, Nord_aurora[4] )
+
+shape_H <- 21
+shape_L <- shape_IMD
 ```
 
 # Is there an interaction between IMD & EPX at the TK level ?
@@ -366,7 +369,7 @@ colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
 
 #col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
-IDs <- unique(df_TK_mix$ID)
+IDs <- as.numeric(as.character(unique(df_TK_mix$ID)))
 
 Sim.Res.ind <- lapply(1:43, function(j) {
   read_tsv(file.path(path_mod_mix, paste0("Simulation_ind_IMD_", j, ".out"))) %>%
@@ -588,17 +591,19 @@ p_CiIMD_predobs <- ggplot(
       ymin = low, 
       ymax = up,
       color = Ratio_plot,
-      shape = Line_plot
-    ),
-    alpha = 0.5,
-    #size = 2
+      shape = Line_plot,
+      size = Line_plot,
+      alpha = Line_plot
+    )
   ) +
   labs(
     x = "Observed concentrations of IMD\nin earthworms (ng/g)",
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
   ) +
   scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
-  scale_shape_manual(values = c(shape_EPX, shape_IMD, shape_IMD, shape_IMD), name = "Isobole Number")+
+  scale_shape_manual(values = c(shape_H, shape_L, shape_L, shape_L), name = "Isobole Number")+
+  scale_size_manual(values = c(0.5, 0.7), name = "Isobole Number")+
+  scale_alpha_manual(values = c(1, 0.7), name = "Isobole Number")+
   scale_x_log10(
     limits=c(0.1, 50000)
   ) +
@@ -610,15 +615,74 @@ p_CiIMD_predobs <- ggplot(
 p_predobs_IMD <- p_WIMD + p_CiIMD_predobs + plot_layout(ncol = 2)
 ```
 
+```{r, include = F}
+p_CiIMD_predobs_poster <- ggplot(
+  data = df_predobs_CiIMD_ind |> filter(Ratio != "E"),
+  mapping = aes(
+    x = CiIMD_obs,
+    y = CiIMD
+  )
+) +
+  geom_path(
+    data = df_line,
+    mapping = aes(x = x1, y = y1),
+    color = col_line1
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x_1, y = y_1),
+    color = col_line1
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x2, y = y2),
+    color = col_line2
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x_2, y = y_2),
+    color = col_line2
+  ) +
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    color = col_line0,
+    linewidth = 1
+  ) +
+  geom_pointrange(
+    mapping = aes(
+      ymin = low, 
+      ymax = up,
+      color = Ratio_plot,
+      shape = Line_plot,
+      size = Line_plot,
+      alpha = Line_plot
+    )
+  ) +
+  labs(
+    x = "Observed concentrations of IMD\nin earthworms (ng/g)",
+    y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
+  ) +
+  scale_color_manual(values = pal_Ratio_bis[2:length(pal_Ratio_bis)], name = "Mixture Ratio") +
+  scale_shape_manual(values = c(shape_H, shape_L, shape_L, shape_L), name = "Isobole Number")+
+  scale_size_manual(values = c(0.5, 0.7), name = "Isobole Number")+
+  scale_alpha_manual(values = c(1, 0.7), name = "Isobole Number")+
+  scale_x_log10(
+    limits=c(60, 20000)
+  ) +
+  scale_y_log10(
+    limits=c(60, 20000)
+  ) +
+  theme_minimal()
+```
+
 ### Ratio PredObs vs. Obs
 
 ```{r predobsratioIMD, message=F, warning=F}
 #| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line.
 #| label: fig-IMDpredobsratio
 #| fig-height: 4
-#| fig-width: 8
-
-pal_Ratio_bis <- c(col_EPX, "#9EB7C0", Nord_aurora[5],  "#8A87AD", col_IMD, Nord_aurora[4] )
+#| fig-width: 6
 
 fact_1 <- 2
 fact_2 <- 5
@@ -639,32 +703,34 @@ df_line <- data.frame(
 p_CiIMD_predobsratio <- ggplot(
   data = df_predobs_CiIMD_ind,
   mapping = aes(
-    x = CiIMD_obs,
-    y = CiIMD/CiIMD_obs
+    x = Ratio_plot,
+    y = ifelse(CiIMD > CiIMD_obs, CiIMD/CiIMD_obs, CiIMD_obs/CiIMD)
   )
 ) +
-  geom_pointrange(
+  geom_point(
     mapping = aes(
-      ymin=low,
-      ymax=up,
       color = Ratio_plot,
-      shape = Line_plot
-    ),
-    alpha = 0.5
+      shape = Line_plot,
+      size = Line_plot,
+      alpha = Line_plot
+    )
   ) +
   labs(
     x = "Observed concentrations of IMD\nin earthworms (ng/g)",
-    y = "Ratio of Predicted to observed concentrations of IMD\nin earthworms (ng/g)"
+    y = "Fold of predicted to observed concentrations\nof IMD in earthworms (ng/g)"
   ) +
   scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
-  scale_shape_manual(values = c(shape_EPX, shape_IMD, shape_IMD, shape_IMD), name = "Isobole Number")+
-  scale_x_log10(
-    limits=c(0.1, 50000)
-  ) +
+  scale_shape_manual(values = c(shape_H, shape_L, shape_L), name = "Isobole Number")+
+  scale_size_manual(values = c(1*1.5, 1.4*1.5), name = "Isobole Number")+
+  scale_alpha_manual(values = c(1, 0.7), name = "Isobole Number")+
+  facet_wrap(~Line_plot, ncol=1)+
   scale_y_log10(
-    limits=c(0.1, 50000)
+   # limits=c(0.1, 50000)
   ) +
-  theme_minimal()
+  theme_minimal()+
+  theme(
+    legend.position = "none"
+  )
 
 p_CiIMD_predobsratio
 ```
@@ -824,7 +890,9 @@ colnames(dObs_ind)[colnames(dObs_ind) == "t"] <- "Time"
 
 col_exposure <- c(Nord_aurora[4], Nord_aurora[1], Nord_frost[2])
 
-IDs <- unique(df_TK_mix$ID)
+#IDs <- unique(df_TK_mix$ID)
+
+IDs <- as.numeric(as.character(unique(df_TK_mix$ID)))
 
 Sim.Res.ind <- lapply(1:43, function(j) {
   read_tsv(file.path(path_mod_mix, paste0("Simulation_ind_EPX_", j, ".out"))) %>%
@@ -834,6 +902,10 @@ Sim.Res.ind <- lapply(1:43, function(j) {
     )
 }) %>%
   bind_rows()
+
+# tmp_2 <- Sim.Res.ind |>
+#   dplyr::select(ID, sim) |>
+#   distinct()
 
 
 df_mod_ind_EPX <- NULL
@@ -1047,17 +1119,19 @@ p_CiEPX_predobs <- ggplot(
       ymin = low, 
       ymax = up,
       color = Ratio_plot,
-      shape = Line_plot
-    ),
-    alpha = 0.5,
-    #size = 2
+      shape = Line_plot,
+      alpha = Line_plot,
+      size = Line_plot
+    )
   ) +
   labs(
     x = "Observed concentrations of EPX\nin earthworms (ng/g)",
     y = "Predicted concentrations of EPX\nin earthworms (ng/g)"
   ) +
   scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
-  scale_shape_manual(values = c(shape_EPX, shape_IMD, shape_IMD, shape_IMD), name = "Isobole Number")+
+  scale_shape_manual(values = c(shape_H, shape_L, shape_L, shape_L), name = "Isobole Number")+
+  scale_size_manual(values = c(0.5, 0.7), name = "Isobole Number")+
+  scale_alpha_manual(values = c(1, 0.7), name = "Isobole Number")+
   scale_x_log10(
     limits=c(0.005, 100000)
   ) +
@@ -1067,6 +1141,126 @@ p_CiEPX_predobs <- ggplot(
   theme_minimal()
 
 p_predobs_EPX <- p_WEPX + p_CiEPX_predobs + plot_layout(ncol = 2)
+```
+
+```{r, include = F}
+p_CiEPX_predobs_poster <- ggplot(
+  data = df_predobs_CiEPX_ind,
+  mapping = aes(
+    x = CiEPX_obs,
+    y = CiEPX
+  )
+) +
+  geom_path(
+    data = df_line,
+    mapping = aes(x = x1, y = y1),
+    color = col_line1
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x_1, y = y_1),
+    color = col_line1
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x2, y = y2),
+    color = col_line2
+  ) +
+  geom_line(
+    data = df_line,
+    mapping = aes(x = x_2, y = y_2),
+    color = col_line2
+  ) +
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    color = col_line0,
+    linewidth = 1
+  ) +
+  geom_pointrange(
+    mapping = aes(
+      ymin = low, 
+      ymax = up,
+      color = Ratio_plot,
+      shape = Line_plot,
+      alpha = Line_plot,
+      size = Line_plot
+    )
+  ) +
+  labs(
+    x = "Observed concentrations of EPX\nin earthworms (ng/g)",
+    y = "Predicted concentrations of EPX\nin earthworms (ng/g)"
+  ) +
+  scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
+  scale_shape_manual(values = c(shape_H, shape_L, shape_L, shape_L), name = "Isobole Number")+
+  scale_size_manual(values = c(0.5, 0.7), name = "Isobole Number")+
+  scale_alpha_manual(values = c(1, 0.7), name = "Isobole Number")+
+  scale_x_log10(
+    limits=c(80, 100000)
+  ) +
+  scale_y_log10(
+    limits=c(80, 100000)
+  ) +
+  theme_minimal()
+```
+
+### Ratio PredObs vs. Obs
+
+```{r predobsratioEPX, message=F, warning=F}
+#| fig-cap: Results of the model fit on experimental data. Predicted values are represented with points with their respective credibility interval of 95%. Thin black and grey lines represent the 2-folds and 5-fold changes, respectively. The thicker black line represents the identity line.
+#| label: fig-EPXpredobsratio
+#| fig-height: 4
+#| fig-width: 6
+
+fact_1 <- 2
+fact_2 <- 5
+
+seq_line <- seq(1, 50000, 10)
+
+df_line <- data.frame(
+  x1  = seq_line,
+  y1  = seq_line * fact_1,
+  x_1 = seq_line,
+  y_1 = seq_line / fact_1,
+  x2  = seq_line,
+  y2  = seq_line * fact_2,
+  x_2 = seq_line,
+  y_2 = seq_line / fact_2
+)
+
+p_CiEPX_predobsratio <- ggplot(
+  data = df_predobs_CiEPX_ind,
+  mapping = aes(
+    x = Ratio_plot,
+    y = ifelse(CiEPX > CiEPX_obs, CiEPX/CiEPX_obs, CiEPX_obs/CiEPX)
+  )
+) +
+  geom_point(
+    mapping = aes(
+      color = Ratio_plot,
+      shape = Line_plot,
+      size = Line_plot,
+      alpha = Line_plot
+    )
+  ) +
+  labs(
+    x = "Observed concentrations of EPX\nin earthworms (ng/g)",
+    y = "Fold of predicted to observed concentrations\nof EPX in earthworms (ng/g)"
+  ) +
+  scale_color_manual(values = pal_Ratio_bis, name = "Mixture Ratio") +
+  scale_shape_manual(values = c(shape_H, shape_L, shape_L), name = "Isobole Number")+
+  scale_size_manual(values = c(1*1.5, 1.4*1.5), name = "Isobole Number")+
+  scale_alpha_manual(values = c(1, 0.7), name = "Isobole Number")+
+  facet_wrap(~Line_plot, ncol=1)+
+  scale_y_log10(
+   # limits=c(0.1, 50000)
+  ) +
+  theme_minimal()+
+  theme(
+    legend.position = "none"
+  )
+
+p_CiEPX_predobsratio
 ```
 
 ### Full trajectories
@@ -1211,11 +1405,15 @@ ggsave(
 ```
 
 ```{r, include = FALSE}
-p_predobs_Ci <- (
+p_predobs_Ci_prep <- (
   (p_CiIMD_predobs + theme(legend.position = "none")) +
     p_CiEPX_predobs +
+    p_CiIMD_predobsratio +
+    p_CiEPX_predobsratio +
     plot_layout(ncol = 2, guides = "collect")
-) +
+) 
+
+p_predobs_Ci <- p_predobs_Ci_prep +
   plot_annotation(tag_levels = "A") &
   theme(
     plot.tag = element_text(face = "bold"),
@@ -1227,9 +1425,49 @@ p_predobs_Ci <- (
 ggsave(
   filename = "Article_predobs_mix.png",
   plot = p_predobs_Ci,
-  width = 8, height = 4,
+  width = 10, height = 8,
   path = here::here("fig")
 )
+
+p_poster <- (p_CiIMD_predobs_poster+
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA),
+    plot.background  = element_rect(fill = "transparent", color = NA),
+    legend.background = element_rect(fill = "transparent", color = NA),
+    legend.box.background = element_rect(fill = "transparent", color = NA),
+    legend.position = "none"
+  )) + (p_CiEPX_predobs_poster+
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA),
+    plot.background  = element_rect(fill = "transparent", color = NA),
+    legend.background = element_rect(fill = "transparent", color = NA),
+    legend.box.background = element_rect(fill = "transparent", color = NA),
+    legend.position = "right"
+  )) +
+    plot_layout(ncol = 2, guides = "collect") & 
+  theme(plot.background = element_rect(fill = "transparent", color = NA))
+  
+  ggsave(
+    filename="Poster_predobs_mix.png", 
+    plot=p_poster, 
+    width=7*1.3, height = 3*1.3, 
+    path=here::here("fig")
+    )
+  
+p_tmp <- p_CiEPX_predobs_poster +
+  theme(
+    panel.background = element_rect(fill = "transparent", color = NA),
+    plot.background  = element_rect(fill = "transparent", color = NA),
+    legend.background = element_rect(fill = "transparent", color = NA),
+    legend.box.background = element_rect(fill = "transparent", color = NA)
+  )
+
+ggsave(
+    filename="Poster_predobs_mix_legende.png", 
+    plot=p_tmp, 
+    width=7/2, height = 3, 
+    path=here::here("fig")
+    )
 ```
 
 ```{r, message=F, warning=F}

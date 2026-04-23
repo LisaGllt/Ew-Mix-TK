@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "**Behind the toxic cocktail** - Toxicokinetic mechanisms of pesticide mixture interactions in earthworms"
+  title: "**Behind the toxic cocktail** - Toxicokinetics of a Pesticide Mixture in Earthworms Reveal Concentration-Dependent Bioaccumulation and Limited Interactions"
   subtitle: "Git repository"
   author:
     - name: "Lisa Gollot"

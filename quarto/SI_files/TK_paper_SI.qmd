@@ -1,5 +1,5 @@
 ---
-title: "Behind the toxic cocktail: Toxicokinetic mechanisms of pesticide mixture interactions in earthworms"
+title: "Toxicokinetics of a Pesticide Mixture in Earthworms Reveal Concentration-Dependent Bioaccumulation and Limited Interactions"
 subtitle: "Supplementary information"
 lang: eng
 format:
@@ -54,7 +54,7 @@ The soil used in the culture of earthworms is collected from the top 10 cm of a 
 | pH                              | 7.5   |
 | Total $Cu$ (mg/kg)              | 25.2  |
 
-: Main characteristics of the breeding soil from Versailles. Table from @bart_2017a. {@tbl-Clx}
+: Main characteristics of the breeding soil from Versailles. Table from @bart_2017. {@tbl-Clx}
 
 ## DNA barcoding
 
@@ -68,7 +68,7 @@ The phylogenetic tree was realised thanks to maximum likelyhood bootstrap method
 
 ## Single substances experiments
 
-### Toxicokinetic experiments (TK & TK BIS experiments)
+### Toxicokinetic experiments
 
 ![Design of the initial toxicokinetic experiments](../../fig/TK_single/TK_design.png)
 
@@ -76,14 +76,14 @@ The phylogenetic tree was realised thanks to maximum likelyhood bootstrap method
 
 ![Initial weights (with gut content) of earthworms for the EPX experiment.](../../fig/TK_single/TK_EPX_initial_weights.png)
 
-| Molecule     | Min   | 1st Q | Mean  | Median | 3rd Q | Max   | $n$ |
-|--------------|-------|-------|-------|--------|-------|-------|-----|
-| IMD (TK)     | 474.0 | 565.7 | 662.5 | 635.1  | 711.3 | 993.7 | 64  |
-| IMD (TK BIS) | 350.0 | 373.2 | 402.8 | 408.8  | 416.5 | 490.8 | 9   |
-| EPX (TK)     | 409.3 | 544.7 | 622.8 | 605.8  | 672.6 | 997.7 | 62  |
-| EPX (TK BIS) | 386.7 | 408.0 | 462.9 | 414.4  | 467.4 | 736.7 | 9   |
+| Molecule   | Min   | 1st Q | Mean  | Median | 3rd Q | Max   | $n$ |
+|------------|-------|-------|-------|--------|-------|-------|-----|
+| IMD (TK)   | 474.0 | 565.7 | 662.5 | 635.1  | 711.3 | 993.7 | 64  |
+| IMD (TK b) | 350.0 | 373.2 | 402.8 | 408.8  | 416.5 | 490.8 | 9   |
+| EPX (TK)   | 409.3 | 544.7 | 622.8 | 605.8  | 672.6 | 997.7 | 62  |
+| EPX (TK b) | 386.7 | 408.0 | 462.9 | 414.4  | 467.4 | 736.7 | 9   |
 
-: Initial weight of earthworms (with gut content, mg) in the toxicokinetic experiments. {#tbl-D0TK}
+: Initial weight of earthworms (with gut content, mg) in the toxicokinetic experiments. The letter "b" indicates earthworms used with only a massage before chemical analysis. {#tbl-D0TK}
 
 ### Link between weight with and without gut content {#sec-gutcontent}
 
@@ -111,6 +111,12 @@ For the model, we consider that weights measured after massage are weights measu
 The estimated value for $DT_{50,\text{gut}}$ and $P^{\infty}_{Weight}$ are 4.37 \[3.11 ; 7.32\] hours and 86.2 \[84.6 ; 87.9\] %, respectively.
 
 $P^{\infty}_{Weight}$ estimated here is consistent with the one estimated in @sec-gutcontent.
+
+Model evaluation is presented @fig-gutpredobs and @fig-gutresid.
+
+![Predicted vs observed percentage of initial weight. All data points fall within fold 2.](../../fig/TK_single/TK_depuration_predobs.png){#fig-gutpredobs fig-scap="Predicted vs observed percentage of initial weight." width="50%"}
+
+![Residuals of the model for earthworm depuration.](../../fig/TK_single/TK_depuration_residuals.png){#fig-gutresid fig-scap="Residuals of the model for earthworm depuration." width="80%"}
 
 ## Mixture experiment
 

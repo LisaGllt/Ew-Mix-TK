@@ -1778,6 +1778,8 @@ f_Simulation_mix_ind <- function(File_path, Molecule, l_param_name) {
     
     if (Molecule == "IMD"){
       df_TK_i <- subset(df_TK_f, ID == i)
+      Ratio_i <- df_TK_i$Ratio[1]
+      Line_i <- df_TK_i$Line[1]
       
       char_tw <- paste(df_TK_i$t, collapse = ",")
       char_Ww <- paste(df_TK_i$Weight, collapse = ",")
@@ -1790,7 +1792,7 @@ f_Simulation_mix_ind <- function(File_path, Molecule, l_param_name) {
       Dose_i <- subset(df_TK_i, t == 0)$CeIMD
       
       char_i <- paste(
-        paste("Simulation { #", "TK Mix IMD - i = ", i),
+        paste("Simulation { #", "TK Mix IMD - i = ", i, ", ", Ratio_i, Line_i),
         paste("    a_growth=", a_growth_i, ";", sep = ""),
         paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
         paste("    Ci0IMD=", C_worm_t0_IMD, ";", sep = ""),
@@ -1831,6 +1833,8 @@ SetPoints("Simulation_ind_IMD_',compteur_exp,'.out", "tab_setpoint_ind_IMD.out",
       #print(i)
       
       df_TK_i <- subset(df_TK_f, ID == i)
+      Ratio_i <- df_TK_i$Ratio[1]
+      Line_i <- df_TK_i$Line[1]
       
       char_tw <- paste(df_TK_i$t, collapse = ",")
       char_Ww <- paste(df_TK_i$Weight, collapse = ",")
@@ -1843,7 +1847,7 @@ SetPoints("Simulation_ind_IMD_',compteur_exp,'.out", "tab_setpoint_ind_IMD.out",
       Dose_i <- subset(df_TK_i, t == 0)$CeEPX
       
       char_i <- paste(
-        paste("Simulation { #", "TK EPX - i = ", i),
+        paste("Simulation { #", "TK EPX - i = ", i, ", ", Ratio_i, Line_i),
         
         paste("    a_growth=", a_growth_i, ";", sep = ""),
         paste("    Winit=", subset(df_TK_i, t == 0)$Weight, ";", sep = ""),
@@ -1898,8 +1902,8 @@ f_Simulation_mix_ind_full <- function(File_path, Molecule, print_times) {
   
   df_growth_rate_mix <- f_GrowthRate(subset(df_TK_f, t < 28.5))
   
-  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "N")$CiIMD, na.rm=T)
-  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio == "N")$CiEPX, na.rm=T)
+  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "E")$CiIMD, na.rm=T)
+  C_worm_t0_EPX <-  mean(subset(df_TK_f, Ratio == "I")$CiEPX, na.rm=T)
   C_clx_IMD <- 16 / 1000 # ng/g
   C_clx_EPX <- 90 / 1000 # ng/g
   
