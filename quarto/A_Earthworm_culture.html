@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Earthworms and pesticides – **Behind the toxic cocktail** - Toxicokinetic mechanisms of pesticide mixture interactions in earthworms</title>
+<title>2&nbsp; Earthworms and pesticides – **Behind the toxic cocktail** - Toxicokinetics of a Pesticide Mixture in Earthworms Reveal Concentration-Dependent Bioaccumulation and Limited Interactions</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -168,7 +168,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title"><strong>Behind the toxic cocktail</strong> - Toxicokinetic mechanisms of pesticide mixture interactions in earthworms</span>
+    <span class="navbar-title"><strong>Behind the toxic cocktail</strong> - Toxicokinetics of a Pesticide Mixture in Earthworms Reveal Concentration-Dependent Bioaccumulation and Limited Interactions</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -981,15 +981,7 @@ Table&nbsp;2.4: Overview of available ecotoxicological data on imidacloprid (non
 </section>
 <section id="environmental-concentrations" class="level3" data-number="2.2.4">
 <h3 data-number="2.2.4" class="anchored" data-anchor-id="environmental-concentrations"><span class="header-section-number">2.2.4</span> Environmental concentrations</h3>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_rescape <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_Rescape_long.csv"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">subset</span>(pesticide <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"EPX"</span>, <span class="st">"IMD"</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_litt_soils <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_litt_EPX_IMD.xlsx"</span>), <span class="at">sheet=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
+<p>Recent monitoring data from French agricultural soils reveal substantial variability in pesticide residue levels. <span class="citation" data-cites="froger_2023">Froger et al. (<a href="references.html#ref-froger_2023" role="doc-biblioref">2023</a>)</span> reported imidacloprid concentrations with median values of 2.9 ng/g (0.0029 mg/kg), reaching maximum concentrations of 13.8 ng/g (0.0138 mg/kg) and third quartile values of 5.8 ng/g (0.0058 mg/kg). Epoxiconazole concentrations were higher, with median concentrations of 5.8 ng/g (0.0058 mg/kg), maximum values of 23.6 ng/g (0.0236 mg/kg), and third quartile concentrations of 10.9 ng/g (0.0109 mg/kg). More comprehensive surveys focusing on conventional cereal farming systems show elevated contamination levels (Pelosi et al., 2021). Imidacloprid median concentrations reached 15.1 ng/g (0.0151 mg/kg) with maximum values of 160 ng/g (0.16 mg/kg), while epoxiconazole showed median concentrations of 34.6 ng/g (0.0346 mg/kg) with maximum values of 283 ng/g (0.283 mg/kg). These concentrations can be contextualized against recommended application doses of 168 ng/g for imidacloprid and 153 ng/g for epoxiconazole (Pelosi et al., 2021). Environmental residue levels show that soil contamination can reach substantial fractions of recommended doses, with maximum detected concentrations representing 95% (160/168) of the recommended dose for imidacloprid and 185% (283/153) for epoxiconazole. Median concentrations in conventional cereal farming represent 9% and 23% of recommended doses for imidacloprid and epoxiconazole, respectively.</p>
 
 
 <!-- -->
@@ -1576,514 +1568,509 @@ Zarn, J. A., Brüschweiler, B. J., &amp; Schlatter, J. R. (2003). Azole fungicid
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, include=F}</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"functions/fun.R"</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">f_load_libraries_colors</span>()</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Earthworms and pesticides</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Earthworms used in this study {#sec-A}</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### Earthworm model - *Aporrectodea caliginosa*</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>*Aporrectodea caliginosa* (@fig-cali), an endogeic earthworm species, was the chosen biological model for it is considered highly representative of agricultural soil <span class="co">[</span><span class="ot">@bart_2018a</span><span class="co">]</span> and is part of the most sensitive agricultural species to pesticides <span class="co">[</span><span class="ot">@pelosi_2013</span><span class="co">]</span>. It is also a species we are able to cultivate under laboratory conditions (@sec-earthwormsbreeding).</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="al">![Adult *A. caliginosa* individual.](../photos/vdt_cali.png)</span>{#fig-cali width="50%"}</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Earthworm cultivation at EcoSys {#sec-earthwormsbreeding}</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>A further objective of this study is to evaluate the effects of a pesticides mixture on inter-individual variations of life-history traits and behavior of *A. caliginosa*. To achieve this, it is essential to use individuals whose genetic diversity is representative of a natural population with limited exposure to plant protection products (PPPs). This excludes the use of the breeding stock maintained at EcoSys, as the individuals have been kept in a closed system since the initiation of the breeding program (for over 5 years), with no consideration for maintaining genetic diversity. Therefore, it was necessary to establish a new *A. caliginosa* breeding population appropriate for the scientific questions addressed in this study.</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Initially collected individuals.</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>To initiate the culture, individuals were collected from a natural population in a permanent grassland in Versailles (48°48′ N, 2°5′ E, called "les Closeaux") where no pesticides have been applied for more than 25 years (@fig-terrain). The individuals were identified using a binocular microscope and an identification key. Ten sampling sessions were conducted in the fall of 2023 and the spring of 2024, yielding a total of 325 individuals.</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="al">![Collection of *Aporrectodea caliginosa* and *Aporrectodea icterica* individuals in a meadow at the Château de Versailles and installation of the new culture in our laboratory.](../photos/Photo_versailles_lab_culture.png)</span>{#fig-terrain width="50%"}</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Workflow</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>Individuals are bred at 18°C in 1 L vessels in groups of five individuals (@fig-terrain) using a loamy soil texture called Closeaux soil (based on the texture definition of the Food and Agriculture Organization of the United Nations (FAO)), sampled from the same meadow as initial individuals. Pesticides found in the soil are summarized in @fig-closeauxPPP and its general properties in @tbl-clx. The soil was collected from the top 0-20 cm, air-dried and crushed to pass a 2 mm mesh. Soil culture is kept with a soil water-holding capacity (WHC) of 60-70%. Individuals are fed with horse dung frost and defrosted twice before being milled (<span class="sc">\&gt;</span> 1mm) as presented in @lowe_2005. They are fed each month with the equivalent of around 6 g of dry horse dung which are given with a WHC of 60-70%.</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Characteristics                 <span class="pp">|</span> Value <span class="pp">|</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="pp">|:--------------------------------|:------|</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Clay (<span class="sc">\&lt;</span> 2 µm, g/kg)            <span class="pp">|</span> 226.0 <span class="pp">|</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Fine silt (2-20 µm, g/kg)       <span class="pp">|</span> 174.1 <span class="pp">|</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Coarse silt (20-50 µm, g/kg)    <span class="pp">|</span> 298.9 <span class="pp">|</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Fine sand (50-200 µm, g/kg)     <span class="pp">|</span> 239.1 <span class="pp">|</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Coarse sand (200-2000 µm, g/kg) <span class="pp">|</span> 47.9  <span class="pp">|</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> CaCO3 total (g/kg)              <span class="pp">|</span> 23.3  <span class="pp">|</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Organic matter (g/kg)           <span class="pp">|</span> 32.6  <span class="pp">|</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> P2O5 (g/kg)                     <span class="pp">|</span> 0.1   <span class="pp">|</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Organic carbon (g/kg)           <span class="pp">|</span> 18.9  <span class="pp">|</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Total nitrogen (N) (g/kg)       <span class="pp">|</span> 1.5   <span class="pp">|</span></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> C/N                             <span class="pp">|</span> 12.7  <span class="pp">|</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> pH                              <span class="pp">|</span> 7.5   <span class="pp">|</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Total Cu (mg/kg)                <span class="pp">|</span> 25.2  <span class="pp">|</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>: Closeaux soil characteristics {#tbl-clx .hover}</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning=F, message=F}</span></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Concentrations of pesticides found in the cultivation soil for our earthworms. </span></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-closeauxPPP</span></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 12</span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>col_bar <span class="ot">&lt;-</span> Nord_polar[<span class="dv">4</span>]</span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Data of measured pesticides concentrations in the Closeaux soil </span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_pesticides_closeaux_soil.xlsx"</span>), <span class="at">sheet=</span><span class="st">"Clx"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Conc =</span> <span class="fu">round</span>(C_calc, <span class="dv">2</span>))</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Separation per scale</span></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span>                                 <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Molecule =</span> <span class="fu">fct_reorder</span>(Molecule, Conc)) <span class="sc">|&gt;</span>       <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">facet =</span> <span class="fu">case_when</span>(Conc <span class="sc">&lt;=</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">1</span>,                 <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">2</span>,       <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">1000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">100</span> <span class="sc">~</span> <span class="dv">3</span>,     <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">10000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">1000</span> <span class="sc">~</span> <span class="dv">4</span>,   <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10000</span> <span class="sc">~</span><span class="dv">5</span>)) <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>df_PPPclx_10 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">1</span>) </span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>df_PPPclx_100 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">2</span>) </span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>df_PPPclx_1000 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">3</span>) </span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>df_PPPclx_10000 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">4</span>) </span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>df_PPPclx_100000 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">5</span>) </span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>Size_text <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>size_label <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>alpha_col <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>plot_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_10, </span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
-<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
-<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
-<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
-<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
-<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
-<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
-<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration (ng/kg)"</span></span>
-<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
-<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>plot_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_100, </span>
-<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
-<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
-<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
-<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>      <span class="at">geom=</span><span class="st">"rect"</span>, </span>
-<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin=</span><span class="st">"atrazine-desisopropyl"</span>, </span>
-<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmax=</span><span class="st">"carbendazin"</span>, </span>
-<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin=</span><span class="dv">0</span>, </span>
-<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax=</span><span class="dv">95</span>, </span>
-<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>      <span class="at">color=</span>col_EPX,</span>
-<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill=</span>col_EPX,</span>
-<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
-<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>      <span class="at">size=</span><span class="fl">1.2</span></span>
-<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>      )<span class="sc">+</span></span>
-<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom=</span><span class="st">"rect"</span>, </span>
-<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin=</span><span class="st">"Flusilazole"</span>, </span>
-<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax=</span><span class="st">"fluopyram"</span>, </span>
-<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin=</span><span class="dv">0</span>, </span>
-<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax=</span><span class="dv">22</span>, </span>
-<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_IMD, </span>
-<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
-<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_IMD, </span>
-<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="fl">1.2</span></span>
-<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
-<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
-<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
-<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
-<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
-<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
-<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
-<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration (ng/kg)"</span></span>
-<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">100</span>)<span class="sc">+</span></span>
-<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
-<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
-<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a>plot_3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_1000, </span>
-<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
-<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
-<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
-<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
-<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
-<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
-<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
-<span id="cb4-167"><a href="#cb4-167" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
-<span id="cb4-168"><a href="#cb4-168" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
-<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
-<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration</span><span class="sc">\n</span><span class="st"> (ng/kg)"</span></span>
-<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
-<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
-<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a>plot_4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_10000, </span>
-<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
-<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
-<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
-<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
-<span id="cb4-186"><a href="#cb4-186" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-187"><a href="#cb4-187" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
-<span id="cb4-188"><a href="#cb4-188" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
-<span id="cb4-189"><a href="#cb4-189" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-190"><a href="#cb4-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb4-191"><a href="#cb4-191" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
-<span id="cb4-192"><a href="#cb4-192" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
-<span id="cb4-193"><a href="#cb4-193" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-194"><a href="#cb4-194" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
-<span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-196"><a href="#cb4-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-197"><a href="#cb4-197" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
-<span id="cb4-198"><a href="#cb4-198" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration</span><span class="sc">\n</span><span class="st"> (ng/kg)"</span></span>
-<span id="cb4-199"><a href="#cb4-199" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-200"><a href="#cb4-200" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
-<span id="cb4-201"><a href="#cb4-201" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
-<span id="cb4-202"><a href="#cb4-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-203"><a href="#cb4-203" aria-hidden="true" tabindex="-1"></a>plot_5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb4-204"><a href="#cb4-204" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_100000,</span>
-<span id="cb4-205"><a href="#cb4-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb4-206"><a href="#cb4-206" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
-<span id="cb4-207"><a href="#cb4-207" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
-<span id="cb4-208"><a href="#cb4-208" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-209"><a href="#cb4-209" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
-<span id="cb4-210"><a href="#cb4-210" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
-<span id="cb4-211"><a href="#cb4-211" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-212"><a href="#cb4-212" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
-<span id="cb4-213"><a href="#cb4-213" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.4</span></span>
-<span id="cb4-214"><a href="#cb4-214" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-215"><a href="#cb4-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb4-216"><a href="#cb4-216" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
-<span id="cb4-217"><a href="#cb4-217" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
-<span id="cb4-218"><a href="#cb4-218" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-219"><a href="#cb4-219" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
-<span id="cb4-220"><a href="#cb4-220" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-221"><a href="#cb4-221" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-222"><a href="#cb4-222" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
-<span id="cb4-223"><a href="#cb4-223" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration</span><span class="sc">\n</span><span class="st"> (ng/kg)"</span></span>
-<span id="cb4-224"><a href="#cb4-224" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-225"><a href="#cb4-225" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
-<span id="cb4-226"><a href="#cb4-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
-<span id="cb4-227"><a href="#cb4-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-228"><a href="#cb4-228" aria-hidden="true" tabindex="-1"></a><span class="co">#plot</span></span>
-<span id="cb4-229"><a href="#cb4-229" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_1, plot_2, plot_3, plot_4, plot_5,</span>
-<span id="cb4-230"><a href="#cb4-230" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncol=</span><span class="dv">3</span>, </span>
-<span id="cb4-231"><a href="#cb4-231" aria-hidden="true" tabindex="-1"></a>             <span class="at">layout_matrix =</span> <span class="fu">cbind</span>(</span>
-<span id="cb4-232"><a href="#cb4-232" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), </span>
-<span id="cb4-233"><a href="#cb4-233" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), </span>
-<span id="cb4-234"><a href="#cb4-234" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>), </span>
-<span id="cb4-235"><a href="#cb4-235" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)</span>
-<span id="cb4-236"><a href="#cb4-236" aria-hidden="true" tabindex="-1"></a>               )</span>
-<span id="cb4-237"><a href="#cb4-237" aria-hidden="true" tabindex="-1"></a>             )</span>
-<span id="cb4-238"><a href="#cb4-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-239"><a href="#cb4-239" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-240"><a href="#cb4-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-241"><a href="#cb4-241" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Division of the pesticides in groups of similar concentration levels.</span>
-<span id="cb4-242"><a href="#cb4-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-243"><a href="#cb4-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning=F, message=F, include=F}</span></span>
-<span id="cb4-244"><a href="#cb4-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Concentrations of pesticides found in the cultivation soil for our earthworms. </span></span>
-<span id="cb4-245"><a href="#cb4-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-closeauxPPPfr</span></span>
-<span id="cb4-246"><a href="#cb4-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
-<span id="cb4-247"><a href="#cb4-247" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 12</span></span>
-<span id="cb4-248"><a href="#cb4-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-249"><a href="#cb4-249" aria-hidden="true" tabindex="-1"></a>col_bar <span class="ot">&lt;-</span> Nord_polar[<span class="dv">4</span>]</span>
-<span id="cb4-250"><a href="#cb4-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-251"><a href="#cb4-251" aria-hidden="true" tabindex="-1"></a><span class="co"># Data of measured pesticides concentrations in the Closeaux soil </span></span>
-<span id="cb4-252"><a href="#cb4-252" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_pesticides_closeaux_soil.xlsx"</span>), <span class="at">sheet=</span><span class="st">"Clx"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-253"><a href="#cb4-253" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Conc =</span> <span class="fu">round</span>(C_calc, <span class="dv">3</span>))</span>
-<span id="cb4-254"><a href="#cb4-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-255"><a href="#cb4-255" aria-hidden="true" tabindex="-1"></a><span class="co"># Separation per scale</span></span>
-<span id="cb4-256"><a href="#cb4-256" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span>                                 <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-257"><a href="#cb4-257" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Molecule =</span> <span class="fu">fct_reorder</span>(Molecule, Conc)) <span class="sc">|&gt;</span>       <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-258"><a href="#cb4-258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">facet =</span> <span class="fu">case_when</span>(Conc <span class="sc">&lt;=</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">1</span>,                 <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-259"><a href="#cb4-259" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">2</span>,       <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-260"><a href="#cb4-260" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">1000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">100</span> <span class="sc">~</span> <span class="dv">3</span>,     <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-261"><a href="#cb4-261" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">10000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">1000</span> <span class="sc">~</span> <span class="dv">4</span>,   <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-262"><a href="#cb4-262" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10000</span> <span class="sc">~</span><span class="dv">5</span>)) <span class="co"># &lt;1&gt;</span></span>
-<span id="cb4-263"><a href="#cb4-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-264"><a href="#cb4-264" aria-hidden="true" tabindex="-1"></a>df_PPPclx_found <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> </span>
-<span id="cb4-265"><a href="#cb4-265" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Conc <span class="sc">&gt;</span> <span class="dv">1</span>)</span>
-<span id="cb4-266"><a href="#cb4-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-267"><a href="#cb4-267" aria-hidden="true" tabindex="-1"></a>Size_text <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb4-268"><a href="#cb4-268" aria-hidden="true" tabindex="-1"></a>size_label <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb4-269"><a href="#cb4-269" aria-hidden="true" tabindex="-1"></a>alpha_col <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
-<span id="cb4-270"><a href="#cb4-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-271"><a href="#cb4-271" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
-<span id="cb4-272"><a href="#cb4-272" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_found, </span>
-<span id="cb4-273"><a href="#cb4-273" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb4-274"><a href="#cb4-274" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
-<span id="cb4-275"><a href="#cb4-275" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
-<span id="cb4-276"><a href="#cb4-276" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-277"><a href="#cb4-277" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
-<span id="cb4-278"><a href="#cb4-278" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb4-279"><a href="#cb4-279" aria-hidden="true" tabindex="-1"></a>      <span class="at">geom=</span><span class="st">"rect"</span>, </span>
-<span id="cb4-280"><a href="#cb4-280" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin=</span><span class="st">"atrazine-desisopropyl"</span>, </span>
-<span id="cb4-281"><a href="#cb4-281" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmax=</span><span class="st">"carbendazin"</span>, </span>
-<span id="cb4-282"><a href="#cb4-282" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin=</span><span class="dv">0</span>, </span>
-<span id="cb4-283"><a href="#cb4-283" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax=</span><span class="dv">95</span>, </span>
-<span id="cb4-284"><a href="#cb4-284" aria-hidden="true" tabindex="-1"></a>      <span class="at">color=</span>col_EPX,</span>
-<span id="cb4-285"><a href="#cb4-285" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill=</span>col_EPX,</span>
-<span id="cb4-286"><a href="#cb4-286" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
-<span id="cb4-287"><a href="#cb4-287" aria-hidden="true" tabindex="-1"></a>      <span class="at">size=</span><span class="fl">0.5</span></span>
-<span id="cb4-288"><a href="#cb4-288" aria-hidden="true" tabindex="-1"></a>      )<span class="sc">+</span></span>
-<span id="cb4-289"><a href="#cb4-289" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
-<span id="cb4-290"><a href="#cb4-290" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom=</span><span class="st">"rect"</span>, </span>
-<span id="cb4-291"><a href="#cb4-291" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin=</span><span class="st">"Flusilazole"</span>, </span>
-<span id="cb4-292"><a href="#cb4-292" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax=</span><span class="st">"fluopyram"</span>, </span>
-<span id="cb4-293"><a href="#cb4-293" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin=</span><span class="dv">0</span>, </span>
-<span id="cb4-294"><a href="#cb4-294" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax=</span><span class="dv">22</span>, </span>
-<span id="cb4-295"><a href="#cb4-295" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_IMD, </span>
-<span id="cb4-296"><a href="#cb4-296" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
-<span id="cb4-297"><a href="#cb4-297" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_IMD, </span>
-<span id="cb4-298"><a href="#cb4-298" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="fl">0.5</span></span>
-<span id="cb4-299"><a href="#cb4-299" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-300"><a href="#cb4-300" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
-<span id="cb4-301"><a href="#cb4-301" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-302"><a href="#cb4-302" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
-<span id="cb4-303"><a href="#cb4-303" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
-<span id="cb4-304"><a href="#cb4-304" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-305"><a href="#cb4-305" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb4-306"><a href="#cb4-306" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">signif</span>(Conc,<span class="dv">2</span>)), </span>
-<span id="cb4-307"><a href="#cb4-307" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
-<span id="cb4-308"><a href="#cb4-308" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
-<span id="cb4-309"><a href="#cb4-309" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
-<span id="cb4-310"><a href="#cb4-310" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-311"><a href="#cb4-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb4-312"><a href="#cb4-312" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-313"><a href="#cb4-313" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">""</span>, </span>
-<span id="cb4-314"><a href="#cb4-314" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Concentration dans le sol (ng/kg)"</span></span>
-<span id="cb4-315"><a href="#cb4-315" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
-<span id="cb4-316"><a href="#cb4-316" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
-<span id="cb4-317"><a href="#cb4-317" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
-<span id="cb4-318"><a href="#cb4-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-319"><a href="#cb4-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-320"><a href="#cb4-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-321"><a href="#cb4-321" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-322"><a href="#cb4-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-323"><a href="#cb4-323" aria-hidden="true" tabindex="-1"></a><span class="fu">#### DNA barcoding</span></span>
-<span id="cb4-324"><a href="#cb4-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-325"><a href="#cb4-325" aria-hidden="true" tabindex="-1"></a>As *A. caliginosa* is a complex of species, DNA barcoding was perform on 10 individuals from each culture (original culture and our new culture). The results summarized by @fig-resbarcoding show the existence of individuals from two different lineages in both cultures.</span>
-<span id="cb4-326"><a href="#cb4-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-327"><a href="#cb4-327" aria-hidden="true" tabindex="-1"></a>PARLER IMPLICATION POUR NOUS</span>
-<span id="cb4-328"><a href="#cb4-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-329"><a href="#cb4-329" aria-hidden="true" tabindex="-1"></a><span class="al">![DNA barcoding results. Individuals from the original culture are highlighted in green when individual from the Versailles meadow are highlighted in yellow.](../photos/DNA_barcoding.png)</span>{#fig-resbarcoding}</span>
-<span id="cb4-330"><a href="#cb4-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-331"><a href="#cb4-331" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pesticides of interest</span></span>
-<span id="cb4-332"><a href="#cb4-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-333"><a href="#cb4-333" aria-hidden="true" tabindex="-1"></a>Because our aim was to study a mixture of pesticides representative of earthworm exposure in agricultural soils, a crucial step of the study was to select two relevant pesticides.</span>
-<span id="cb4-334"><a href="#cb4-334" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-335"><a href="#cb4-335" aria-hidden="true" tabindex="-1"></a><span class="fu">### Choice of Epoxiconazole and Imidacloprid</span></span>
-<span id="cb4-336"><a href="#cb4-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-337"><a href="#cb4-337" aria-hidden="true" tabindex="-1"></a>The selection was made in fall 2023 and was guided by two main criteria: the ubiquity and persistence of pesticide residues in soils, and the availability of ecotoxicological data on earthworms.</span>
-<span id="cb4-338"><a href="#cb4-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-339"><a href="#cb4-339" aria-hidden="true" tabindex="-1"></a>@froger_2023 conducted an extensive nationwide survey of pesticide contamination in French soils, monitoring 111 pesticide residues across 47 sites under various land uses. Epoxiconazole and imidacloprid were detected in 47% and 9% of all sites, respectively, with median concentrations of 5.8 ng/g and 2.9 ng/g, and maximum concentrations of 23.6 ng/g and 13.8 ng/g. In arable lands, epoxiconazole, bixafen, fluopyram, fluxapyroxad, glyphosate &amp; AMPA, diflufenican, and terfluthrin were among the most frequently detected compounds.</span>
-<span id="cb4-340"><a href="#cb4-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-341"><a href="#cb4-341" aria-hidden="true" tabindex="-1"></a>In a complementary study, @pelosi_2021 investigated the exposure of earthworms to 31 pesticide residues in both treated and untreated habitats within an intensive agricultural landscape in France (Spring 2016, Long-Term Socio-Ecological Research Site, Zone Atelier Plaine &amp; Val de Sèvre). Diflufenican, imidacloprid, boscalid, and epoxiconazole were among the most frequently detected residues, found in more than 80% of sampled soils.</span>
-<span id="cb4-342"><a href="#cb4-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-343"><a href="#cb4-343" aria-hidden="true" tabindex="-1"></a>Based on these two studies, we initially targeted a range of pesticide residues. Ultimately, we selected epoxiconazole and imidacloprid due to the availability of toxicological data and their known effects on earthworms <span class="co">[</span><span class="ot">@bart_2020; @bart_2019a; @pelosi_2016; @capowiez_2006; @dittbrenner_2011; @dittbrenner_2010; @vanloon_2022; @wang_2019</span><span class="co">]</span>. Despite being now banned in the EU, both pesticides continue to be of concern due to their ubiquity and persistence in the environment. These pesticides have been shown to persist in agricultural soils, with concentrations that can still pose adverse effects on non-target organisms, such as earthworms. Imidacloprid is particularly known for impairing earthworm bioturbation, a critical process that supports many ecosystem functions <span class="co">[</span><span class="ot">@chen_2021</span><span class="co">]</span>. Both pesticides' enduring presence in the environment highlights the relevance of studying their long-term ecological impacts. This choice aligns with the objectives of the EEWORM ANR project, which aims to investigate the eco-evolutionary dynamics of earthworms under pesticide exposure and the resulting impacts on ecosystem functions.</span>
-<span id="cb4-344"><a href="#cb4-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-345"><a href="#cb4-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=F, warning=F}</span></span>
-<span id="cb4-346"><a href="#cb4-346" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-chemprop</span></span>
-<span id="cb4-347"><a href="#cb4-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: Physico-chemical properties of epoxiconazole and imidacloprid (data from PPDB).</span></span>
-<span id="cb4-348"><a href="#cb4-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-349"><a href="#cb4-349" aria-hidden="true" tabindex="-1"></a>molec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"EPX"</span>, <span class="st">"IMD"</span>)</span>
-<span id="cb4-350"><a href="#cb4-350" aria-hidden="true" tabindex="-1"></a>CAS <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"133855-98-8"</span>, <span class="st">"138261-41-3"</span>)</span>
-<span id="cb4-351"><a href="#cb4-351" aria-hidden="true" tabindex="-1"></a>Solubility_w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">6.63</span>, <span class="dv">610</span>) <span class="co"># mg/L</span></span>
-<span id="cb4-352"><a href="#cb4-352" aria-hidden="true" tabindex="-1"></a>logKow <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"3.3 (high)"</span>, <span class="st">"0.57 (low)"</span>)</span>
-<span id="cb4-353"><a href="#cb4-353" aria-hidden="true" tabindex="-1"></a>Henry_law <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"1.649e-05 (non-volatile)"</span>, <span class="st">"1.7e-10 (non-volatile)"</span>) </span>
-<span id="cb4-354"><a href="#cb4-354" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-355"><a href="#cb4-355" aria-hidden="true" tabindex="-1"></a>DT50_lab <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">353.5</span>,<span class="dv">187</span>) <span class="co"># d at 20°C</span></span>
-<span id="cb4-356"><a href="#cb4-356" aria-hidden="true" tabindex="-1"></a>BCF <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">70</span>, <span class="cn">NA</span>)</span>
-<span id="cb4-357"><a href="#cb4-357" aria-hidden="true" tabindex="-1"></a>NOEC_repro <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">3.24</span>, <span class="fl">0.178</span>)</span>
-<span id="cb4-358"><a href="#cb4-358" aria-hidden="true" tabindex="-1"></a>LC50 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"&gt;500"</span>, <span class="fl">10.7</span>)</span>
-<span id="cb4-359"><a href="#cb4-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-360"><a href="#cb4-360" aria-hidden="true" tabindex="-1"></a>df_chem_prop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb4-361"><a href="#cb4-361" aria-hidden="true" tabindex="-1"></a>  <span class="at">molec=</span>molec,</span>
-<span id="cb4-362"><a href="#cb4-362" aria-hidden="true" tabindex="-1"></a>  <span class="at">CAS=</span>CAS,</span>
-<span id="cb4-363"><a href="#cb4-363" aria-hidden="true" tabindex="-1"></a>  <span class="at">Solubility_w=</span>Solubility_w,</span>
-<span id="cb4-364"><a href="#cb4-364" aria-hidden="true" tabindex="-1"></a>  <span class="at">logKow =</span> logKow,</span>
-<span id="cb4-365"><a href="#cb4-365" aria-hidden="true" tabindex="-1"></a>  <span class="at">Henry_law=</span>Henry_law,</span>
-<span id="cb4-366"><a href="#cb4-366" aria-hidden="true" tabindex="-1"></a>  <span class="at">DT50_lab=</span>DT50_lab, </span>
-<span id="cb4-367"><a href="#cb4-367" aria-hidden="true" tabindex="-1"></a>  <span class="at">BCF=</span>BCF,</span>
-<span id="cb4-368"><a href="#cb4-368" aria-hidden="true" tabindex="-1"></a>  <span class="at">NOEC_repro =</span> NOEC_repro,</span>
-<span id="cb4-369"><a href="#cb4-369" aria-hidden="true" tabindex="-1"></a>  <span class="at">LC50 =</span> LC50,</span>
-<span id="cb4-370"><a href="#cb4-370" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
-<span id="cb4-371"><a href="#cb4-371" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-372"><a href="#cb4-372" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-373"><a href="#cb4-373" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_chem_prop) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Molecule"</span>,</span>
-<span id="cb4-374"><a href="#cb4-374" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"CAS number"</span>, </span>
-<span id="cb4-375"><a href="#cb4-375" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Solubility in water (mg/L, 20°C)"</span>, </span>
-<span id="cb4-376"><a href="#cb4-376" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"logKow"</span>, </span>
-<span id="cb4-377"><a href="#cb4-377" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Henry law"</span>, </span>
-<span id="cb4-378"><a href="#cb4-378" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"DT~50~ (d, lab at 20°C)"</span>, </span>
-<span id="cb4-379"><a href="#cb4-379" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"BCF"</span>, </span>
-<span id="cb4-380"><a href="#cb4-380" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"NOEC (reproduction)"</span>, </span>
-<span id="cb4-381"><a href="#cb4-381" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"LC~50~"</span>)</span>
-<span id="cb4-382"><a href="#cb4-382" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-383"><a href="#cb4-383" aria-hidden="true" tabindex="-1"></a>df_chem_prop_t <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(df_chem_prop))</span>
-<span id="cb4-384"><a href="#cb4-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-385"><a href="#cb4-385" aria-hidden="true" tabindex="-1"></a>df_chem_prop_t <span class="ot">&lt;-</span> df_chem_prop_t <span class="sc">%&gt;%</span></span>
-<span id="cb4-386"><a href="#cb4-386" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"Property"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-387"><a href="#cb4-387" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Property <span class="sc">==</span> <span class="st">"Molecule"</span>))</span>
-<span id="cb4-388"><a href="#cb4-388" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_chem_prop_t) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Property"</span>, <span class="st">"EPX"</span>, <span class="st">"IMD"</span>)</span>
-<span id="cb4-389"><a href="#cb4-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-390"><a href="#cb4-390" aria-hidden="true" tabindex="-1"></a>df_chem_prop_t <span class="sc">|&gt;</span> </span>
-<span id="cb4-391"><a href="#cb4-391" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span>
-<span id="cb4-392"><a href="#cb4-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-393"><a href="#cb4-393" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-394"><a href="#cb4-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-395"><a href="#cb4-395" aria-hidden="true" tabindex="-1"></a><span class="fu">### Epoxiconazole (EPX)</span></span>
-<span id="cb4-396"><a href="#cb4-396" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-397"><a href="#cb4-397" aria-hidden="true" tabindex="-1"></a>Epoxiconazole (EPX) is a broad-spectrum fungicide from the azole family, used to control plant diseases caused by Ascomycetes, Basidiomycetes, and Deuteromycetes <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. It was commercialized by BASF SE in 1993 and applied to a variety of crops including cereals, soy, bananas, rice, coffee, beets, and turnips <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. Epoxiconazole has also been investigated for medical applications due to its antifungal properties, although its primary use has remained agricultural <span class="co">[</span><span class="ot">@hamdi_2022</span><span class="co">]</span>.</span>
-<span id="cb4-398"><a href="#cb4-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-399"><a href="#cb4-399" aria-hidden="true" tabindex="-1"></a>In France, EPX was widely applied on cultivated land, primarily as a foliar treatment. Before its withdrawal, approximately 200 tons were sold annually. Its market authorization was revoked by ANSES in 2019, and subsequently at the EU level in 2020.</span>
-<span id="cb4-400"><a href="#cb4-400" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-401"><a href="#cb4-401" aria-hidden="true" tabindex="-1"></a>Epoxiconazole is a sterol biosynthesis inhibitor (SBI) <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. It disrupts fungal metabolism by inhibiting mycelial growth, reducing conidia production, and limiting mycotoxin synthesis. Like other triazole fungicides, its main mode of action is the inhibition of cytochrome P450 14α-demethylase (CYP51), a key enzyme in the biosynthesis of sterols such as ergosterol <span class="co">[</span><span class="ot">@vandenbossche_1990; @zarn_2003</span><span class="co">]</span>. Ergosterol is an essential component of fungal cell membranes, and its disruption compromises fungal viability.</span>
-<span id="cb4-402"><a href="#cb4-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-403"><a href="#cb4-403" aria-hidden="true" tabindex="-1"></a>Beyond its antifungal activity, EPX has been shown to interact with endocrine pathways. It acts as an androgen receptor agonist and promotes the synthesis of sex steroid hormones in vitro, which can interfere with developmental processes and individual growth <span class="co">[</span><span class="ot">@kjaerstad_2010; @zarn_2003</span><span class="co">]</span>. EPX also showed to be carcinogenic on rats. EPX is therefore considered as a reprotoxic and a suspected carcenogenic <span class="co">[</span><span class="ot">@echa_2025a</span><span class="co">]</span>.</span>
-<span id="cb4-404"><a href="#cb4-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-405"><a href="#cb4-405" aria-hidden="true" tabindex="-1"></a>The half-life of epoxiconazole is 353.5 days in soil (20°C), 103.4 days in water-sediment (20°C) and 1000 days in water only (20°C) <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>, which makes it a very persistant substance in the environment. Its logK$_{ow}$ above 3 makes it likely to bind to the organic matter in soil. Overall, there is broad agreement in that this substance is Persistent, Bioaccumulative and Toxic (PBT) <span class="co">[</span><span class="ot">@echa_2025b</span><span class="co">]</span>.</span>
-<span id="cb4-406"><a href="#cb4-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-407"><a href="#cb4-407" aria-hidden="true" tabindex="-1"></a>On earthworms, epoxiconazole impacts growth, maturation and reproduction <span class="co">[</span><span class="ot">@bart_2020; @bart_2019</span><span class="co">]</span>. In field studies, it was shown to reduce the species diversity, anecic abundance and total biomass <span class="co">[</span><span class="ot">@amosse_2020</span><span class="co">]</span>.</span>
-<span id="cb4-408"><a href="#cb4-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-411"><a href="#cb4-411" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-412"><a href="#cb4-412" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: Overview of available ecotoxicological data on epoxiconazole (non exhaustive)</span></span>
-<span id="cb4-413"><a href="#cb4-413" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-EPXtox</span></span>
-<span id="cb4-414"><a href="#cb4-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-415"><a href="#cb4-415" aria-hidden="true" tabindex="-1"></a>df_EPX_tox <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb4-416"><a href="#cb4-416" aria-hidden="true" tabindex="-1"></a>  <span class="at">Species =</span> <span class="fu">c</span>(</span>
-<span id="cb4-417"><a href="#cb4-417" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish"</span>,</span>
-<span id="cb4-418"><a href="#cb4-418" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish"</span>,</span>
-<span id="cb4-419"><a href="#cb4-419" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>,</span>
-<span id="cb4-420"><a href="#cb4-420" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>,</span>
-<span id="cb4-421"><a href="#cb4-421" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Algae"</span>,</span>
-<span id="cb4-422"><a href="#cb4-422" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span>,</span>
-<span id="cb4-423"><a href="#cb4-423" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span></span>
-<span id="cb4-424"><a href="#cb4-424" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb4-425"><a href="#cb4-425" aria-hidden="true" tabindex="-1"></a>  <span class="at">Endpoint =</span> <span class="fu">c</span>(</span>
-<span id="cb4-426"><a href="#cb4-426" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LC50 (96 h)"</span>,</span>
-<span id="cb4-427"><a href="#cb4-427" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NOEC (reproduction, 90 d)"</span>,</span>
-<span id="cb4-428"><a href="#cb4-428" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EC50 (48 h)"</span>,</span>
-<span id="cb4-429"><a href="#cb4-429" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NOEC (reproduction, 21 days)"</span>,</span>
-<span id="cb4-430"><a href="#cb4-430" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 201 - EC50 (growth inhibition, 72 h)"</span>,</span>
-<span id="cb4-431"><a href="#cb4-431" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Acute LC50 (14 d)"</span>,</span>
-<span id="cb4-432"><a href="#cb4-432" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ISO 11268-2 - NOEC (reproduction, 56 d)"</span></span>
-<span id="cb4-433"><a href="#cb4-433" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb4-434"><a href="#cb4-434" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(</span>
-<span id="cb4-435"><a href="#cb4-435" aria-hidden="true" tabindex="-1"></a>    <span class="st">"3.2 mg/L"</span>,</span>
-<span id="cb4-436"><a href="#cb4-436" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0.01 mg/kg"</span>,</span>
-<span id="cb4-437"><a href="#cb4-437" aria-hidden="true" tabindex="-1"></a>    <span class="st">"8.9 mg/kg"</span>,</span>
-<span id="cb4-438"><a href="#cb4-438" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0.63 mg/L"</span>,</span>
-<span id="cb4-439"><a href="#cb4-439" aria-hidden="true" tabindex="-1"></a>    <span class="st">"6.7 g/L"</span>,</span>
-<span id="cb4-440"><a href="#cb4-440" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 500 mg/kg"</span>,</span>
-<span id="cb4-441"><a href="#cb4-441" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 3.24 mg/kg"</span></span>
-<span id="cb4-442"><a href="#cb4-442" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-443"><a href="#cb4-443" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-444"><a href="#cb4-444" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(df_EPX_tox)</span>
-<span id="cb4-445"><a href="#cb4-445" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-446"><a href="#cb4-446" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-447"><a href="#cb4-447" aria-hidden="true" tabindex="-1"></a><span class="fu">### Imidacloprid (IMD)</span></span>
-<span id="cb4-448"><a href="#cb4-448" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-449"><a href="#cb4-449" aria-hidden="true" tabindex="-1"></a>Imidacloprid (IMD) is a systemic insecticide belonging to the chloronicotinyl (neonicotinoid) family. It is widely used in agriculture across the globe to control sap-feeding insects such as plant hoppers, aphids, termites, Colorado potato beetles, fleas, white grubs, craneflies, crickets, and ants <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. Its applications included lawns and turf, as well as crops such as rice, cereals, maize, potatoes, and sugar beet. It was also used in veterinary medicine, notably in flea treatments for domestic pets. Imidacloprid was commercialized by Bayer in 1991 <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>.</span>
-<span id="cb4-450"><a href="#cb4-450" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-451"><a href="#cb4-451" aria-hidden="true" tabindex="-1"></a>In France, the use of neonicotinoids — including imidacloprid — was progressively restricted following the adoption of the 2016 law on the “reconquest of biodiversity, nature and landscapes” (loi pour la reconquête de la biodiversité, de la nature et des paysages). The European Union withdrew the market authorization for imidacloprid in 2020. Currently, only acetamiprid remains approved for use in France and the EU, primarily for veterinary purposes. A temporary derogation had allowed the use of imidacloprid and thiamethoxam for aphid-infested beet crops, but this exemption was definitively revoked in January 2023, reinforcing the ban on neonicotinoids following multiple regulatory actions at both French and European levels <span class="co">[</span><span class="ot">@anses_2020</span><span class="co">]</span>.</span>
-<span id="cb4-452"><a href="#cb4-452" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-453"><a href="#cb4-453" aria-hidden="true" tabindex="-1"></a>Imidacloprid exerts its toxic effects by acting as an agonist of the nicotinic acetylcholine receptors (nAChRs), leading to overstimulation and subsequent disruption of the central nervous system in target invertebrates <span class="co">[</span><span class="ot">@lewis_2006; @chen_2021</span><span class="co">]</span>. This mechanism makes it highly effective at low concentrations, but also raises concerns about its non-target effects, particularly on soil invertebrates such as earthworms.</span>
-<span id="cb4-454"><a href="#cb4-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-455"><a href="#cb4-455" aria-hidden="true" tabindex="-1"></a>Imidacloprid is also under assessment for endocrine disrupting <span class="co">[</span><span class="ot">@echa_2025b</span><span class="co">]</span>.</span>
-<span id="cb4-456"><a href="#cb4-456" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-457"><a href="#cb4-457" aria-hidden="true" tabindex="-1"></a>The half-life of imidacloprid is 2.3 years in fresh water (12°C), 1.1 years in freshwater-sediment (12°C) and 1.4 years in soil (12°C) <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>, which makes it a very persistant substance in the environment.</span>
-<span id="cb4-458"><a href="#cb4-458" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-459"><a href="#cb4-459" aria-hidden="true" tabindex="-1"></a>On earthworms, imidacloprid significatively impacts survival but also growth, maturation and reproduction <span class="co">[</span><span class="ot">@vanloon_2022; @pelosi_2016; @dittbrenner_2011</span><span class="co">]</span>. It was also shown to disturbe activities of carboxylesterase (CarE) and glutathione-S- transferases (GST) <span class="co">[</span><span class="ot">@wang_2019</span><span class="co">]</span>. More importantly, it affects earthworms' burrowing activity, essential for the various ecosystem functions endorsed by earthworms <span class="co">[</span><span class="ot">@capowiez_2006; @dittbrenner_2010</span><span class="co">]</span>.</span>
-<span id="cb4-460"><a href="#cb4-460" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-463"><a href="#cb4-463" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-464"><a href="#cb4-464" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: Overview of available ecotoxicological data on imidacloprid (non exhaustive)</span></span>
-<span id="cb4-465"><a href="#cb4-465" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-IMDtox</span></span>
-<span id="cb4-466"><a href="#cb4-466" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-467"><a href="#cb4-467" aria-hidden="true" tabindex="-1"></a>df_IMD_tox <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb4-468"><a href="#cb4-468" aria-hidden="true" tabindex="-1"></a>  <span class="at">Species =</span> <span class="fu">c</span>(</span>
-<span id="cb4-469"><a href="#cb4-469" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish - *C. variegatus*"</span>, </span>
-<span id="cb4-470"><a href="#cb4-470" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish - *O. mykiss*"</span>, </span>
-<span id="cb4-471"><a href="#cb4-471" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>, </span>
-<span id="cb4-472"><a href="#cb4-472" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>, </span>
-<span id="cb4-473"><a href="#cb4-473" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Algae - *S. capricornutum*"</span>, </span>
-<span id="cb4-474"><a href="#cb4-474" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span>,</span>
-<span id="cb4-475"><a href="#cb4-475" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span>,</span>
-<span id="cb4-476"><a href="#cb4-476" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Collembole - *F. candida*"</span>,</span>
-<span id="cb4-477"><a href="#cb4-477" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bird - *C. virginianus*"</span></span>
-<span id="cb4-478"><a href="#cb4-478" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb4-479"><a href="#cb4-479" aria-hidden="true" tabindex="-1"></a>  <span class="at">Endpoint =</span> <span class="fu">c</span>(</span>
-<span id="cb4-480"><a href="#cb4-480" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP 72-1 - LC50 (96 h)"</span>, </span>
-<span id="cb4-481"><a href="#cb4-481" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 210 - NOEC (reproduction, 31 days)"</span>, </span>
-<span id="cb4-482"><a href="#cb4-482" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP 72-2 - EC50 (immobilization, 48 h)"</span>, </span>
-<span id="cb4-483"><a href="#cb4-483" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP 72-4 - NOEC (reproduction, 21 days)"</span>, </span>
-<span id="cb4-484"><a href="#cb4-484" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 201 - EC50 (growth inhibition, 72 h)"</span>,</span>
-<span id="cb4-485"><a href="#cb4-485" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ISO 11268-2 - NOEC (reproduction, 56 d)"</span>,</span>
-<span id="cb4-486"><a href="#cb4-486" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 207 - LC50 (14 d)"</span>,</span>
-<span id="cb4-487"><a href="#cb4-487" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ISO/FDIS 11267(1998) - NOEC (reproduction, 28 d)"</span>,</span>
-<span id="cb4-488"><a href="#cb4-488" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP Guideline 71-4 - NOEC (reproduction, 20 wk)"</span></span>
-<span id="cb4-489"><a href="#cb4-489" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb4-490"><a href="#cb4-490" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(</span>
-<span id="cb4-491"><a href="#cb4-491" aria-hidden="true" tabindex="-1"></a>    <span class="st">"161 mg/L"</span>, </span>
-<span id="cb4-492"><a href="#cb4-492" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 9.02 mg/L"</span>, </span>
-<span id="cb4-493"><a href="#cb4-493" aria-hidden="true" tabindex="-1"></a>    <span class="st">"85 mg/L"</span>, </span>
-<span id="cb4-494"><a href="#cb4-494" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1.8 mg/L"</span>, </span>
-<span id="cb4-495"><a href="#cb4-495" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 100 mg/L"</span>,</span>
-<span id="cb4-496"><a href="#cb4-496" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 178 µg/kg"</span>,</span>
-<span id="cb4-497"><a href="#cb4-497" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10.7 mg/kg"</span>,</span>
-<span id="cb4-498"><a href="#cb4-498" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1.25 mg/kg"</span>,</span>
-<span id="cb4-499"><a href="#cb4-499" aria-hidden="true" tabindex="-1"></a>    <span class="st">"126 mg/kg diet"</span></span>
-<span id="cb4-500"><a href="#cb4-500" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-501"><a href="#cb4-501" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-502"><a href="#cb4-502" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(df_IMD_tox)</span>
-<span id="cb4-503"><a href="#cb4-503" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-504"><a href="#cb4-504" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-505"><a href="#cb4-505" aria-hidden="true" tabindex="-1"></a><span class="fu">### Environmental concentrations</span></span>
-<span id="cb4-506"><a href="#cb4-506" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-507"><a href="#cb4-507" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning=F, message=F}</span></span>
-<span id="cb4-508"><a href="#cb4-508" aria-hidden="true" tabindex="-1"></a>df_rescape <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_Rescape_long.csv"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-509"><a href="#cb4-509" aria-hidden="true" tabindex="-1"></a>  <span class="fu">subset</span>(pesticide <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"EPX"</span>, <span class="st">"IMD"</span>))</span>
-<span id="cb4-510"><a href="#cb4-510" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-511"><a href="#cb4-511" aria-hidden="true" tabindex="-1"></a>df_litt_soils <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_litt_EPX_IMD.xlsx"</span>), <span class="at">sheet=</span><span class="dv">2</span>)</span>
-<span id="cb4-512"><a href="#cb4-512" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, include=F}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"functions/fun.R"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">f_load_libraries_colors</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Earthworms and pesticides</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Earthworms used in this study {#sec-A}</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### Earthworm model - *Aporrectodea caliginosa*</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>*Aporrectodea caliginosa* (@fig-cali), an endogeic earthworm species, was the chosen biological model for it is considered highly representative of agricultural soil <span class="co">[</span><span class="ot">@bart_2018a</span><span class="co">]</span> and is part of the most sensitive agricultural species to pesticides <span class="co">[</span><span class="ot">@pelosi_2013</span><span class="co">]</span>. It is also a species we are able to cultivate under laboratory conditions (@sec-earthwormsbreeding).</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="al">![Adult *A. caliginosa* individual.](../photos/vdt_cali.png)</span>{#fig-cali width="50%"}</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Earthworm cultivation at EcoSys {#sec-earthwormsbreeding}</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>A further objective of this study is to evaluate the effects of a pesticides mixture on inter-individual variations of life-history traits and behavior of *A. caliginosa*. To achieve this, it is essential to use individuals whose genetic diversity is representative of a natural population with limited exposure to plant protection products (PPPs). This excludes the use of the breeding stock maintained at EcoSys, as the individuals have been kept in a closed system since the initiation of the breeding program (for over 5 years), with no consideration for maintaining genetic diversity. Therefore, it was necessary to establish a new *A. caliginosa* breeding population appropriate for the scientific questions addressed in this study.</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Initially collected individuals.</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>To initiate the culture, individuals were collected from a natural population in a permanent grassland in Versailles (48°48′ N, 2°5′ E, called "les Closeaux") where no pesticides have been applied for more than 25 years (@fig-terrain). The individuals were identified using a binocular microscope and an identification key. Ten sampling sessions were conducted in the fall of 2023 and the spring of 2024, yielding a total of 325 individuals.</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="al">![Collection of *Aporrectodea caliginosa* and *Aporrectodea icterica* individuals in a meadow at the Château de Versailles and installation of the new culture in our laboratory.](../photos/Photo_versailles_lab_culture.png)</span>{#fig-terrain width="50%"}</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">##### Workflow</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>Individuals are bred at 18°C in 1 L vessels in groups of five individuals (@fig-terrain) using a loamy soil texture called Closeaux soil (based on the texture definition of the Food and Agriculture Organization of the United Nations (FAO)), sampled from the same meadow as initial individuals. Pesticides found in the soil are summarized in @fig-closeauxPPP and its general properties in @tbl-clx. The soil was collected from the top 0-20 cm, air-dried and crushed to pass a 2 mm mesh. Soil culture is kept with a soil water-holding capacity (WHC) of 60-70%. Individuals are fed with horse dung frost and defrosted twice before being milled (<span class="sc">\&gt;</span> 1mm) as presented in @lowe_2005. They are fed each month with the equivalent of around 6 g of dry horse dung which are given with a WHC of 60-70%.</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Characteristics                 <span class="pp">|</span> Value <span class="pp">|</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="pp">|:--------------------------------|:------|</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Clay (<span class="sc">\&lt;</span> 2 µm, g/kg)            <span class="pp">|</span> 226.0 <span class="pp">|</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Fine silt (2-20 µm, g/kg)       <span class="pp">|</span> 174.1 <span class="pp">|</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Coarse silt (20-50 µm, g/kg)    <span class="pp">|</span> 298.9 <span class="pp">|</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Fine sand (50-200 µm, g/kg)     <span class="pp">|</span> 239.1 <span class="pp">|</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Coarse sand (200-2000 µm, g/kg) <span class="pp">|</span> 47.9  <span class="pp">|</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> CaCO3 total (g/kg)              <span class="pp">|</span> 23.3  <span class="pp">|</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Organic matter (g/kg)           <span class="pp">|</span> 32.6  <span class="pp">|</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> P2O5 (g/kg)                     <span class="pp">|</span> 0.1   <span class="pp">|</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Organic carbon (g/kg)           <span class="pp">|</span> 18.9  <span class="pp">|</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Total nitrogen (N) (g/kg)       <span class="pp">|</span> 1.5   <span class="pp">|</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> C/N                             <span class="pp">|</span> 12.7  <span class="pp">|</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> pH                              <span class="pp">|</span> 7.5   <span class="pp">|</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Total Cu (mg/kg)                <span class="pp">|</span> 25.2  <span class="pp">|</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>: Closeaux soil characteristics {#tbl-clx .hover}</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning=F, message=F}</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Concentrations of pesticides found in the cultivation soil for our earthworms. </span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-closeauxPPP</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 12</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>col_bar <span class="ot">&lt;-</span> Nord_polar[<span class="dv">4</span>]</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Data of measured pesticides concentrations in the Closeaux soil </span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_pesticides_closeaux_soil.xlsx"</span>), <span class="at">sheet=</span><span class="st">"Clx"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Conc =</span> <span class="fu">round</span>(C_calc, <span class="dv">2</span>))</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Separation per scale</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span>                                 <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Molecule =</span> <span class="fu">fct_reorder</span>(Molecule, Conc)) <span class="sc">|&gt;</span>       <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">facet =</span> <span class="fu">case_when</span>(Conc <span class="sc">&lt;=</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">1</span>,                 <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">2</span>,       <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">1000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">100</span> <span class="sc">~</span> <span class="dv">3</span>,     <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">10000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">1000</span> <span class="sc">~</span> <span class="dv">4</span>,   <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10000</span> <span class="sc">~</span><span class="dv">5</span>)) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>df_PPPclx_10 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">1</span>) </span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>df_PPPclx_100 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">2</span>) </span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>df_PPPclx_1000 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">3</span>) </span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>df_PPPclx_10000 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">4</span>) </span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>df_PPPclx_100000 <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> <span class="fu">subset</span>(facet<span class="sc">==</span><span class="dv">5</span>) </span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>Size_text <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>size_label <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>alpha_col <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>plot_1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_10, </span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration (ng/kg)"</span></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>plot_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_100, </span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>      <span class="at">geom=</span><span class="st">"rect"</span>, </span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin=</span><span class="st">"atrazine-desisopropyl"</span>, </span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmax=</span><span class="st">"carbendazin"</span>, </span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin=</span><span class="dv">0</span>, </span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax=</span><span class="dv">95</span>, </span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>      <span class="at">color=</span>col_EPX,</span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill=</span>col_EPX,</span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>      <span class="at">size=</span><span class="fl">1.2</span></span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>      )<span class="sc">+</span></span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom=</span><span class="st">"rect"</span>, </span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin=</span><span class="st">"Flusilazole"</span>, </span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax=</span><span class="st">"fluopyram"</span>, </span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin=</span><span class="dv">0</span>, </span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax=</span><span class="dv">22</span>, </span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_IMD, </span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_IMD, </span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="fl">1.2</span></span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
+<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
+<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration (ng/kg)"</span></span>
+<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">100</span>)<span class="sc">+</span></span>
+<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
+<span id="cb3-151"><a href="#cb3-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a>plot_3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_1000, </span>
+<span id="cb3-155"><a href="#cb3-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-156"><a href="#cb3-156" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
+<span id="cb3-157"><a href="#cb3-157" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
+<span id="cb3-158"><a href="#cb3-158" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-159"><a href="#cb3-159" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb3-160"><a href="#cb3-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb3-161"><a href="#cb3-161" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-162"><a href="#cb3-162" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
+<span id="cb3-163"><a href="#cb3-163" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
+<span id="cb3-164"><a href="#cb3-164" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-165"><a href="#cb3-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb3-166"><a href="#cb3-166" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
+<span id="cb3-167"><a href="#cb3-167" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
+<span id="cb3-168"><a href="#cb3-168" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-169"><a href="#cb3-169" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
+<span id="cb3-170"><a href="#cb3-170" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-171"><a href="#cb3-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-172"><a href="#cb3-172" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
+<span id="cb3-173"><a href="#cb3-173" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration</span><span class="sc">\n</span><span class="st"> (ng/kg)"</span></span>
+<span id="cb3-174"><a href="#cb3-174" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-175"><a href="#cb3-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
+<span id="cb3-176"><a href="#cb3-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb3-177"><a href="#cb3-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-178"><a href="#cb3-178" aria-hidden="true" tabindex="-1"></a>plot_4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb3-179"><a href="#cb3-179" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_10000, </span>
+<span id="cb3-180"><a href="#cb3-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-181"><a href="#cb3-181" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
+<span id="cb3-182"><a href="#cb3-182" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
+<span id="cb3-183"><a href="#cb3-183" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-184"><a href="#cb3-184" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
+<span id="cb3-188"><a href="#cb3-188" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
+<span id="cb3-189"><a href="#cb3-189" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb3-191"><a href="#cb3-191" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
+<span id="cb3-192"><a href="#cb3-192" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
+<span id="cb3-193"><a href="#cb3-193" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-194"><a href="#cb3-194" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
+<span id="cb3-195"><a href="#cb3-195" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-196"><a href="#cb3-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-197"><a href="#cb3-197" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
+<span id="cb3-198"><a href="#cb3-198" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration</span><span class="sc">\n</span><span class="st"> (ng/kg)"</span></span>
+<span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-200"><a href="#cb3-200" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
+<span id="cb3-201"><a href="#cb3-201" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb3-202"><a href="#cb3-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a>plot_5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb3-204"><a href="#cb3-204" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_100000,</span>
+<span id="cb3-205"><a href="#cb3-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-206"><a href="#cb3-206" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
+<span id="cb3-207"><a href="#cb3-207" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
+<span id="cb3-208"><a href="#cb3-208" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-209"><a href="#cb3-209" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb3-210"><a href="#cb3-210" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb3-211"><a href="#cb3-211" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-212"><a href="#cb3-212" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
+<span id="cb3-213"><a href="#cb3-213" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.4</span></span>
+<span id="cb3-214"><a href="#cb3-214" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-215"><a href="#cb3-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb3-216"><a href="#cb3-216" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(Conc)), </span>
+<span id="cb3-217"><a href="#cb3-217" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
+<span id="cb3-218"><a href="#cb3-218" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-219"><a href="#cb3-219" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
+<span id="cb3-220"><a href="#cb3-220" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-221"><a href="#cb3-221" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-222"><a href="#cb3-222" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"Pesticides"</span>, </span>
+<span id="cb3-223"><a href="#cb3-223" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span><span class="st">"Soil concentration</span><span class="sc">\n</span><span class="st"> (ng/kg)"</span></span>
+<span id="cb3-224"><a href="#cb3-224" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-225"><a href="#cb3-225" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
+<span id="cb3-226"><a href="#cb3-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-228"><a href="#cb3-228" aria-hidden="true" tabindex="-1"></a><span class="co">#plot</span></span>
+<span id="cb3-229"><a href="#cb3-229" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_1, plot_2, plot_3, plot_4, plot_5,</span>
+<span id="cb3-230"><a href="#cb3-230" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncol=</span><span class="dv">3</span>, </span>
+<span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a>             <span class="at">layout_matrix =</span> <span class="fu">cbind</span>(</span>
+<span id="cb3-232"><a href="#cb3-232" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), </span>
+<span id="cb3-233"><a href="#cb3-233" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), </span>
+<span id="cb3-234"><a href="#cb3-234" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>), </span>
+<span id="cb3-235"><a href="#cb3-235" aria-hidden="true" tabindex="-1"></a>               <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)</span>
+<span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Division of the pesticides in groups of similar concentration levels.</span>
+<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning=F, message=F, include=F}</span></span>
+<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Concentrations of pesticides found in the cultivation soil for our earthworms. </span></span>
+<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-closeauxPPPfr</span></span>
+<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
+<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 12</span></span>
+<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-249"><a href="#cb3-249" aria-hidden="true" tabindex="-1"></a>col_bar <span class="ot">&lt;-</span> Nord_polar[<span class="dv">4</span>]</span>
+<span id="cb3-250"><a href="#cb3-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-251"><a href="#cb3-251" aria-hidden="true" tabindex="-1"></a><span class="co"># Data of measured pesticides concentrations in the Closeaux soil </span></span>
+<span id="cb3-252"><a href="#cb3-252" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/Data_pesticides_closeaux_soil.xlsx"</span>), <span class="at">sheet=</span><span class="st">"Clx"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-253"><a href="#cb3-253" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Conc =</span> <span class="fu">round</span>(C_calc, <span class="dv">3</span>))</span>
+<span id="cb3-254"><a href="#cb3-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-255"><a href="#cb3-255" aria-hidden="true" tabindex="-1"></a><span class="co"># Separation per scale</span></span>
+<span id="cb3-256"><a href="#cb3-256" aria-hidden="true" tabindex="-1"></a>df_PPPclx <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span>                                 <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-257"><a href="#cb3-257" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Molecule =</span> <span class="fu">fct_reorder</span>(Molecule, Conc)) <span class="sc">|&gt;</span>       <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-258"><a href="#cb3-258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">facet =</span> <span class="fu">case_when</span>(Conc <span class="sc">&lt;=</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">1</span>,                 <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-259"><a href="#cb3-259" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">2</span>,       <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-260"><a href="#cb3-260" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">1000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">100</span> <span class="sc">~</span> <span class="dv">3</span>,     <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-261"><a href="#cb3-261" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">10000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">1000</span> <span class="sc">~</span> <span class="dv">4</span>,   <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-262"><a href="#cb3-262" aria-hidden="true" tabindex="-1"></a>                           Conc<span class="sc">&lt;=</span><span class="dv">100000</span> <span class="sc">&amp;</span> Conc<span class="sc">&gt;</span><span class="dv">10000</span> <span class="sc">~</span><span class="dv">5</span>)) <span class="co"># &lt;1&gt;</span></span>
+<span id="cb3-263"><a href="#cb3-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-264"><a href="#cb3-264" aria-hidden="true" tabindex="-1"></a>df_PPPclx_found <span class="ot">&lt;-</span> df_PPPclx <span class="sc">|&gt;</span> </span>
+<span id="cb3-265"><a href="#cb3-265" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Conc <span class="sc">&gt;</span> <span class="dv">1</span>)</span>
+<span id="cb3-266"><a href="#cb3-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-267"><a href="#cb3-267" aria-hidden="true" tabindex="-1"></a>Size_text <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb3-268"><a href="#cb3-268" aria-hidden="true" tabindex="-1"></a>size_label <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb3-269"><a href="#cb3-269" aria-hidden="true" tabindex="-1"></a>alpha_col <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb3-270"><a href="#cb3-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-271"><a href="#cb3-271" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb3-272"><a href="#cb3-272" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span>df_PPPclx_found, </span>
+<span id="cb3-273"><a href="#cb3-273" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb3-274"><a href="#cb3-274" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>Molecule, </span>
+<span id="cb3-275"><a href="#cb3-275" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Conc</span>
+<span id="cb3-276"><a href="#cb3-276" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-277"><a href="#cb3-277" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb3-278"><a href="#cb3-278" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-279"><a href="#cb3-279" aria-hidden="true" tabindex="-1"></a>      <span class="at">geom=</span><span class="st">"rect"</span>, </span>
+<span id="cb3-280"><a href="#cb3-280" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin=</span><span class="st">"atrazine-desisopropyl"</span>, </span>
+<span id="cb3-281"><a href="#cb3-281" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmax=</span><span class="st">"carbendazin"</span>, </span>
+<span id="cb3-282"><a href="#cb3-282" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin=</span><span class="dv">0</span>, </span>
+<span id="cb3-283"><a href="#cb3-283" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax=</span><span class="dv">95</span>, </span>
+<span id="cb3-284"><a href="#cb3-284" aria-hidden="true" tabindex="-1"></a>      <span class="at">color=</span>col_EPX,</span>
+<span id="cb3-285"><a href="#cb3-285" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill=</span>col_EPX,</span>
+<span id="cb3-286"><a href="#cb3-286" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
+<span id="cb3-287"><a href="#cb3-287" aria-hidden="true" tabindex="-1"></a>      <span class="at">size=</span><span class="fl">0.5</span></span>
+<span id="cb3-288"><a href="#cb3-288" aria-hidden="true" tabindex="-1"></a>      )<span class="sc">+</span></span>
+<span id="cb3-289"><a href="#cb3-289" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb3-290"><a href="#cb3-290" aria-hidden="true" tabindex="-1"></a>    <span class="at">geom=</span><span class="st">"rect"</span>, </span>
+<span id="cb3-291"><a href="#cb3-291" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin=</span><span class="st">"Flusilazole"</span>, </span>
+<span id="cb3-292"><a href="#cb3-292" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmax=</span><span class="st">"fluopyram"</span>, </span>
+<span id="cb3-293"><a href="#cb3-293" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin=</span><span class="dv">0</span>, </span>
+<span id="cb3-294"><a href="#cb3-294" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymax=</span><span class="dv">22</span>, </span>
+<span id="cb3-295"><a href="#cb3-295" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_IMD, </span>
+<span id="cb3-296"><a href="#cb3-296" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.2</span>, </span>
+<span id="cb3-297"><a href="#cb3-297" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_IMD, </span>
+<span id="cb3-298"><a href="#cb3-298" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="fl">0.5</span></span>
+<span id="cb3-299"><a href="#cb3-299" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-300"><a href="#cb3-300" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb3-301"><a href="#cb3-301" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-302"><a href="#cb3-302" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span>col_bar, </span>
+<span id="cb3-303"><a href="#cb3-303" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span>alpha_col</span>
+<span id="cb3-304"><a href="#cb3-304" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-305"><a href="#cb3-305" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb3-306"><a href="#cb3-306" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">signif</span>(Conc,<span class="dv">2</span>)), </span>
+<span id="cb3-307"><a href="#cb3-307" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, </span>
+<span id="cb3-308"><a href="#cb3-308" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span>col_bar, </span>
+<span id="cb3-309"><a href="#cb3-309" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span>size_label</span>
+<span id="cb3-310"><a href="#cb3-310" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-311"><a href="#cb3-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb3-312"><a href="#cb3-312" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-313"><a href="#cb3-313" aria-hidden="true" tabindex="-1"></a>    <span class="at">x     =</span> <span class="st">""</span>, </span>
+<span id="cb3-314"><a href="#cb3-314" aria-hidden="true" tabindex="-1"></a>    <span class="at">y     =</span> <span class="st">"Concentration dans le sol (ng/kg)"</span></span>
+<span id="cb3-315"><a href="#cb3-315" aria-hidden="true" tabindex="-1"></a>    )<span class="sc">+</span></span>
+<span id="cb3-316"><a href="#cb3-316" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(Size_text)<span class="sc">+</span></span>
+<span id="cb3-317"><a href="#cb3-317" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb3-318"><a href="#cb3-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-319"><a href="#cb3-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-320"><a href="#cb3-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-321"><a href="#cb3-321" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-322"><a href="#cb3-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-323"><a href="#cb3-323" aria-hidden="true" tabindex="-1"></a><span class="fu">#### DNA barcoding</span></span>
+<span id="cb3-324"><a href="#cb3-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-325"><a href="#cb3-325" aria-hidden="true" tabindex="-1"></a>As *A. caliginosa* is a complex of species, DNA barcoding was perform on 10 individuals from each culture (original culture and our new culture). The results summarized by @fig-resbarcoding show the existence of individuals from two different lineages in both cultures.</span>
+<span id="cb3-326"><a href="#cb3-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-327"><a href="#cb3-327" aria-hidden="true" tabindex="-1"></a>PARLER IMPLICATION POUR NOUS</span>
+<span id="cb3-328"><a href="#cb3-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-329"><a href="#cb3-329" aria-hidden="true" tabindex="-1"></a><span class="al">![DNA barcoding results. Individuals from the original culture are highlighted in green when individual from the Versailles meadow are highlighted in yellow.](../photos/DNA_barcoding.png)</span>{#fig-resbarcoding}</span>
+<span id="cb3-330"><a href="#cb3-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-331"><a href="#cb3-331" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pesticides of interest</span></span>
+<span id="cb3-332"><a href="#cb3-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-333"><a href="#cb3-333" aria-hidden="true" tabindex="-1"></a>Because our aim was to study a mixture of pesticides representative of earthworm exposure in agricultural soils, a crucial step of the study was to select two relevant pesticides.</span>
+<span id="cb3-334"><a href="#cb3-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-335"><a href="#cb3-335" aria-hidden="true" tabindex="-1"></a><span class="fu">### Choice of Epoxiconazole and Imidacloprid</span></span>
+<span id="cb3-336"><a href="#cb3-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-337"><a href="#cb3-337" aria-hidden="true" tabindex="-1"></a>The selection was made in fall 2023 and was guided by two main criteria: the ubiquity and persistence of pesticide residues in soils, and the availability of ecotoxicological data on earthworms.</span>
+<span id="cb3-338"><a href="#cb3-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-339"><a href="#cb3-339" aria-hidden="true" tabindex="-1"></a>@froger_2023 conducted an extensive nationwide survey of pesticide contamination in French soils, monitoring 111 pesticide residues across 47 sites under various land uses. Epoxiconazole and imidacloprid were detected in 47% and 9% of all sites, respectively, with median concentrations of 5.8 ng/g and 2.9 ng/g, and maximum concentrations of 23.6 ng/g and 13.8 ng/g. In arable lands, epoxiconazole, bixafen, fluopyram, fluxapyroxad, glyphosate &amp; AMPA, diflufenican, and terfluthrin were among the most frequently detected compounds.</span>
+<span id="cb3-340"><a href="#cb3-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-341"><a href="#cb3-341" aria-hidden="true" tabindex="-1"></a>In a complementary study, @pelosi_2021 investigated the exposure of earthworms to 31 pesticide residues in both treated and untreated habitats within an intensive agricultural landscape in France (Spring 2016, Long-Term Socio-Ecological Research Site, Zone Atelier Plaine &amp; Val de Sèvre). Diflufenican, imidacloprid, boscalid, and epoxiconazole were among the most frequently detected residues, found in more than 80% of sampled soils.</span>
+<span id="cb3-342"><a href="#cb3-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-343"><a href="#cb3-343" aria-hidden="true" tabindex="-1"></a>Based on these two studies, we initially targeted a range of pesticide residues. Ultimately, we selected epoxiconazole and imidacloprid due to the availability of toxicological data and their known effects on earthworms <span class="co">[</span><span class="ot">@bart_2020; @bart_2019a; @pelosi_2016; @capowiez_2006; @dittbrenner_2011; @dittbrenner_2010; @vanloon_2022; @wang_2019</span><span class="co">]</span>. Despite being now banned in the EU, both pesticides continue to be of concern due to their ubiquity and persistence in the environment. These pesticides have been shown to persist in agricultural soils, with concentrations that can still pose adverse effects on non-target organisms, such as earthworms. Imidacloprid is particularly known for impairing earthworm bioturbation, a critical process that supports many ecosystem functions <span class="co">[</span><span class="ot">@chen_2021</span><span class="co">]</span>. Both pesticides' enduring presence in the environment highlights the relevance of studying their long-term ecological impacts. This choice aligns with the objectives of the EEWORM ANR project, which aims to investigate the eco-evolutionary dynamics of earthworms under pesticide exposure and the resulting impacts on ecosystem functions.</span>
+<span id="cb3-344"><a href="#cb3-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-345"><a href="#cb3-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=F, warning=F}</span></span>
+<span id="cb3-346"><a href="#cb3-346" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-chemprop</span></span>
+<span id="cb3-347"><a href="#cb3-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: Physico-chemical properties of epoxiconazole and imidacloprid (data from PPDB).</span></span>
+<span id="cb3-348"><a href="#cb3-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-349"><a href="#cb3-349" aria-hidden="true" tabindex="-1"></a>molec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"EPX"</span>, <span class="st">"IMD"</span>)</span>
+<span id="cb3-350"><a href="#cb3-350" aria-hidden="true" tabindex="-1"></a>CAS <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"133855-98-8"</span>, <span class="st">"138261-41-3"</span>)</span>
+<span id="cb3-351"><a href="#cb3-351" aria-hidden="true" tabindex="-1"></a>Solubility_w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">6.63</span>, <span class="dv">610</span>) <span class="co"># mg/L</span></span>
+<span id="cb3-352"><a href="#cb3-352" aria-hidden="true" tabindex="-1"></a>logKow <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"3.3 (high)"</span>, <span class="st">"0.57 (low)"</span>)</span>
+<span id="cb3-353"><a href="#cb3-353" aria-hidden="true" tabindex="-1"></a>Henry_law <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"1.649e-05 (non-volatile)"</span>, <span class="st">"1.7e-10 (non-volatile)"</span>) </span>
+<span id="cb3-354"><a href="#cb3-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-355"><a href="#cb3-355" aria-hidden="true" tabindex="-1"></a>DT50_lab <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">353.5</span>,<span class="dv">187</span>) <span class="co"># d at 20°C</span></span>
+<span id="cb3-356"><a href="#cb3-356" aria-hidden="true" tabindex="-1"></a>BCF <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">70</span>, <span class="cn">NA</span>)</span>
+<span id="cb3-357"><a href="#cb3-357" aria-hidden="true" tabindex="-1"></a>NOEC_repro <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">3.24</span>, <span class="fl">0.178</span>)</span>
+<span id="cb3-358"><a href="#cb3-358" aria-hidden="true" tabindex="-1"></a>LC50 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"&gt;500"</span>, <span class="fl">10.7</span>)</span>
+<span id="cb3-359"><a href="#cb3-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-360"><a href="#cb3-360" aria-hidden="true" tabindex="-1"></a>df_chem_prop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-361"><a href="#cb3-361" aria-hidden="true" tabindex="-1"></a>  <span class="at">molec=</span>molec,</span>
+<span id="cb3-362"><a href="#cb3-362" aria-hidden="true" tabindex="-1"></a>  <span class="at">CAS=</span>CAS,</span>
+<span id="cb3-363"><a href="#cb3-363" aria-hidden="true" tabindex="-1"></a>  <span class="at">Solubility_w=</span>Solubility_w,</span>
+<span id="cb3-364"><a href="#cb3-364" aria-hidden="true" tabindex="-1"></a>  <span class="at">logKow =</span> logKow,</span>
+<span id="cb3-365"><a href="#cb3-365" aria-hidden="true" tabindex="-1"></a>  <span class="at">Henry_law=</span>Henry_law,</span>
+<span id="cb3-366"><a href="#cb3-366" aria-hidden="true" tabindex="-1"></a>  <span class="at">DT50_lab=</span>DT50_lab, </span>
+<span id="cb3-367"><a href="#cb3-367" aria-hidden="true" tabindex="-1"></a>  <span class="at">BCF=</span>BCF,</span>
+<span id="cb3-368"><a href="#cb3-368" aria-hidden="true" tabindex="-1"></a>  <span class="at">NOEC_repro =</span> NOEC_repro,</span>
+<span id="cb3-369"><a href="#cb3-369" aria-hidden="true" tabindex="-1"></a>  <span class="at">LC50 =</span> LC50,</span>
+<span id="cb3-370"><a href="#cb3-370" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb3-371"><a href="#cb3-371" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-372"><a href="#cb3-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-373"><a href="#cb3-373" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_chem_prop) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Molecule"</span>,</span>
+<span id="cb3-374"><a href="#cb3-374" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"CAS number"</span>, </span>
+<span id="cb3-375"><a href="#cb3-375" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Solubility in water (mg/L, 20°C)"</span>, </span>
+<span id="cb3-376"><a href="#cb3-376" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"logKow"</span>, </span>
+<span id="cb3-377"><a href="#cb3-377" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Henry law"</span>, </span>
+<span id="cb3-378"><a href="#cb3-378" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"DT~50~ (d, lab at 20°C)"</span>, </span>
+<span id="cb3-379"><a href="#cb3-379" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"BCF"</span>, </span>
+<span id="cb3-380"><a href="#cb3-380" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"NOEC (reproduction)"</span>, </span>
+<span id="cb3-381"><a href="#cb3-381" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"LC~50~"</span>)</span>
+<span id="cb3-382"><a href="#cb3-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-383"><a href="#cb3-383" aria-hidden="true" tabindex="-1"></a>df_chem_prop_t <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(df_chem_prop))</span>
+<span id="cb3-384"><a href="#cb3-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-385"><a href="#cb3-385" aria-hidden="true" tabindex="-1"></a>df_chem_prop_t <span class="ot">&lt;-</span> df_chem_prop_t <span class="sc">%&gt;%</span></span>
+<span id="cb3-386"><a href="#cb3-386" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"Property"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-387"><a href="#cb3-387" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Property <span class="sc">==</span> <span class="st">"Molecule"</span>))</span>
+<span id="cb3-388"><a href="#cb3-388" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_chem_prop_t) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Property"</span>, <span class="st">"EPX"</span>, <span class="st">"IMD"</span>)</span>
+<span id="cb3-389"><a href="#cb3-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-390"><a href="#cb3-390" aria-hidden="true" tabindex="-1"></a>df_chem_prop_t <span class="sc">|&gt;</span> </span>
+<span id="cb3-391"><a href="#cb3-391" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span>
+<span id="cb3-392"><a href="#cb3-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-393"><a href="#cb3-393" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-394"><a href="#cb3-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-395"><a href="#cb3-395" aria-hidden="true" tabindex="-1"></a><span class="fu">### Epoxiconazole (EPX)</span></span>
+<span id="cb3-396"><a href="#cb3-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-397"><a href="#cb3-397" aria-hidden="true" tabindex="-1"></a>Epoxiconazole (EPX) is a broad-spectrum fungicide from the azole family, used to control plant diseases caused by Ascomycetes, Basidiomycetes, and Deuteromycetes <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. It was commercialized by BASF SE in 1993 and applied to a variety of crops including cereals, soy, bananas, rice, coffee, beets, and turnips <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. Epoxiconazole has also been investigated for medical applications due to its antifungal properties, although its primary use has remained agricultural <span class="co">[</span><span class="ot">@hamdi_2022</span><span class="co">]</span>.</span>
+<span id="cb3-398"><a href="#cb3-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-399"><a href="#cb3-399" aria-hidden="true" tabindex="-1"></a>In France, EPX was widely applied on cultivated land, primarily as a foliar treatment. Before its withdrawal, approximately 200 tons were sold annually. Its market authorization was revoked by ANSES in 2019, and subsequently at the EU level in 2020.</span>
+<span id="cb3-400"><a href="#cb3-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-401"><a href="#cb3-401" aria-hidden="true" tabindex="-1"></a>Epoxiconazole is a sterol biosynthesis inhibitor (SBI) <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. It disrupts fungal metabolism by inhibiting mycelial growth, reducing conidia production, and limiting mycotoxin synthesis. Like other triazole fungicides, its main mode of action is the inhibition of cytochrome P450 14α-demethylase (CYP51), a key enzyme in the biosynthesis of sterols such as ergosterol <span class="co">[</span><span class="ot">@vandenbossche_1990; @zarn_2003</span><span class="co">]</span>. Ergosterol is an essential component of fungal cell membranes, and its disruption compromises fungal viability.</span>
+<span id="cb3-402"><a href="#cb3-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-403"><a href="#cb3-403" aria-hidden="true" tabindex="-1"></a>Beyond its antifungal activity, EPX has been shown to interact with endocrine pathways. It acts as an androgen receptor agonist and promotes the synthesis of sex steroid hormones in vitro, which can interfere with developmental processes and individual growth <span class="co">[</span><span class="ot">@kjaerstad_2010; @zarn_2003</span><span class="co">]</span>. EPX also showed to be carcinogenic on rats. EPX is therefore considered as a reprotoxic and a suspected carcenogenic <span class="co">[</span><span class="ot">@echa_2025a</span><span class="co">]</span>.</span>
+<span id="cb3-404"><a href="#cb3-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-405"><a href="#cb3-405" aria-hidden="true" tabindex="-1"></a>The half-life of epoxiconazole is 353.5 days in soil (20°C), 103.4 days in water-sediment (20°C) and 1000 days in water only (20°C) <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>, which makes it a very persistant substance in the environment. Its logK$_{ow}$ above 3 makes it likely to bind to the organic matter in soil. Overall, there is broad agreement in that this substance is Persistent, Bioaccumulative and Toxic (PBT) <span class="co">[</span><span class="ot">@echa_2025b</span><span class="co">]</span>.</span>
+<span id="cb3-406"><a href="#cb3-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-407"><a href="#cb3-407" aria-hidden="true" tabindex="-1"></a>On earthworms, epoxiconazole impacts growth, maturation and reproduction <span class="co">[</span><span class="ot">@bart_2020; @bart_2019</span><span class="co">]</span>. In field studies, it was shown to reduce the species diversity, anecic abundance and total biomass <span class="co">[</span><span class="ot">@amosse_2020</span><span class="co">]</span>.</span>
+<span id="cb3-408"><a href="#cb3-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-411"><a href="#cb3-411" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb3-412"><a href="#cb3-412" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: Overview of available ecotoxicological data on epoxiconazole (non exhaustive)</span></span>
+<span id="cb3-413"><a href="#cb3-413" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-EPXtox</span></span>
+<span id="cb3-414"><a href="#cb3-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-415"><a href="#cb3-415" aria-hidden="true" tabindex="-1"></a>df_EPX_tox <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-416"><a href="#cb3-416" aria-hidden="true" tabindex="-1"></a>  <span class="at">Species =</span> <span class="fu">c</span>(</span>
+<span id="cb3-417"><a href="#cb3-417" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish"</span>,</span>
+<span id="cb3-418"><a href="#cb3-418" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish"</span>,</span>
+<span id="cb3-419"><a href="#cb3-419" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>,</span>
+<span id="cb3-420"><a href="#cb3-420" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>,</span>
+<span id="cb3-421"><a href="#cb3-421" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Algae"</span>,</span>
+<span id="cb3-422"><a href="#cb3-422" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span>,</span>
+<span id="cb3-423"><a href="#cb3-423" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span></span>
+<span id="cb3-424"><a href="#cb3-424" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-425"><a href="#cb3-425" aria-hidden="true" tabindex="-1"></a>  <span class="at">Endpoint =</span> <span class="fu">c</span>(</span>
+<span id="cb3-426"><a href="#cb3-426" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LC50 (96 h)"</span>,</span>
+<span id="cb3-427"><a href="#cb3-427" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NOEC (reproduction, 90 d)"</span>,</span>
+<span id="cb3-428"><a href="#cb3-428" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EC50 (48 h)"</span>,</span>
+<span id="cb3-429"><a href="#cb3-429" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NOEC (reproduction, 21 days)"</span>,</span>
+<span id="cb3-430"><a href="#cb3-430" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 201 - EC50 (growth inhibition, 72 h)"</span>,</span>
+<span id="cb3-431"><a href="#cb3-431" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Acute LC50 (14 d)"</span>,</span>
+<span id="cb3-432"><a href="#cb3-432" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ISO 11268-2 - NOEC (reproduction, 56 d)"</span></span>
+<span id="cb3-433"><a href="#cb3-433" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-434"><a href="#cb3-434" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(</span>
+<span id="cb3-435"><a href="#cb3-435" aria-hidden="true" tabindex="-1"></a>    <span class="st">"3.2 mg/L"</span>,</span>
+<span id="cb3-436"><a href="#cb3-436" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0.01 mg/kg"</span>,</span>
+<span id="cb3-437"><a href="#cb3-437" aria-hidden="true" tabindex="-1"></a>    <span class="st">"8.9 mg/kg"</span>,</span>
+<span id="cb3-438"><a href="#cb3-438" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0.63 mg/L"</span>,</span>
+<span id="cb3-439"><a href="#cb3-439" aria-hidden="true" tabindex="-1"></a>    <span class="st">"6.7 g/L"</span>,</span>
+<span id="cb3-440"><a href="#cb3-440" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 500 mg/kg"</span>,</span>
+<span id="cb3-441"><a href="#cb3-441" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 3.24 mg/kg"</span></span>
+<span id="cb3-442"><a href="#cb3-442" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-443"><a href="#cb3-443" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-444"><a href="#cb3-444" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(df_EPX_tox)</span>
+<span id="cb3-445"><a href="#cb3-445" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-446"><a href="#cb3-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-447"><a href="#cb3-447" aria-hidden="true" tabindex="-1"></a><span class="fu">### Imidacloprid (IMD)</span></span>
+<span id="cb3-448"><a href="#cb3-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-449"><a href="#cb3-449" aria-hidden="true" tabindex="-1"></a>Imidacloprid (IMD) is a systemic insecticide belonging to the chloronicotinyl (neonicotinoid) family. It is widely used in agriculture across the globe to control sap-feeding insects such as plant hoppers, aphids, termites, Colorado potato beetles, fleas, white grubs, craneflies, crickets, and ants <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>. Its applications included lawns and turf, as well as crops such as rice, cereals, maize, potatoes, and sugar beet. It was also used in veterinary medicine, notably in flea treatments for domestic pets. Imidacloprid was commercialized by Bayer in 1991 <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>.</span>
+<span id="cb3-450"><a href="#cb3-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-451"><a href="#cb3-451" aria-hidden="true" tabindex="-1"></a>In France, the use of neonicotinoids — including imidacloprid — was progressively restricted following the adoption of the 2016 law on the “reconquest of biodiversity, nature and landscapes” (loi pour la reconquête de la biodiversité, de la nature et des paysages). The European Union withdrew the market authorization for imidacloprid in 2020. Currently, only acetamiprid remains approved for use in France and the EU, primarily for veterinary purposes. A temporary derogation had allowed the use of imidacloprid and thiamethoxam for aphid-infested beet crops, but this exemption was definitively revoked in January 2023, reinforcing the ban on neonicotinoids following multiple regulatory actions at both French and European levels <span class="co">[</span><span class="ot">@anses_2020</span><span class="co">]</span>.</span>
+<span id="cb3-452"><a href="#cb3-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-453"><a href="#cb3-453" aria-hidden="true" tabindex="-1"></a>Imidacloprid exerts its toxic effects by acting as an agonist of the nicotinic acetylcholine receptors (nAChRs), leading to overstimulation and subsequent disruption of the central nervous system in target invertebrates <span class="co">[</span><span class="ot">@lewis_2006; @chen_2021</span><span class="co">]</span>. This mechanism makes it highly effective at low concentrations, but also raises concerns about its non-target effects, particularly on soil invertebrates such as earthworms.</span>
+<span id="cb3-454"><a href="#cb3-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-455"><a href="#cb3-455" aria-hidden="true" tabindex="-1"></a>Imidacloprid is also under assessment for endocrine disrupting <span class="co">[</span><span class="ot">@echa_2025b</span><span class="co">]</span>.</span>
+<span id="cb3-456"><a href="#cb3-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-457"><a href="#cb3-457" aria-hidden="true" tabindex="-1"></a>The half-life of imidacloprid is 2.3 years in fresh water (12°C), 1.1 years in freshwater-sediment (12°C) and 1.4 years in soil (12°C) <span class="co">[</span><span class="ot">@lewis_2006</span><span class="co">]</span>, which makes it a very persistant substance in the environment.</span>
+<span id="cb3-458"><a href="#cb3-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-459"><a href="#cb3-459" aria-hidden="true" tabindex="-1"></a>On earthworms, imidacloprid significatively impacts survival but also growth, maturation and reproduction <span class="co">[</span><span class="ot">@vanloon_2022; @pelosi_2016; @dittbrenner_2011</span><span class="co">]</span>. It was also shown to disturbe activities of carboxylesterase (CarE) and glutathione-S- transferases (GST) <span class="co">[</span><span class="ot">@wang_2019</span><span class="co">]</span>. More importantly, it affects earthworms' burrowing activity, essential for the various ecosystem functions endorsed by earthworms <span class="co">[</span><span class="ot">@capowiez_2006; @dittbrenner_2010</span><span class="co">]</span>.</span>
+<span id="cb3-460"><a href="#cb3-460" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-463"><a href="#cb3-463" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb3-464"><a href="#cb3-464" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: Overview of available ecotoxicological data on imidacloprid (non exhaustive)</span></span>
+<span id="cb3-465"><a href="#cb3-465" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-IMDtox</span></span>
+<span id="cb3-466"><a href="#cb3-466" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-467"><a href="#cb3-467" aria-hidden="true" tabindex="-1"></a>df_IMD_tox <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-468"><a href="#cb3-468" aria-hidden="true" tabindex="-1"></a>  <span class="at">Species =</span> <span class="fu">c</span>(</span>
+<span id="cb3-469"><a href="#cb3-469" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish - *C. variegatus*"</span>, </span>
+<span id="cb3-470"><a href="#cb3-470" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Fish - *O. mykiss*"</span>, </span>
+<span id="cb3-471"><a href="#cb3-471" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>, </span>
+<span id="cb3-472"><a href="#cb3-472" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Aquatic invertebrates - *D. magna*"</span>, </span>
+<span id="cb3-473"><a href="#cb3-473" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Algae - *S. capricornutum*"</span>, </span>
+<span id="cb3-474"><a href="#cb3-474" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span>,</span>
+<span id="cb3-475"><a href="#cb3-475" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Earthworm - *E. fetida*"</span>,</span>
+<span id="cb3-476"><a href="#cb3-476" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Collembole - *F. candida*"</span>,</span>
+<span id="cb3-477"><a href="#cb3-477" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bird - *C. virginianus*"</span></span>
+<span id="cb3-478"><a href="#cb3-478" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-479"><a href="#cb3-479" aria-hidden="true" tabindex="-1"></a>  <span class="at">Endpoint =</span> <span class="fu">c</span>(</span>
+<span id="cb3-480"><a href="#cb3-480" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP 72-1 - LC50 (96 h)"</span>, </span>
+<span id="cb3-481"><a href="#cb3-481" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 210 - NOEC (reproduction, 31 days)"</span>, </span>
+<span id="cb3-482"><a href="#cb3-482" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP 72-2 - EC50 (immobilization, 48 h)"</span>, </span>
+<span id="cb3-483"><a href="#cb3-483" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP 72-4 - NOEC (reproduction, 21 days)"</span>, </span>
+<span id="cb3-484"><a href="#cb3-484" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 201 - EC50 (growth inhibition, 72 h)"</span>,</span>
+<span id="cb3-485"><a href="#cb3-485" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ISO 11268-2 - NOEC (reproduction, 56 d)"</span>,</span>
+<span id="cb3-486"><a href="#cb3-486" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OECD TG 207 - LC50 (14 d)"</span>,</span>
+<span id="cb3-487"><a href="#cb3-487" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ISO/FDIS 11267(1998) - NOEC (reproduction, 28 d)"</span>,</span>
+<span id="cb3-488"><a href="#cb3-488" aria-hidden="true" tabindex="-1"></a>    <span class="st">"EPA OPP Guideline 71-4 - NOEC (reproduction, 20 wk)"</span></span>
+<span id="cb3-489"><a href="#cb3-489" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-490"><a href="#cb3-490" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(</span>
+<span id="cb3-491"><a href="#cb3-491" aria-hidden="true" tabindex="-1"></a>    <span class="st">"161 mg/L"</span>, </span>
+<span id="cb3-492"><a href="#cb3-492" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 9.02 mg/L"</span>, </span>
+<span id="cb3-493"><a href="#cb3-493" aria-hidden="true" tabindex="-1"></a>    <span class="st">"85 mg/L"</span>, </span>
+<span id="cb3-494"><a href="#cb3-494" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1.8 mg/L"</span>, </span>
+<span id="cb3-495"><a href="#cb3-495" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 100 mg/L"</span>,</span>
+<span id="cb3-496"><a href="#cb3-496" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&gt; 178 µg/kg"</span>,</span>
+<span id="cb3-497"><a href="#cb3-497" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10.7 mg/kg"</span>,</span>
+<span id="cb3-498"><a href="#cb3-498" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1.25 mg/kg"</span>,</span>
+<span id="cb3-499"><a href="#cb3-499" aria-hidden="true" tabindex="-1"></a>    <span class="st">"126 mg/kg diet"</span></span>
+<span id="cb3-500"><a href="#cb3-500" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-501"><a href="#cb3-501" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-502"><a href="#cb3-502" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(df_IMD_tox)</span>
+<span id="cb3-503"><a href="#cb3-503" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-504"><a href="#cb3-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-505"><a href="#cb3-505" aria-hidden="true" tabindex="-1"></a><span class="fu">### Environmental concentrations</span></span>
+<span id="cb3-506"><a href="#cb3-506" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-507"><a href="#cb3-507" aria-hidden="true" tabindex="-1"></a>Recent monitoring data from French agricultural soils reveal substantial variability in pesticide residue levels. @froger_2023 reported imidacloprid concentrations with median values of 2.9 ng/g (0.0029 mg/kg), reaching maximum concentrations of 13.8 ng/g (0.0138 mg/kg) and third quartile values of 5.8 ng/g (0.0058 mg/kg). Epoxiconazole concentrations were higher, with median concentrations of 5.8 ng/g (0.0058 mg/kg), maximum values of 23.6 ng/g (0.0236 mg/kg), and third quartile concentrations of 10.9 ng/g (0.0109 mg/kg). More comprehensive surveys focusing on conventional cereal farming systems show elevated contamination levels (Pelosi et al., 2021). Imidacloprid median concentrations reached 15.1 ng/g (0.0151 mg/kg) with maximum values of 160 ng/g (0.16 mg/kg), while epoxiconazole showed median concentrations of 34.6 ng/g (0.0346 mg/kg) with maximum values of 283 ng/g (0.283 mg/kg). These concentrations can be contextualized against recommended application doses of 168 ng/g for imidacloprid and 153 ng/g for epoxiconazole (Pelosi et al., 2021). Environmental residue levels show that soil contamination can reach substantial fractions of recommended doses, with maximum detected concentrations representing 95% (160/168) of the recommended dose for imidacloprid and 185% (283/153) for epoxiconazole. Median concentrations in conventional cereal farming represent 9% and 23% of recommended doses for imidacloprid and epoxiconazole, respectively.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
