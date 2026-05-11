@@ -5,7 +5,7 @@ f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 ```
 
-# Toxicokinetics of Epoxiconazole {#sec-ModEPXBIS}
+# Toxicokinetics of Epoxiconazole {#sec-ModEPX}
 
 ## Results of the experiment
 
@@ -288,7 +288,7 @@ Measured internal concentrations are presented @fig-CiData. A pronounced differe
 
 ```{r, message=F, warning=F}
 #| fig-cap: Measurements of EPX concentration in earthworms exposed to 10 mg/kg of EPX and related weight measurement of earthworms. Points represent the experimental data, the blue curve and the transparent blue band are produced with geom_smooth. 
-#| fig-label: fig-CiData
+#| label: fig-CiData
 #| fig-width: 8
 #| fig-height: 4
 
@@ -4139,7 +4139,7 @@ df_phases_plot <- subset(df_phases, ID %in% ID_tri)|>
 
 ```{r EPXpredcurvesdataC1, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfullC1
+#| label: fig-EPXdatapredfullC1
 #| fig-width: 8
 #| fig-height: 20
 
@@ -4440,7 +4440,7 @@ p_CiEPX_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfulllogC1
+#| label: fig-EPXdatapredfulllogC1
 #| fig-width: 8
 #| fig-height: 20
 
@@ -4453,7 +4453,7 @@ p_CiEPX_traj_log
 
 ```{r EPXpredcurvesdataWC1, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-EPXdatapredfullWC1
+#| label: fig-EPXdatapredfullWC1
 #| fig-width: 8
 #| fig-height: 20
 
@@ -4594,7 +4594,7 @@ ggsave(
 
 ```{r EPXpredcurvesdataC1P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfullC1P
+#| label: fig-EPXdatapredfullC1P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -4895,7 +4895,7 @@ p_CiEPX_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfulllogC1P
+#| label: fig-EPXdatapredfulllogC1P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -4908,7 +4908,7 @@ p_CiEPX_traj_log
 
 ```{r EPXpredcurvesdataWC1P, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-EPXdatapredfullWC1P
+#| label: fig-EPXdatapredfullWC1P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -5047,7 +5047,7 @@ ggsave(
 
 ```{r EPXpredcurvesdataC2, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfullC2
+#| label: fig-EPXdatapredfullC2
 #| fig-width: 8
 #| fig-height: 20
 
@@ -5349,7 +5349,7 @@ p_CiEPX_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfulllogC2
+#| label: fig-EPXdatapredfulllogC2
 #| fig-width: 8
 #| fig-height: 20
 
@@ -5362,7 +5362,7 @@ p_CiEPX_traj_log
 
 ```{r EPXpredcurvesdataWC2, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-EPXdatapredfullWC2
+#| label: fig-EPXdatapredfullWC2
 #| fig-width: 8
 #| fig-height: 20
 
@@ -5501,7 +5501,7 @@ ggsave(
 
 ```{r EPXpredcurvesdataC2P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfullC2P
+#| label: fig-EPXdatapredfullC2P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -5801,7 +5801,7 @@ p_CiEPX_traj_2 <- ggplot()+
 
 ```{r EPXpredcurvesdataC2Article, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfullC2Article
+#| label: fig-EPXdatapredfullC2Article
 #| fig-width: 8
 #| fig-height: 20
 
@@ -5907,7 +5907,11 @@ p_CiEPX_traj_article <- ggplot()+
     y = "Internal EPX concentration (ng/g)"
   )+
   #lims(y=c(0, 300))+
-  theme_minimal()
+  theme_minimal()+
+  theme(
+    legend.position = "bottom"
+  )
+  
   
 ```
 
@@ -5915,7 +5919,7 @@ p_CiEPX_traj_article <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-EPXdatapredfulllogC2P
+#| label: fig-EPXdatapredfulllogC2P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -5928,7 +5932,7 @@ p_CiEPX_traj_log
 
 ```{r EPXpredcurvesdataWC2P, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-EPXdatapredfullWC2P
+#| label: fig-EPXdatapredfullWC2P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -6021,7 +6025,7 @@ ggsave(
 ggsave(
   filename="TK_EPX_comptrajpred_article.png", 
   plot=p_CiEPX_traj_article , 
-  width=10, height = 10, 
+  width=10, height = 12, 
   path=path_fig_C2P
   )
 ggsave(
@@ -6248,7 +6252,7 @@ df_mod_CiEPX_C2P <- subset(df_mod_C2P, Endpt == "CiEPX_1")
 
 ```{r EPXpredcurvesC1, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 0.1 mg/kg of EPX. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-EPXcurvemodC1
+#| label: fig-EPXcurvemodC1
 #| fig-width: 8
 #| fig-height: 4
 
@@ -6322,7 +6326,7 @@ p
 
 ```{r EPXpredcurvesC1P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 0.1 mg/kg of EPX. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-EPXcurvemodC1P
+#| label: fig-EPXcurvemodC1P
 #| fig-width: 8
 #| fig-height: 4
 
@@ -6396,7 +6400,7 @@ p
 
 ```{r EPXpredcurvesC2, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 0.1 mg/kg of EPX. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-EPXcurvemodC2
+#| label: fig-EPXcurvemodC2
 #| fig-width: 8
 #| fig-height: 4
 
@@ -6470,7 +6474,7 @@ p
 
 ```{r EPXpredcurvesC2P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 0.1 mg/kg of EPX. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-EPXcurvemodC2P
+#| label: fig-EPXcurvemodC2P
 #| fig-width: 8
 #| fig-height: 4
 

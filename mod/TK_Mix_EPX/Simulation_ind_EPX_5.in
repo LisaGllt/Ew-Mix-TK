@@ -1,4 +1,4 @@
-#### Toxicokinetics of Imidacloprid in A. caliginosa
+#### Toxicokinetics of Epoxiconazole in A. caliginosa
 #===============================================
 
 
@@ -10,7 +10,7 @@ SetPoints("Simulation_ind_EPX_5.out", "tab_setpoint_ind_EPX.out", 0,kuEPX, keEPX
 Simulation { # TK EPX - i =  73 ,  G 5
     a_growth=0.00184868261068445;
     Winit=0.3866944;
-    Ci0EPX=54.4899731750958;
+    Ci0EPX=17.684;
     Ce0EPX=64413.5;
     CclxEPX=0.09;
     expo=NDoses(3,1,2,2,0,28,29.1);

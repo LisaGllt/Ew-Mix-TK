@@ -5,7 +5,7 @@ f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 ```
 
-# Toxicokinetics of Imidacloprid {#sec-ModIMDBIS}
+# Toxicokinetics of Imidacloprid {#sec-ModIMD}
 
 ## Results of the experiment
 
@@ -270,7 +270,7 @@ Measured internal concentrations are presented @fig-CiData.
 
 ```{r, message=F, warning=F}
 #| fig-cap: Measurements of IMD concentration in earthworms exposed to 10 mg/kg of IMD and related weight measurement of earthworms. Points represent the experimental data, the blue curve and the transparent blue band are produced with geom_smooth. 
-#| fig-label: fig-CiData
+#| label: fig-CiData
 #| fig-width: 8
 #| fig-height: 4
 
@@ -5914,7 +5914,7 @@ df_phases_plot <- subset(df_phases, ID %in% ID_tri)|>
 
 ```{r IMDpredcurvesdataC1, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfullC1
+#| label: fig-IMDdatapredfullC1
 #| fig-width: 8
 #| fig-height: 20
 
@@ -6217,7 +6217,7 @@ p_CiIMD_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfulllogC1
+#| label: fig-IMDdatapredfulllogC1
 #| fig-width: 8
 #| fig-height: 20
 
@@ -6231,7 +6231,7 @@ p_CiIMD_traj_log
 
 ```{r IMDpredcurvesdataWC1, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-IMDdatapredfullWC1
+#| label: fig-IMDdatapredfullWC1
 #| fig-width: 8
 #| fig-height: 20
 
@@ -6365,7 +6365,7 @@ ggsave(
 
 ```{r IMDpredcurvesdataC1P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfullC1P
+#| label: fig-IMDdatapredfullC1P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -6668,7 +6668,7 @@ p_CiIMD_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfulllogC1P
+#| label: fig-IMDdatapredfulllogC1P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -6682,7 +6682,7 @@ p_CiIMD_traj_log
 
 ```{r IMDpredcurvesdataWC1P, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-IMDdatapredfullWC1P
+#| label: fig-IMDdatapredfullWC1P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -6816,7 +6816,7 @@ ggsave(
 
 ```{r IMDpredcurvesdataC1N, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfullC1N
+#| label: fig-IMDdatapredfullC1N
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7119,7 +7119,7 @@ p_CiIMD_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfulllogC1N
+#| label: fig-IMDdatapredfulllogC1N
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7133,7 +7133,7 @@ p_CiIMD_traj_log
 
 ```{r IMDpredcurvesdataWC1N, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-IMDdatapredfullWC1N
+#| label: fig-IMDdatapredfullWC1N
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7267,7 +7267,7 @@ ggsave(
 
 ```{r IMDpredcurvesdataC2, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfullC2
+#| label: fig-IMDdatapredfullC2
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7568,7 +7568,7 @@ p_CiIMD_traj_2 <- ggplot()+
 
 ```{r IMDpredcurvesdataC2Article, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfullC2Article
+#| label: fig-IMDdatapredfullC2Article
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7674,7 +7674,11 @@ p_CiIMD_traj_article <- ggplot()+
     y = "Internal IMD concentration (ng/g)"
   )+
   #lims(y=c(0, 300))+
-  theme_minimal()
+  theme_minimal()+
+  theme(
+    legend.position = "bottom"
+  )
+  
   
 ```
 
@@ -7682,7 +7686,7 @@ p_CiIMD_traj_article <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfulllogC2
+#| label: fig-IMDdatapredfulllogC2
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7696,7 +7700,7 @@ p_CiIMD_traj_log
 
 ```{r IMDpredcurvesdataWC2, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-IMDdatapredfullWC2
+#| label: fig-IMDdatapredfullWC2
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7785,7 +7789,7 @@ ggsave(
 ggsave(
   filename="TK_IMD_comptrajpred_article.png", 
   plot=p_CiIMD_traj_article , 
-  width=10, height = 10, 
+  width=10, height = 12, 
   path=path_fig_C2
   )
  ggsave(
@@ -7836,7 +7840,7 @@ ggsave(
 
 ```{r IMDpredcurvesdataC2P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfullC2P
+#| label: fig-IMDdatapredfullC2P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -7947,7 +7951,6 @@ p_CiIMD_traj <- ggplot()+
   )+
   #lims(y=c(0, 300))+
   theme_minimal()
-  
 
 p_CiIMD_traj 
 
@@ -8139,7 +8142,7 @@ p_CiIMD_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfulllogC2P
+#| label: fig-IMDdatapredfulllogC2P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -8153,7 +8156,7 @@ p_CiIMD_traj_log
 
 ```{r IMDpredcurvesdataWC2P, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-IMDdatapredfullWC2P
+#| label: fig-IMDdatapredfullWC2P
 #| fig-width: 8
 #| fig-height: 20
 
@@ -8287,7 +8290,7 @@ ggsave(
 
 ```{r IMDpredcurvesdataC2N, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfullC2N
+#| label: fig-IMDdatapredfullC2N
 #| fig-width: 8
 #| fig-height: 20
 
@@ -8590,7 +8593,7 @@ p_CiIMD_traj_2 <- ggplot()+
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model. 
-#| fig-label: fig-IMDdatapredfulllogC2N
+#| label: fig-IMDdatapredfulllogC2N
 #| fig-width: 8
 #| fig-height: 20
 
@@ -8604,7 +8607,7 @@ p_CiIMD_traj_log
 
 ```{r IMDpredcurvesdataWC2N, message=F, warning=F}
 #| fig-cap: Weight predictions
-#| fig-label: fig-IMDdatapredfullWC2N
+#| label: fig-IMDdatapredfullWC2N
 #| fig-width: 8
 #| fig-height: 20
 
@@ -8999,7 +9002,7 @@ df_mod_CiIMD_C2N <- subset(df_mod_C2N, Endpt == "CiIMD_1")
 
 ```{r IMDpredcurvesC1, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 0.1 mg/kg of IMD. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-IMDcurvemodC1
+#| label: fig-IMDcurvemodC1
 #| fig-width: 8
 #| fig-height: 4
 
@@ -9091,7 +9094,7 @@ p_poster <- p +
 
 ```{r IMDpredcurvesC1P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 0.1 mg/kg of IMD. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-IMDcurvemodC1P
+#| label: fig-IMDcurvemodC1P
 #| fig-width: 8
 #| fig-height: 4
 
@@ -9183,7 +9186,7 @@ p_poster <- p +
 
 ```{r IMDpredcurvesC1N, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 0.1 mg/kg of IMD. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-IMDcurvemodC1N
+#| label: fig-IMDcurvemodC1N
 #| fig-width: 8
 #| fig-height: 4
 
@@ -9275,7 +9278,7 @@ p_poster <- p +
 
 ```{r IMDpredcurvesC2, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 0.1 mg/kg of IMD. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-IMDcurvemodC2
+#| label: fig-IMDcurvemodC2
 #| fig-width: 8
 #| fig-height: 4
 
@@ -9367,7 +9370,7 @@ p_poster <- p +
 
 ```{r IMDpredcurvesC2P, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 0.1 mg/kg of IMD. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-IMDcurvemodC2P
+#| label: fig-IMDcurvemodC2P
 #| fig-width: 8
 #| fig-height: 4
 
@@ -9459,7 +9462,7 @@ p_poster <- p +
 
 ```{r IMDpredcurvesC2N, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 0.1 mg/kg of IMD. Blue points represent the experimental data, the blue curve represents the estimated toxicokinetic curve and the transparent blue band corresponds to the credibility interval of the model. 
-#| fig-label: fig-IMDcurvemodC2N
+#| label: fig-IMDcurvemodC2N
 #| fig-width: 8
 #| fig-height: 4
 

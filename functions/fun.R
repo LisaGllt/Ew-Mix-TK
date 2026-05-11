@@ -1590,8 +1590,8 @@ f_MonteCarlo_mix_ind_full <- function(File_path, Molecule, N_draws, print_times)
   df_TK_f <- f_read_data_TK_mix() |> 
     mutate(across(where(is.numeric), ~ replace_na(.x, -1)))
   
-  C_worm_t0_IMD <-  df_TK_f[df_TK_f$t == 0, ]$CiIMD[1]
-  C_worm_t0_EPX <-  df_TK_f[df_TK_f$t == 0, ]$CiEPX[1]
+  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio %in% c("N"))$CiIMD, na.rm=T)
+  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio %in% c("N"))$CiEPX, na.rm=T)
   C_clx_IMD <- 16 / 1000 # ng/g
   C_clx_EPX <- 90 / 1000 # ng/g
   
@@ -1765,8 +1765,11 @@ f_Simulation_mix_ind <- function(File_path, Molecule, l_param_name) {
   
   df_growth_rate_mix <- f_GrowthRate(subset(df_TK_f, t < 28.5))
   
-  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio == "E")$CiIMD, na.rm=T)
-  C_worm_t0_EPX <-  mean(subset(df_TK_f, Ratio == "I")$CiEPX, na.rm=T)
+  C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio %in% c("N"))$CiIMD, na.rm=T)
+  C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio %in% c("N"))$CiEPX, na.rm=T)
+  
+  # C_worm_t0_IMD <-  mean(subset(df_TK_f, Ratio %in% c("E", "N"))$CiIMD, na.rm=T)
+  # C_worm_t0_EPX <-  mean(subset(df_TK_mix, Ratio %in% c("I", "N"))$CiEPX, na.rm=T)
   C_clx_IMD <- 16 / 1000 # ng/g
   C_clx_EPX <- 90 / 1000 # ng/g
   
@@ -1862,7 +1865,7 @@ SetPoints("Simulation_ind_IMD_',compteur_exp,'.out", "tab_setpoint_ind_IMD.out",
         sep = "\n"
       )
       
-      text_start <- paste0('#### Toxicokinetics of Imidacloprid in A. caliginosa
+      text_start <- paste0('#### Toxicokinetics of Epoxiconazole in A. caliginosa
 #===============================================
 
 

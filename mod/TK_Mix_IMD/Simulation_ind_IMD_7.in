@@ -10,7 +10,7 @@ SetPoints("Simulation_ind_IMD_7.out", "tab_setpoint_ind_IMD.out", 0,kuIMD, keIMD
 Simulation { # TK Mix IMD - i =  101 ,  H 5
     a_growth=0.00164759789171166;
     Winit=0.4984307;
-    Ci0IMD=3.91919859546046;
+    Ci0IMD=2.57633333333333;
     Ce0IMD=336;
     CclxIMD=0.016;
     expo=NDoses(3,1,2,2,0,28,29.1);

@@ -240,7 +240,7 @@ summary(lm.fasting)
 
 ```{r, warning=F, message=F}
 #| fig-cap: Relationship between fresh weight before and after fasting. 
-#| fig-label: fig-Wfast
+#| label: fig-Wfast
 #| fig-width: 5
 #| fig-height: 4
 
