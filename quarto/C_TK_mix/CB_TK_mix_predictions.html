@@ -79,7 +79,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-4d58ae029ca8c4121063b1aa4ad523f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a8b0d7a4373b3a0f48e19f5c38939cff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-4f27bf0baa1a97ba45bc9e947babe209.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -1058,7 +1058,7 @@ Figure&nbsp;9.4: Results of the model fit on experimental data. Predicted values
 <span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(dObs_ind, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_obs"</span>, <span class="st">"_pred"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div class="cell" data-fig-label="fig-IMDdatapredfull">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>col_ratio <span class="ot">&lt;-</span> <span class="fu">nord</span>(<span class="at">palette =</span> <span class="st">"frost"</span>, <span class="at">n =</span> <span class="dv">5</span>)</span>
@@ -1549,7 +1549,7 @@ Figure&nbsp;9.5: Results of the model fit on experimental data. Predicted values
 <span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(dObs_ind, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_obs"</span>, <span class="st">"_pred"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div class="cell" data-fig-label="fig-EPXdatapredfull">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>col_ratio <span class="ot">&lt;-</span> <span class="fu">nord</span>(<span class="at">palette =</span> <span class="st">"frost"</span>, <span class="at">n =</span> <span class="dv">5</span>)</span>
@@ -1623,22 +1623,26 @@ Figure&nbsp;9.6: Results of the model fits on experimental data. Predicted value
 </div>
 </div>
 </div>
-<div class="cell" data-fig-label="fig-MIXdatapredfull">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>p_traj_full <span class="ot">&lt;-</span> p_CiEPX_traj <span class="sc">+</span> p_CiIMD_traj <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">1</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>p_traj_full</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="CB_TK_mix_predictions_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="768"></p>
-<figcaption>Estimated toxicokinetic of the EPX &amp; IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.</figcaption>
+<div id="fig-MIXdatapredfull" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-MIXdatapredfull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="CB_TK_mix_predictions_files/figure-html/fig-MIXdatapredfull-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-MIXdatapredfull-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.7: Estimated toxicokinetic of the EPX &amp; IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Single substances were also tested at two concentrations within the mixture experiment and served to validate the single-substance toxicokinetic models (<span class="quarto-unresolved-ref">?fig-MIXdatapredfull</span>). For both compounds, internal concentrations measured in earthworms exposed to low doses were well predicted by the respective single-substance models.</p>
+<p>Single substances were also tested at two concentrations within the mixture experiment and served to validate the single-substance toxicokinetic models (<a href="#fig-MIXdatapredfull" class="quarto-xref">Figure&nbsp;<span>9.7</span></a>). For both compounds, internal concentrations measured in earthworms exposed to low doses were well predicted by the respective single-substance models.</p>
 <p>However, deviations emerged at higher doses. For imidacloprid, internal concentrations appeared to reach a plateau in earthworm tissues, with a mean internal concentration of 1676 ng/g, suggesting a potential saturation process. In contrast, epoxiconazole internal concentrations were systematically underestimated by the model at high doses, with a mean predicted-to-observed ratio of 0.34. No consistent trend related to mixture ratios was observed.</p>
 <p>Additionally, the residual concentration of epoxiconazole measured in earthworms exposed only to imidacloprid is not captured by our model, which predicts a decline toward zero due to the absence of epoxiconazole in the soil and ongoing elimination during the experiment. This discrepancy may be explained by the presence of a small background burden of epoxiconazole retained in earthworm tissues, potentially accumulated over time during laboratory culture.</p>
 
@@ -2951,7 +2955,7 @@ Figure&nbsp;9.6: Results of the model fits on experimental data. Predicted value
 <span id="cb30-805"><a href="#cb30-805" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-806"><a href="#cb30-806" aria-hidden="true" tabindex="-1"></a><span class="in">```{r IMDpredcurvesdata, message=F, warning=F}</span></span>
 <span id="cb30-807"><a href="#cb30-807" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.</span></span>
-<span id="cb30-808"><a href="#cb30-808" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-label: fig-IMDdatapredfull</span></span>
+<span id="cb30-808"><a href="#cb30-808" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-IMDdatapredfull</span></span>
 <span id="cb30-809"><a href="#cb30-809" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
 <span id="cb30-810"><a href="#cb30-810" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 20</span></span>
 <span id="cb30-811"><a href="#cb30-811" aria-hidden="true" tabindex="-1"></a></span>
@@ -3480,7 +3484,7 @@ Figure&nbsp;9.6: Results of the model fits on experimental data. Predicted value
 <span id="cb30-1336"><a href="#cb30-1336" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-1337"><a href="#cb30-1337" aria-hidden="true" tabindex="-1"></a><span class="in">```{r EPXpredcurvesdata, message=F, warning=F}</span></span>
 <span id="cb30-1338"><a href="#cb30-1338" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.</span></span>
-<span id="cb30-1339"><a href="#cb30-1339" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-label: fig-EPXdatapredfull</span></span>
+<span id="cb30-1339"><a href="#cb30-1339" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-EPXdatapredfull</span></span>
 <span id="cb30-1340"><a href="#cb30-1340" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
 <span id="cb30-1341"><a href="#cb30-1341" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 20</span></span>
 <span id="cb30-1342"><a href="#cb30-1342" aria-hidden="true" tabindex="-1"></a></span>
@@ -3627,7 +3631,7 @@ Figure&nbsp;9.6: Results of the model fits on experimental data. Predicted value
 <span id="cb30-1483"><a href="#cb30-1483" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-1484"><a href="#cb30-1484" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=F, warning=F}</span></span>
 <span id="cb30-1485"><a href="#cb30-1485" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Estimated toxicokinetic of the EPX &amp; IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.</span></span>
-<span id="cb30-1486"><a href="#cb30-1486" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-label: fig-MIXdatapredfull</span></span>
+<span id="cb30-1486"><a href="#cb30-1486" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-MIXdatapredfull</span></span>
 <span id="cb30-1487"><a href="#cb30-1487" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
 <span id="cb30-1488"><a href="#cb30-1488" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 40</span></span>
 <span id="cb30-1489"><a href="#cb30-1489" aria-hidden="true" tabindex="-1"></a></span>
