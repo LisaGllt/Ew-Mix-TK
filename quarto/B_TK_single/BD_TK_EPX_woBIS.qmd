@@ -5,7 +5,7 @@ f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 ```
 
-# Toxicokinetics of Epoxiconazole - Without TK BIS data {#sec-ModIMD}
+# Toxicokinetics of Epoxiconazole - Without TK BIS data {#sec-ModEPXBIS}
 
 What would have happened if we didn't have the TK BIS data ?
 
@@ -263,7 +263,7 @@ C1 : Number of parameters = `r Nb_param_C1` C1P : Number of parameters = `r Nb_p
 
 ```{r EPXreadpriorsC1, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-EPXPriorsC1
+#| label: tbl-EPXPriorsC1
 
 colnames(MCMC_out_EPX_C1$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -347,7 +347,7 @@ ggsave(
 
 ```{r EPXreadpriorsC1P, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-EPXPriorsC1P
+#| label: tbl-EPXPriorsC1P
 
 colnames(MCMC_out_EPX_C1P$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -431,7 +431,7 @@ ggsave(
 
 ```{r EPXreadpriorsC2, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-EPXPriorsC2
+#| label: tbl-EPXPriorsC2
 
 colnames(MCMC_out_EPX_C2$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -515,7 +515,7 @@ ggsave(
 
 ```{r EPXreadpriorsC2P, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-EPXPriorsC2P
+#| label: tbl-EPXPriorsC2P
 
 colnames(MCMC_out_EPX_C2P$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -1752,7 +1752,7 @@ BCF_C2P <- c(
 
 ```{r EPXSummaryResC1, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-EPXressumC1
+#| label: tbl-EPXressumC1
 
 Summary_res_EPX_tmp_C1 <- cbind(as.data.frame(MCMC_out_EPX_C1$Summary_res)[1:length(L_parameters_C1)], BCF_C1)
 
@@ -1790,7 +1790,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r EPXSummaryResC1P, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-EPXressumC1P
+#| label: tbl-EPXressumC1P
 
 Summary_res_EPX_tmp_C1P <- cbind(as.data.frame(MCMC_out_EPX_C1P$Summary_res)[1:length(L_parameters_C1P)], BCF_C1P)
 
@@ -1828,7 +1828,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r EPXSummaryResC2, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-EPXressumC2
+#| label: tbl-EPXressumC2
 
 Summary_res_EPX_tmp_C2 <- cbind(as.data.frame(MCMC_out_EPX_C2$Summary_res)[1:length(L_parameters_C2)], BCF_C2)
 
@@ -1866,7 +1866,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r EPXSummaryResC2P, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-EPXressumC2P
+#| label: tbl-EPXressumC2P
 
 Summary_res_EPX_tmp_C2P <- cbind(as.data.frame(MCMC_out_EPX_C2P$Summary_res)[1:length(L_parameters_C2P)], BCF_C2P)
 
@@ -6290,7 +6290,7 @@ p
 
 ```{r, message=F, warning=F}
 #| tbl-cap: "Estimated toxicokinetic parameters for single exposure of *Aporrectodea caliginosa* to epoxiconazole with the use of TK data only (without TK BIS). Results are expressed as the modes of the distributions and their respective credibility interval (95%). C1 : One compartment model, C1P : One compartment model with exposure through gut route in Petri dishes, C2 : Two-compartment model, C2P : Two-compartment model with exposure through gut route in Petri dishes, C2N : Two-compartment model with omission of the depuration phase in Petri dishes."
-#| tbl-label: tbl-EPXressumall
+#| label: tbl-EPXressumall
 
 format_summary <- function(summary_df, model_name) {
   

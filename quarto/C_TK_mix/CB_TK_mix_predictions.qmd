@@ -797,7 +797,7 @@ df_mod_CeIMD_ind <- df_sim_full |>
 
 ```{r IMDpredcurvesdata, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the IMD concentration in earthworms exposed to 100 ng/g of IMD. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
-#| fig-label: fig-IMDdatapredfull
+#| label: fig-IMDdatapredfull
 #| fig-width: 8
 #| fig-height: 20
 
@@ -1326,7 +1326,7 @@ df_mod_CeEPX_ind <- df_sim_full |>
 
 ```{r EPXpredcurvesdata, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX concentration in earthworms exposed to 1000 ng/g of EPX. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
-#| fig-label: fig-EPXdatapredfull
+#| label: fig-EPXdatapredfull
 #| fig-width: 8
 #| fig-height: 20
 
@@ -1473,7 +1473,7 @@ ggsave(
 
 ```{r, message=F, warning=F}
 #| fig-cap: Estimated toxicokinetic of the EPX & IMD concentrations in earthworms. Red points represent the experimental data, the blue curve represent the estimated toxicokinetic curve and the transparent blue band correspond to the credibility interval of the model.
-#| fig-label: fig-MIXdatapredfull
+#| label: fig-MIXdatapredfull
 #| fig-width: 8
 #| fig-height: 40
 

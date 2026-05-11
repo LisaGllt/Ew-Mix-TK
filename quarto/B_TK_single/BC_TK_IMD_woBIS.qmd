@@ -5,7 +5,7 @@ f_load_libraries_colors()
 col_Molecule <- rev(col_Molecule)
 ```
 
-# Toxicokinetics of Imidacloprid - Without TK BIS data {#sec-ModIMD}
+# Toxicokinetics of Imidacloprid - Without TK BIS data {#sec-ModIMDBIS}
 
 What would have happened if we didn't have the TK BIS data ?
 
@@ -331,7 +331,7 @@ C1 : Number of parameters = `r Nb_param_C1` C1P : Number of parameters = `r Nb_p
 
 ```{r IMDreadpriorsC1, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-IMDPriorsC1
+#| label: tbl-IMDPriorsC1
 
 colnames(MCMC_out_IMD_C1$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -416,7 +416,7 @@ ggsave(
 
 ```{r IMDreadpriorsC1P, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-IMDPriorsC1P
+#| label: tbl-IMDPriorsC1P
 
 colnames(MCMC_out_IMD_C1P$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -501,7 +501,7 @@ ggsave(
 
 ```{r IMDreadpriorsC1N, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-IMDPriorsC1N
+#| label: tbl-IMDPriorsC1N
 
 colnames(MCMC_out_IMD_C1N$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -586,7 +586,7 @@ ggsave(
 
 ```{r IMDreadpriorsC2, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-IMDPriorsC2
+#| label: tbl-IMDPriorsC2
 
 colnames(MCMC_out_IMD_C2$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -671,7 +671,7 @@ ggsave(
 
 ```{r IMDreadpriorsC2P, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-IMDPriorsC2P
+#| label: tbl-IMDPriorsC2P
 
 colnames(MCMC_out_IMD_C2P$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -756,7 +756,7 @@ ggsave(
 
 ```{r IMDreadpriorsC2N, message = F, warning = F}
 #| tbl-cap: Priors used for the model
-#| tbl-label: tbl-IMDPriorsC2N
+#| label: tbl-IMDPriorsC2N
 
 colnames(MCMC_out_IMD_C2N$Priors) <- c("Nom", "Distribution", "P1", "P2", "P3", "P4")
 
@@ -2569,7 +2569,7 @@ BCF_C2N <- c(
 
 ```{r IMDSummaryResC1, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-IMDressumC1
+#| label: tbl-IMDressumC1
 
 Summary_res_IMD_tmp_C1 <- cbind(as.data.frame(MCMC_out_IMD_C1$Summary_res)[1:length(L_parameters_C1)], BCF_C1)
 
@@ -2609,7 +2609,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r IMDSummaryResC1P, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-IMDressumC1P
+#| label: tbl-IMDressumC1P
 
 Summary_res_IMD_tmp_C1P <- cbind(as.data.frame(MCMC_out_IMD_C1P$Summary_res)[1:length(L_parameters_C1P)], BCF_C1P)
 
@@ -2649,7 +2649,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r IMDSummaryResC1N, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-IMDressumC1N
+#| label: tbl-IMDressumC1N
 
 Summary_res_IMD_tmp_C1N <- cbind(as.data.frame(MCMC_out_IMD_C1N$Summary_res)[1:length(L_parameters_C1N)], BCF_C1N)
 
@@ -2689,7 +2689,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r IMDSummaryResC2, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-IMDressumC2
+#| label: tbl-IMDressumC2
 
 Summary_res_IMD_tmp_C2 <- cbind(as.data.frame(MCMC_out_IMD_C2$Summary_res)[1:length(L_parameters_C2)], BCF_C2)
 
@@ -2729,7 +2729,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r IMDSummaryResC2P, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-IMDressumC2P
+#| label: tbl-IMDressumC2P
 
 Summary_res_IMD_tmp_C2P <- cbind(as.data.frame(MCMC_out_IMD_C2P$Summary_res)[1:length(L_parameters_C2P)], BCF_C2P)
 
@@ -2769,7 +2769,7 @@ cat("Number of observations, n = ", n,"\nNumber of parameters, k = ", k, "\nLog-
 
 ```{r IMDSummaryResC2N, message=F, warning=F}
 #| tbl-cap: Results summary
-#| tbl-label: tbl-IMDressumC2N
+#| label: tbl-IMDressumC2N
 
 Summary_res_IMD_tmp_C2N <- cbind(as.data.frame(MCMC_out_IMD_C2N$Summary_res)[1:length(L_parameters_C2N)], BCF_C2N)
 
@@ -9305,7 +9305,7 @@ p_poster <- p +
 
 ```{r, message=F, warning=F}
 #| tbl-cap: "Estimated toxicokinetic parameters for single exposure of *Aporrectodea caliginosa* to imidacloprid with the use of TK data only  (without TK BIS). Results are expressed as the modes of the distributions and their respective credibility interval (95%). C1 : One compartment model, C1P : One compartment model with exposure through gut route in Petri dishes, C2 : Two-compartment model, C2P : Two-compartment model with exposure through gut route in Petri dishes, C2N : Two-compartment model with omission of the depuration phase in Petri dishes."
-#| tbl-label: tbl-IMDressumall
+#| label: tbl-IMDressumall
 
 format_summary <- function(summary_df, model_name) {
   
