@@ -18,7 +18,7 @@ Sigma_W;  # Error on Weight measurements without gut content
 Sigma_CiIMD; # Error on CiIMD measurements
 
 # Kinetics in soil 
-DT50IMD = 353.5;   # IMD Half-life in soil (days)
+DT50IMD = 187;   # IMD Half-life in soil (days)
 DT50gut = 0.182; # In days ! (= 4,37 h)
 
 # Second compartment
