@@ -245,7 +245,7 @@ p_IMD <- ggplot() +
   ) +
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\nsoil", "Elimination", "Depuration"),
     name = "Phase"
     )+
   theme_minimal(base_size = 12) +  # Thème minimaliste
@@ -3106,14 +3106,18 @@ Nb_experiment <- Nb_experiment_C1
 
 ######### Observed data ######################################################
 
+Group_levels <- c("Contaminated\n soil", "Controle soil after\n contaminated soil\n + Petri dish", "Controle soil after\n contaminated soil")
+
 dObs_ind <- df_TK_IMD |> 
   mutate(
     ID = as.numeric(ID),
-    Group_tmp = case_when(
-      ID < 65 ~ "Uptake",
-      (ID > 64 & ID <= 128) ~ "Elimination",
-      ID > 128 ~ "Uptake\n(with massage only)"),
-    Group = fct_relevel(Group_tmp, c("Uptake", "Elimination", "Uptake\n(with massage only)"))
+    Group = factor(
+      case_when(
+      ID < 65 ~ "Contaminated\n soil",
+      (ID > 64 & ID <= 128) ~ "Controle soil after\n contaminated soil\n + Petri dish",
+      ID > 128 ~ "Controle soil after\n contaminated soil"),
+      Group_levels
+      )
     )
 
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
@@ -3740,9 +3744,13 @@ p_CiIMD_predobs <- ggplot(
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
   )+
   scale_color_manual(
-    values = col_exposure_bis
+    values = col_exposure_bis,
+    name = "Scenario"
     )+
-  scale_shape_manual(values = shape_exposure_bis)+
+  scale_shape_manual(
+    values = shape_exposure_bis,
+    name = "Scenario"
+    )+
   scale_x_log10(
     limits=c(100, lim_plot)
     )+
@@ -3971,9 +3979,13 @@ p_CiIMD_predobs <- ggplot(
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
   )+
   scale_color_manual(
-    values = col_exposure_bis
+    values = col_exposure_bis,
+    name = "Scenario"
     )+
-  scale_shape_manual(values = shape_exposure_bis)+
+  scale_shape_manual(
+    values = shape_exposure_bis,
+    name = "Scenario"
+    )+
   scale_x_log10(
     limits=c(100, lim_plot)
     )+
@@ -4202,9 +4214,13 @@ p_CiIMD_predobs <- ggplot(
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
   )+
   scale_color_manual(
-    values = col_exposure_bis
+    values = col_exposure_bis,
+    name = "Scenario"
     )+
-  scale_shape_manual(values = shape_exposure_bis)+
+  scale_shape_manual(
+    values = shape_exposure_bis,
+    name = "Scenario"
+    )+
   scale_x_log10(
     limits=c(100, lim_plot)
     )+
@@ -4433,9 +4449,13 @@ p_CiIMD_predobs <- ggplot(
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
   )+
   scale_color_manual(
-    values = col_exposure_bis
+    values = col_exposure_bis,
+    name = "Scenario"
     )+
-  scale_shape_manual(values = shape_exposure_bis)+
+  scale_shape_manual(
+    values = shape_exposure_bis,
+    name = "Scenario"
+    )+
   scale_x_log10(
     limits=c(100, lim_plot)
     )+
@@ -4445,6 +4465,8 @@ p_CiIMD_predobs <- ggplot(
   theme_minimal()
 
 p_predobs <- p_W + p_CiIMD_predobs
+
+p_CiIMD_predobs_article <- p_CiIMD_predobs
 p_predobs
 
 ```
@@ -4462,6 +4484,24 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2
 )
+```
+
+```{r, include=FALSE, warning=FALSE}
+
+# path_fig_article <- here::here("fig/")
+# 
+# p <- p_CiEPX_predobs_article + p_CiIMD_predobs_article +
+#   plot_layout(ncol=2, guides = "collect") +
+#   plot_annotation(tag_levels = "A")
+# p
+# 
+# ggsave(
+#   filename="Article_predobs_bis.png",
+#   plot=p,
+#   width=8, height = 4,
+#   path=path_fig_article
+#   )
+
 ```
 
 ```{r countfoldIMDC2, warning=F}
@@ -4662,9 +4702,13 @@ p_CiIMD_predobs <- ggplot(
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
   )+
   scale_color_manual(
-    values = col_exposure_bis
+    values = col_exposure_bis,
+    name = "Scenario"
     )+
-  scale_shape_manual(values = shape_exposure_bis)+
+  scale_shape_manual(
+    values = shape_exposure_bis,
+    name = "Scenario"
+    )+
   scale_x_log10(
     limits=c(100, lim_plot)
     )+
@@ -4892,9 +4936,13 @@ p_CiIMD_predobs <- ggplot(
     y = "Predicted concentrations of IMD\nin earthworms (ng/g)"
   )+
   scale_color_manual(
-    values = col_exposure_bis
+    values = col_exposure_bis,
+    name = "Scenario"
     )+
-  scale_shape_manual(values = shape_exposure_bis)+
+  scale_shape_manual(
+    values = shape_exposure_bis,
+    name = "Scenario"
+    )+
   scale_x_log10(
     limits=c(100, lim_plot)
     )+
@@ -4975,7 +5023,7 @@ df_residuals_CiIMD_C1 <- df_predobs_CiIMD_ind_C1 |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "Uptake bis" ~ Time_point,
@@ -5015,7 +5063,6 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1
 )
-
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5039,7 +5086,7 @@ df_residuals_CiIMD_C1P <- df_predobs_CiIMD_ind_C1P |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5079,7 +5126,6 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1P
 )
-
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5103,7 +5149,7 @@ df_residuals_CiIMD_C1N <- df_predobs_CiIMD_ind_C1N |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5143,7 +5189,6 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1N
 )
-
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5167,7 +5212,7 @@ df_residuals_CiIMD_C2 <- df_predobs_CiIMD_ind_C2 |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5207,7 +5252,6 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2
 )
-
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5231,7 +5275,7 @@ df_residuals_CiIMD_C2P <- df_predobs_CiIMD_ind_C2P |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5271,7 +5315,6 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2P
 )
-
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -5295,7 +5338,7 @@ df_residuals_CiIMD_C2N <- df_predobs_CiIMD_ind_C2N |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -5335,7 +5378,6 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2N
 )
-
 ggsave(
   filename = "TK_IMD_predobsratio.svg",
   plot = p_residus,
@@ -6016,7 +6058,7 @@ p_CiIMD_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -6121,7 +6163,7 @@ p_CiIMD_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -6202,7 +6244,7 @@ p_CiIMD_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -6467,7 +6509,7 @@ p_CiIMD_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -6572,7 +6614,7 @@ p_CiIMD_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -6653,7 +6695,7 @@ p_CiIMD_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -6918,7 +6960,7 @@ p_CiIMD_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -7023,7 +7065,7 @@ p_CiIMD_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -7104,7 +7146,7 @@ p_CiIMD_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -7369,7 +7411,7 @@ p_CiIMD_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -7474,7 +7516,7 @@ p_CiIMD_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -7555,7 +7597,7 @@ p_CiIMD_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -7666,7 +7708,7 @@ p_CiIMD_traj_article <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -7942,7 +7984,7 @@ p_CiIMD_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -8046,7 +8088,7 @@ p_CiIMD_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -8127,7 +8169,7 @@ p_CiIMD_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -8392,7 +8434,7 @@ p_CiIMD_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -8497,7 +8539,7 @@ p_CiIMD_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -8578,7 +8620,7 @@ p_CiIMD_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(

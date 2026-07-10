@@ -9,7 +9,7 @@ SetPoints("Setpoints_ind_42.out", "tab_setpoint_ind_42.out", 0,kuEPX, keEPX, phi
 ########## Individuals ################################################
 Simulation { # TK EPX - i =  82
     Winit=0.6668436;
-    Ci0EPX=5.84;
+    Ci0EPX=NA;
     Ce0EPX=780;
     CclxEPX=0.09;
     expo=NDoses(4,1,0,2,2,0,21.0208333333333,23.8125,25.0625);

@@ -246,7 +246,7 @@ p_EPX <- ggplot() +
   ) +
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   theme_minimal(base_size = 12) +  # Thème minimaliste
@@ -2205,14 +2205,20 @@ done
 Nb_experiment <- Nb_experiment_C1
 
 ######### Observed data ######################################################
+
+Group_levels <- c("Contaminated\n soil", "Controle soil after\n contaminated soil\n + Petri dish", "Controle soil after\n contaminated soil")
+
 dObs_ind <- df_TK_EPX |> 
   mutate(
     ID = as.numeric(ID),
-    Group_tmp = case_when(
-      ID < 65 ~ "Uptake",
-      (ID > 64 & ID <= 128) ~ "Elimination",
-      ID > 128 ~ "Uptake\n(with massage only)"),
-    Group = fct_relevel(Group_tmp, c("Uptake", "Elimination", "Uptake\n(with massage only)"))
+
+    Group = factor(
+      case_when(
+      ID < 65 ~ "Contaminated\n soil",
+      (ID > 64 & ID <= 128) ~ "Controle soil after\n contaminated soil\n + Petri dish",
+      ID > 128 ~ "Controle soil after\n contaminated soil"),
+      Group_levels
+      )
     )
 
 colnames(dObs_ind)[colnames(dObs_ind) == "Weight"] <- "Weight_obs"
@@ -2541,7 +2547,6 @@ col_line2 <- Nord_snow[1]
 
 col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
-# "#BF616A" "#A3BE8C" "#B48EAD"
 
 lim_min <-  min(df_predobs_Weight_ind_C1$predict.endpoint, df_predobs_Weight_ind_C1$Weight)
 lim_max <- max(df_predobs_Weight_ind_C1$predict.endpoint, df_predobs_Weight_ind_C1$Weight)
@@ -2703,6 +2708,7 @@ p_CiEPX_predobs <- ggplot(
   theme_minimal()
 
 p_predobs <- p_W + p_CiEPX_predobs
+
 p_predobs
 
 ```
@@ -2714,6 +2720,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1
 )
+
 ggsave(
   filename = "TK_EPX_predobs.svg",
   plot = p_predobs,
@@ -2773,7 +2780,6 @@ col_line2 <- Nord_snow[1]
 
 col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
-# "#BF616A" "#A3BE8C" "#B48EAD"
 
 lim_min <-  min(df_predobs_Weight_ind_C1P$predict.endpoint, df_predobs_Weight_ind_C1P$Weight)
 lim_max <- max(df_predobs_Weight_ind_C1P$predict.endpoint, df_predobs_Weight_ind_C1P$Weight)
@@ -2935,6 +2941,7 @@ p_CiEPX_predobs <- ggplot(
   theme_minimal()
 
 p_predobs <- p_W + p_CiEPX_predobs
+
 p_predobs
 
 ```
@@ -2946,6 +2953,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C1P
 )
+
 ggsave(
   filename = "TK_EPX_predobs.svg",
   plot = p_predobs,
@@ -3005,7 +3013,6 @@ col_line2 <- Nord_snow[1]
 
 col_exposure_bis <- c(Nord_aurora[1], Nord_aurora[4], Nord_aurora[5])
 shape_exposure_bis <- c(shape_IMD, shape_IMD, shape_EPX)
-# "#BF616A" "#A3BE8C" "#B48EAD"
 
 lim_min <-  min(df_predobs_Weight_ind_C2$predict.endpoint, df_predobs_Weight_ind_C2$Weight)
 lim_max <- max(df_predobs_Weight_ind_C2$predict.endpoint, df_predobs_Weight_ind_C2$Weight)
@@ -3167,6 +3174,7 @@ p_CiEPX_predobs <- ggplot(
   theme_minimal()
 
 p_predobs <- p_W + p_CiEPX_predobs
+
 p_predobs
 
 ```
@@ -3178,6 +3186,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2
 )
+
 ggsave(
   filename = "TK_EPX_predobs.svg",
   plot = p_predobs,
@@ -3230,6 +3239,7 @@ cat(
 
 fact_1 <- 2
 fact_2 <- 5
+
 col_line0 <- Nord_polar[1]
 col_line1 <- Nord_polar[4]
 col_line2 <- Nord_snow[1]
@@ -3385,9 +3395,13 @@ p_CiEPX_predobs <- ggplot(
     y = "Predicted concentrations of EPX\nin earthworms (ng/g)"
   )+
   scale_color_manual(
-    values = col_exposure_bis
+    values = col_exposure_bis,
+    name = "Scenario"
     )+
-  scale_shape_manual(values = shape_exposure_bis)+
+  scale_shape_manual(
+    values = shape_exposure_bis,
+    name = "Scenario"
+    )+
   scale_x_log10(
     limits=c(1, lim_plot)
     )+
@@ -3397,6 +3411,9 @@ p_CiEPX_predobs <- ggplot(
   theme_minimal()
 
 p_predobs <- p_W + p_CiEPX_predobs
+
+p_CiEPX_predobs_article <- p_CiEPX_predobs
+
 p_predobs
 
 ```
@@ -3408,6 +3425,7 @@ ggsave(
   width = 8, height = 4,
   path = path_fig_C2P
 )
+
 ggsave(
   filename = "TK_EPX_predobs.svg",
   plot = p_predobs,
@@ -3467,7 +3485,7 @@ df_residuals_CiEPX_C1 <- df_predobs_CiEPX_ind_C1 |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3507,7 +3525,6 @@ ggsave(
   width = 10, height = 4,
   path = path_fig_C1
 )
-
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -3531,7 +3548,7 @@ df_residuals_CiEPX_C1P <- df_predobs_CiEPX_ind_C1P |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3571,7 +3588,6 @@ ggsave(
   width = 10, height = 4,
   path = path_fig_C1P
 )
-
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -3595,7 +3611,7 @@ df_residuals_CiEPX_C2 <- df_predobs_CiEPX_ind_C2 |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3635,7 +3651,6 @@ ggsave(
   width = 10, height = 4,
   path = path_fig_C2
 )
-
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -3659,7 +3674,7 @@ df_residuals_CiEPX_C2P <- df_predobs_CiEPX_ind_C2P |>
     ) |> 
   mutate(
     Time_point = as.numeric(gsub("([0-9]+).*", "\\1" , as.character(Time_point_f))),
-    Group = factor(Group, c("Uptake", "Elimination", "Uptake bis")),
+    Group = factor(Group, Group_levels),
     Time_relative = case_when(
       Group == "Uptake" ~ Time_point,
       Group == "TK_BIS" ~ Time_point,
@@ -3699,7 +3714,6 @@ ggsave(
   width = 10, height = 4,
   path = path_fig_C2P
 )
-
 ggsave(
   filename = "TK_EPX_predobsratio.svg",
   plot = p_residus,
@@ -4241,7 +4255,7 @@ p_CiEPX_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -4344,7 +4358,7 @@ p_CiEPX_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -4425,7 +4439,7 @@ p_CiEPX_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -4696,7 +4710,7 @@ p_CiEPX_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -4799,7 +4813,7 @@ p_CiEPX_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -4880,7 +4894,7 @@ p_CiEPX_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -5149,7 +5163,7 @@ p_CiEPX_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -5253,7 +5267,7 @@ p_CiEPX_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -5334,7 +5348,7 @@ p_CiEPX_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -5603,7 +5617,7 @@ p_CiEPX_traj <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -5707,7 +5721,7 @@ p_CiEPX_traj_1 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -5788,7 +5802,7 @@ p_CiEPX_traj_2 <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
@@ -5899,7 +5913,7 @@ p_CiEPX_traj_article <- ggplot()+
     )+
   scale_color_manual(
     values = col_exposure,
-    label = c("Uptake", "Elimination", "Depuration"),
+    label = c("Contaminated\n soil", "Controle soil", "Petri dish"),
     name = "Phase"
     )+
   labs(
